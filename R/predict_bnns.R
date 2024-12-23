@@ -30,7 +30,7 @@ predict.bnns <- function(object, newdata=NULL, ...) {
     if(!is.null(object$formula)){ ## model has been fitted using formula interface
       test_x <- model.matrix(delete.response(terms(object$formula)), newdata)
     } else{
-      test_x <- newdata
+      test_x <- as.matrix(newdata)
     }
   }
   list_of_draws <- rstan::extract(object$fit)

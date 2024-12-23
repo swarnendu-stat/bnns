@@ -39,6 +39,6 @@ pred <- matrix(c(0.8, 0.1, 0.1,
                  0.7, 0.2, 0.1),
                nrow = 3, byrow = TRUE)
 measure_cat(obs, pred)
-# Returns: list(log_loss = 1.012185, AUC = "Multi-class area under the curve: 0.75")
+# Returns: list(log_loss = 1.012185, AUC = 0.75)
 
 }

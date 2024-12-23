@@ -49,7 +49,8 @@ summary.bnns <- function(object, ...){
   pars <- c("w_out", "b_out")
   if(object$data$out_act_fn == 1){ pars <- c(pars, "sigma") }
   cat("\nPosterior Summary (Key Parameters):\n")
-  print(rstan::summary(object$fit, pars = pars)$summary)
+  stan_sum <- rstan::summary(object$fit, pars = pars)$summary
+  print(stan_sum)
 
   cat("\nModel Fit Information:\n")
   cat("Iterations:", object$fit@sim$iter, "\n")
@@ -68,11 +69,23 @@ summary.bnns <- function(object, ...){
     cat("Accuracy (training with 0.5 cutoff):", measure$accuracy, "\n")
     cat(measure$AUC, "\n")
   }else if(object$data$out_act_fn == 3){
-    measure <- measure_cat(obs = object$data$y, pred = predict(object))
+    measure <- measure_cat(obs = factor(object$data$y), pred = predict(object))
     cat("Log-loss (training):", measure$log_loss, "\n")
-    cat(measure$AUC, "\n")
+    cat("AUC (training):", measure$AUC, "\n")
   }
 
   cat("\nNotes:\n")
   cat("Check convergence diagnostics for parameters with high R-hat values.\n")
+  return(invisible(list("Number of observations" = object$data$n,
+              "Number of features" = object$data$m,
+              "Number of hidden layers" = object$data$L,
+              "Nodes per layer" = paste(object$data$nodes, collapse = " , "),
+              "Activation functions" = paste(object$data$act_fn, collapse = " , "),
+              "Output activation function" = object$data$out_act_fn,
+              "Stanfit Summary" = stan_sum,
+              "Iterations" = object$fit@sim$iter,
+              "Warmup" = object$fit@sim$warmup,
+              "Thinning" = object$fit@sim$thin,
+              "Chains" = object$fit@sim$chains,
+              "Performance" = measure)))
 }

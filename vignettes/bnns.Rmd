@@ -1,0 +1,212 @@
+---
+title: "Getting Started with the bnns Package"
+author: "Swarnendu Chatterjee"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{bnns}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(bnns)
+```
+
+## Overview
+
+The `bnns` package provides an efficient and user-friendly implementation of **Bayesian Neural Networks (BNNs)** for regression, binary classification, and multiclass classification problems. By integrating Bayesian inference, `bnns` allows for uncertainty quantification in predictions and robust parameter estimation.
+
+This vignette covers:
+1. Installing and loading the package
+2. Preparing data
+3. Fitting a BNN model
+4. Summarizing the model
+5. Making predictions
+6. Model evaluation
+
+## 1. Installation
+
+To install the package, use the following commands:
+
+```{r}
+# Install from CRAN (if available)
+#  install.packages("bnns")
+
+# Or install the development version from GitHub
+devtools::install_github("swarnendu-stat/bnns")
+```
+
+Load the package in your R session:
+
+```{r}
+library(bnns)
+```
+
+## 2. Preparing the Data
+
+The `bnns` package expects data in the form of matrices for predictors and a vector for responses.
+
+Here’s an example of generating synthetic data:
+
+```{r}
+# Generate training data
+set.seed(123)
+train_x <- matrix(runif(200), nrow = 20, ncol = 10)  # 20 samples, 10 features
+train_y <- rnorm(20)  # Regression response variable
+```
+
+For binary or multiclass classification:
+
+```{r}
+# Binary classification response
+train_y_bin <- sample(0:1, 20, replace = TRUE)
+
+# Multiclass classification response
+train_y_cat <- factor(sample(letters[1:3], 20, replace = TRUE))  # 3 classes
+```
+
+## 3. Fitting a Bayesian Neural Network Model
+
+Fit a Bayesian Neural Network using the `bnns()` function. Specify the network architecture using arguments like the number of layers (`L`), nodes per layer (`nodes`), and activation functions (`act_fn`).
+
+### Regression Example
+
+```{r}
+model_reg <- bnns(
+  train_x, train_y,
+  L = 2,                  # Number of hidden layers
+  nodes = c(16, 8),       # Nodes per layer
+  act_fn = c(2, 3),       # Activation functions: 2 = Sigmoid, 3 = ReLU
+  out_act_fn = 1          # Output activation function: 1 = Identity (for regression)
+)
+```
+
+### Binary Classification Example
+
+```{r}
+model_bin <- bnns(
+  train_x, train_y_bin,
+  L = 1,
+  nodes = c(16),
+  act_fn = c(2),
+  out_act_fn = 2          # Output activation: 2 = Logistic sigmoid
+)
+```
+
+### Multiclass Classification Example
+
+```{r}
+model_cat <- bnns(
+  train_x, train_y_cat,
+  L = 3,
+  nodes = c(32, 16, 8),
+  act_fn = c(3, 2, 2),
+  out_act_fn = 3          # Output activation: 3 = Softmax
+)
+```
+
+## 4. Summarizing the Model
+
+Use the `summary()` function to view details of the fitted model, including the network architecture, posterior distributions, and predictive performance.
+
+```{r}
+summary(model_reg)
+summary(model_bin)
+summary(model_cat)
+```
+
+## 5. Making Predictions
+
+The `predict()` function generates predictions for new data. The format of predictions depends on the output activation function.
+
+```{r}
+# New data
+test_x <- matrix(runif(50), nrow = 5, ncol = 10)
+
+# Regression predictions
+pred_reg <- predict(model_reg, test_x)
+
+# Binary classification predictions
+pred_bin <- predict(model_bin, test_x)
+
+# Multiclass classification predictions
+pred_cat <- predict(model_cat, test_x)
+```
+
+## 6. Evaluating the Model
+
+The `bnns` package includes utility functions like `measure_cont`, `measure_bin`, and `measure_cat` for evaluating model performance.
+
+### Regression Evaluation
+
+```{r}
+# True responses
+test_y <- rnorm(5)
+
+# Evaluate predictions
+metrics_reg <- measure_cont(obs = test_y, pred = pred_reg)
+print(metrics_reg)
+```
+
+### Binary Classification Evaluation
+
+```{r}
+# True responses
+test_y_bin <- sample(0:1, 5, replace = TRUE)
+
+# Evaluate predictions
+metrics_bin <- measure_bin(obs = test_y_bin, pred = pred_bin)
+print(metrics_bin)
+```
+
+### Multiclass Classification Evaluation
+
+```{r}
+# True responses
+test_y_cat <- factor(sample(letters[1:3], 5, replace = TRUE))
+
+# Evaluate predictions
+metrics_cat <- measure_cat(obs = test_y_cat, pred = pred_cat)
+print(metrics_cat)
+```
+
+## 7. Advanced Options
+
+The `bnns` function offers several advanced options for controlling model fitting:
+- `iterations`: Number of iterations for Bayesian sampling.
+- `warmup`: Number of warmup iterations.
+- `chains`: Number of MCMC chains.
+- `adapt_delta`: Target acceptance probability for HMC.
+
+For example:
+
+```{r}
+model_advanced <- bnns(
+  train_x, train_y,
+  L = 2,
+  nodes = c(16, 8),
+  act_fn = c(2, 3),
+  iterations = 2000,
+  warmup = 500,
+  chains = 4,
+  adapt_delta = 0.9
+)
+```
+
+## 8. Notes on Bayesian Neural Networks
+
+- Bayesian inference allows for uncertainty quantification in predictions.
+- Always check convergence diagnostics such as R-hat values.
+- Use informative priors when possible to stabilize the model.
+
+## References
+
+For more details, refer to the [package documentation](https://your-package-doc-link) or consult the source code on [GitHub](https://github.com/swarnendu/bnns).

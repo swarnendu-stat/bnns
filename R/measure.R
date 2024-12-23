@@ -47,7 +47,7 @@ measure_cont <- function(obs, pred) {
 #' pred <- c(0.9, 0.4, 0.8, 0.7, 0.3)
 #' cut <- 0.5
 #' measure_bin(obs, pred, cut)
-#' # Returns: list(conf_mat = <confusion matrix>, accuracy = 1, ROC = <ROC>, AUC = "Area under the curve: 1")
+#' # Returns: list(conf_mat = <confusion matrix>, accuracy = 1, ROC = <ROC>, AUC = 1)
 #'
 #' @export
 measure_bin <- function(obs, pred, cut = 0.5) {
@@ -62,7 +62,7 @@ measure_bin <- function(obs, pred, cut = 0.5) {
   return(list(conf_mat = conf_mat,
               accuracy = sum(diag(conf_mat)) / sum(conf_mat),
               ROC = ROC,
-              AUC = ROC$auc))
+              AUC = as.numeric(ROC$auc)))
 }
 
 #' Measure Performance for Multi-Class Classification Models
@@ -96,7 +96,7 @@ measure_bin <- function(obs, pred, cut = 0.5) {
 #'                  0.7, 0.2, 0.1),
 #'                nrow = 3, byrow = TRUE)
 #' measure_cat(obs, pred)
-#' # Returns: list(log_loss = 1.012185, AUC = "Multi-class area under the curve: 0.75")
+#' # Returns: list(log_loss = 1.012185, AUC = 0.75)
 #'
 #' @export
 measure_cat <- function(obs, pred) {
@@ -114,5 +114,5 @@ measure_cat <- function(obs, pred) {
   }
   log_loss <- -log_loss / length(obs)
 
-  return(list(log_loss = log_loss, ROC = ROC, AUC = ROC$auc))
+  return(list(log_loss = log_loss, ROC = ROC, AUC = as.numeric(ROC$auc)))
 }

@@ -28,6 +28,6 @@ obs <- c(1, 0, 1, 1, 0)
 pred <- c(0.9, 0.4, 0.8, 0.7, 0.3)
 cut <- 0.5
 measure_bin(obs, pred, cut)
-# Returns: list(conf_mat = <confusion matrix>, accuracy = 1, ROC = <ROC>, AUC = "Area under the curve: 1")
+# Returns: list(conf_mat = <confusion matrix>, accuracy = 1, ROC = <ROC>, AUC = 1)
 
 }
