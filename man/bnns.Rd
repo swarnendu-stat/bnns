@@ -41,7 +41,7 @@ bnns(
 \itemize{
 \item \code{1} for linear (default)
 \item \code{2} for sigmoid
-\item \code{3} for tanh
+\item \code{3} for softmax
 }}
 
 \item{iter}{An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.}

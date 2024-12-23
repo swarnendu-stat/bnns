@@ -46,8 +46,10 @@ summary.bnns <- function(object, ...){
   cat("Activation functions:", paste(object$data$act_fn, collapse = ", "), "\n")
   cat("Output activation function:", object$data$out_act_fn, "\n")
 
+  pars <- c("w_out", "b_out")
+  if(object$data$out_act_fn == 1){ pars <- c(pars, "sigma") }
   cat("\nPosterior Summary (Key Parameters):\n")
-  print(rstan::summary(object$fit, pars = c("w_out", "b_out", "sigma"))$summary)
+  print(rstan::summary(object$fit, pars = pars)$summary)
 
   cat("\nModel Fit Information:\n")
   cat("Iterations:", object$fit@sim$iter, "\n")
@@ -55,10 +57,21 @@ summary.bnns <- function(object, ...){
   cat("Thinning:", object$fit@sim$thin, "\n")
   cat("Chains:", object$fit@sim$chains, "\n")
 
-  # cat("\nPredictive Performance:\n")
-  # # Assuming object includes performance metrics
-  # cat("RMSE (training):", object$rmse, "\n")
-  # cat("R-squared (training):", object$r_squared, "\n")
+  cat("\nPredictive Performance:\n")
+  if(object$data$out_act_fn == 1){
+    measure <- measure_cont(obs = object$data$y, pred = predict(object))
+    cat("RMSE (training):", measure$rmse, "\n")
+    cat("MAE (training):", measure$mae, "\n")
+  }else if(object$data$out_act_fn == 2){
+    measure <- measure_bin(obs = object$data$y, pred = predict(object))
+    cat("Confusion matrix (training with 0.5 cutoff):", measure$conf_mat, "\n")
+    cat("Accuracy (training with 0.5 cutoff):", measure$accuracy, "\n")
+    cat(measure$AUC, "\n")
+  }else if(object$data$out_act_fn == 3){
+    measure <- measure_cat(obs = object$data$y, pred = predict(object))
+    cat("Log-loss (training):", measure$log_loss, "\n")
+    cat(measure$AUC, "\n")
+  }
 
   cat("\nNotes:\n")
   cat("Check convergence diagnostics for parameters with high R-hat values.\n")

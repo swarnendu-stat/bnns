@@ -35,55 +35,101 @@ predict.bnns <- function(object, newdata=NULL, ...) {
   }
   list_of_draws <- rstan::extract(object$fit)
 
-  predictions <- matrix(nrow = nrow(test_x), ncol = length(list_of_draws$b_out))
-  for(l in 1:object$data$L){
-    eval(parse(text = paste0("a", l, " <- z", l, " <- array(dim = c(length(list_of_draws$b_out), nrow(test_x), object$data$nodes[", l, "]))")))
-  }
-
-  for(i in 1:ncol(predictions)){
-    z1[i, , ] <- test_x %*% list_of_draws$w1[i, , ] + matrix(rep(list_of_draws$b1[i, ], nrow(test_x)), nrow = nrow(test_x), byrow = TRUE)
-    # Activation functions (1 = ta3H, 2 = sigmoid, 3 = ReLU, 4 = softplus)
-    if(object$data$act_fn[1] == 1){
-      a1[i, , ] <- tanh(z1[i, , ])
-    }else if(object$data$act_fn[1] == 2){
-      a1[i, , ] <- sigmoid(z1[i, , ])
-    }else if(object$data$act_fn[1] == 3){
-      a1[i, , ] <- relu(z1[i, , ])
-    }else if(object$data$act_fn[1] == 4){
-      a1[i, , ] <- softplus(z1[i, , ])
+  if(object$data$out_act_fn == 3){
+    predictions <- array(dim = c(nrow(test_x), dim(list_of_draws$w1)[1], object$data$K))
+    for(l in 1:object$data$L){
+      eval(parse(text = paste0("a", l, " <- z", l, " <- array(dim = c(dim(list_of_draws$w1)[1], nrow(test_x), object$data$nodes[", l, "]))")))
     }
-  }
 
-  if(object$data$L > 1){
-    for(l in 2:object$data$L){
-      for(i in 1:ncol(predictions)){
-        id3 <- paste0(l, "[", i, ", , ]")
-        id3_1 <- paste0(l-1, "[", i, ", , ]")
-        id2 <- paste0(l, "[", i, ", ]")
-        eval(parse(text = paste0("z", id3, "<- a", id3_1, "%*% list_of_draws$w", id3, "  + matrix(rep(list_of_draws$b", id2, ", nrow(test_x)), nrow = nrow(test_x), byrow = TRUE)")))
-        if(object$data$act_fn[l] == 1){
-          eval(parse(text = paste0("a", id3, " <- tanh(z", id3, ")")))
-        }else if(object$data$act_fn[l] == 2){
-          eval(parse(text = paste0("a", id3, " <- sigmoid(z", id3, ")")))
-        }else if(object$data$act_fn[l] == 3){
-          eval(parse(text = paste0("a", id3, " <- softplus(z", id3, ")")))
-        }else if(object$data$act_fn[l] == 4){
-          eval(parse(text = paste0("a", id3, " <- relu(z", id3, ")")))
+    for(i in 1:dim(list_of_draws$w1)[1]){
+      z1[i, , ] <- test_x %*% list_of_draws$w1[i, , ] + matrix(rep(list_of_draws$b1[i, ], nrow(test_x)), nrow = nrow(test_x), byrow = TRUE)
+      # Activation functions (1 = ta3H, 2 = sigmoid, 3 = ReLU, 4 = softplus)
+      if(object$data$act_fn[1] == 1){
+        a1[i, , ] <- tanh(z1[i, , ])
+      }else if(object$data$act_fn[1] == 2){
+        a1[i, , ] <- sigmoid(z1[i, , ])
+      }else if(object$data$act_fn[1] == 3){
+        a1[i, , ] <- relu(z1[i, , ])
+      }else if(object$data$act_fn[1] == 4){
+        a1[i, , ] <- softplus(z1[i, , ])
+      }
+    }
+
+    if(object$data$L > 1){
+      for(l in 2:object$data$L){
+        for(i in 1:dim(list_of_draws$w1)[1]){
+          id3 <- paste0(l, "[", i, ", , ]")
+          id3_1 <- paste0(l-1, "[", i, ", , ]")
+          id2 <- paste0(l, "[", i, ", ]")
+          eval(parse(text = paste0("z", id3, "<- a", id3_1, "%*% list_of_draws$w", id3, "  + matrix(rep(list_of_draws$b", id2, ", nrow(test_x)), nrow = nrow(test_x), byrow = TRUE)")))
+          if(object$data$act_fn[l] == 1){
+            eval(parse(text = paste0("a", id3, " <- tanh(z", id3, ")")))
+          }else if(object$data$act_fn[l] == 2){
+            eval(parse(text = paste0("a", id3, " <- sigmoid(z", id3, ")")))
+          }else if(object$data$act_fn[l] == 3){
+            eval(parse(text = paste0("a", id3, " <- softplus(z", id3, ")")))
+          }else if(object$data$act_fn[l] == 4){
+            eval(parse(text = paste0("a", id3, " <- relu(z", id3, ")")))
+          }
         }
       }
     }
-  }
 
-  for(i in 1:ncol(predictions)){
-    id <- paste0(object$data$L, "[", i, ", , ]")
-    eval(parse(text = paste0("predictions[,",  i, "] <- a", id, " %*% matrix(list_of_draws$w_out[", i, ", ], ncol = 1) + list_of_draws$b_out[", i, "]")))
-  }
+    for(i in 1:dim(predictions)[2]){
+      id <- paste0(object$data$L, "[", i, ", , ]")
+      eval(parse(text = paste0("predictions[,",  i, ", ] <- a", id, " %*% list_of_draws$w_out[", i, ", , ] + matrix(rep(list_of_draws$b_out[", i, ", ], nrow(test_x)), nrow = nrow(test_x), byrow = TRUE)")))
+    }
 
-  # Activation function for the output layer (1 = linear, 2 = sigmoid, 3 = ta3H)
-  if(object$data$out_act_fn == 2){
-    predictions <- sigmoid(predictions)
-  }else if(object$data$out_act_fn == 3){
-    predictions <- tanh(predictions)
+    predictions <- softmax_3d(predictions)
+  }else{
+    predictions <- matrix(nrow = nrow(test_x), ncol = length(list_of_draws$b_out))
+    for(l in 1:object$data$L){
+      eval(parse(text = paste0("a", l, " <- z", l, " <- array(dim = c(length(list_of_draws$b_out), nrow(test_x), object$data$nodes[", l, "]))")))
+    }
+
+    for(i in 1:ncol(predictions)){
+      z1[i, , ] <- test_x %*% list_of_draws$w1[i, , ] + matrix(rep(list_of_draws$b1[i, ], nrow(test_x)), nrow = nrow(test_x), byrow = TRUE)
+      # Activation functions (1 = ta3H, 2 = sigmoid, 3 = ReLU, 4 = softplus)
+      if(object$data$act_fn[1] == 1){
+        a1[i, , ] <- tanh(z1[i, , ])
+      }else if(object$data$act_fn[1] == 2){
+        a1[i, , ] <- sigmoid(z1[i, , ])
+      }else if(object$data$act_fn[1] == 3){
+        a1[i, , ] <- relu(z1[i, , ])
+      }else if(object$data$act_fn[1] == 4){
+        a1[i, , ] <- softplus(z1[i, , ])
+      }
+    }
+
+    if(object$data$L > 1){
+      for(l in 2:object$data$L){
+        for(i in 1:ncol(predictions)){
+          id3 <- paste0(l, "[", i, ", , ]")
+          id3_1 <- paste0(l-1, "[", i, ", , ]")
+          id2 <- paste0(l, "[", i, ", ]")
+          eval(parse(text = paste0("z", id3, "<- a", id3_1, "%*% list_of_draws$w", id3, "  + matrix(rep(list_of_draws$b", id2, ", nrow(test_x)), nrow = nrow(test_x), byrow = TRUE)")))
+          if(object$data$act_fn[l] == 1){
+            eval(parse(text = paste0("a", id3, " <- tanh(z", id3, ")")))
+          }else if(object$data$act_fn[l] == 2){
+            eval(parse(text = paste0("a", id3, " <- sigmoid(z", id3, ")")))
+          }else if(object$data$act_fn[l] == 3){
+            eval(parse(text = paste0("a", id3, " <- softplus(z", id3, ")")))
+          }else if(object$data$act_fn[l] == 4){
+            eval(parse(text = paste0("a", id3, " <- relu(z", id3, ")")))
+          }
+        }
+      }
+    }
+
+    for(i in 1:ncol(predictions)){
+      id <- paste0(object$data$L, "[", i, ", , ]")
+      eval(parse(text = paste0("predictions[,",  i, "] <- a", id, " %*% matrix(list_of_draws$w_out[", i, ", ], ncol = 1) + list_of_draws$b_out[", i, "]")))
+    }
+
+    # Activation function for the output layer (1 = linear, 2 = sigmoid, 3 = softmax)
+    if(object$data$out_act_fn == 2){
+      predictions <- sigmoid(predictions)
+    }
   }
   return(predictions)
 }

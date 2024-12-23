@@ -2,22 +2,65 @@
 % Please edit documentation in R/generate_stan_code.R
 \name{generate_stan_code}
 \alias{generate_stan_code}
-\title{Generate the required Stan code}
+\title{Generate Stan Code Based on Output Activation Function}
 \usage{
-generate_stan_code(num_layers, nodes)
+generate_stan_code(num_layers, nodes, out_act_fn = 1)
 }
 \arguments{
-\item{num_layers}{Number of hidden layers.}
+\item{num_layers}{An integer specifying the number of hidden layers in the neural network.}
 
-\item{nodes}{A vector of number of nodes in each hidden layer.}
+\item{nodes}{A vector of integers, where each element specifies the number of nodes
+in the corresponding hidden layer. The length of the vector must match \code{num_layers}.}
+
+\item{out_act_fn}{An integer specifying the output activation function, determining
+the type of response variable. Supported values are:
+\itemize{
+\item \code{1}: Continuous response (identity function as output layer).
+\item \code{2}: Binary response (sigmoid function as output layer).
+\item \code{3}: Categorical response (softmax function as output layer).
+}}
 }
 \value{
-A string with the required Stan code for Bayesian neural network.
+A character string containing the Stan code for the specified Bayesian neural network model.
+The Stan model includes data, parameters, transformed parameters, and model blocks,
+adjusted based on the specified response type.
 }
 \description{
-Generate the required Stan code
+This function serves as a wrapper to generate Stan code for Bayesian neural networks
+tailored to different types of response variables. Based on the specified output
+activation function (\code{out_act_fn}), it delegates the code generation to the
+appropriate function for continuous, binary, or categorical response models.
+}
+\details{
+This function dynamically calls one of the following functions based on the value of \code{out_act_fn}:
+\itemize{
+\item \strong{Continuous response:} Calls \code{generate_stan_code_cont}.
+\item \strong{Binary response:} Calls \code{generate_stan_code_bin}.
+\item \strong{Categorical response:} Calls \code{generate_stan_code_cat}.
+}
+
+If an unsupported value is provided for \code{out_act_fn}, the function throws an error.
+The generated Stan code is adapted for the response type, including appropriate
+likelihood functions and transformations.
 }
 \examples{
-generate_stan_code(3, c(16, 4, 2))
-generate_stan_code(2, c(4, 2))
+# Generate Stan code for a continuous response model
+stan_code <- generate_stan_code(num_layers = 2, nodes = c(10, 5), out_act_fn = 1)
+cat(stan_code)
+
+# Generate Stan code for a binary response model
+stan_code <- generate_stan_code(num_layers = 2, nodes = c(10, 5), out_act_fn = 2)
+cat(stan_code)
+
+# Generate Stan code for a categorical response model
+stan_code <- generate_stan_code(num_layers = 2, nodes = c(10, 5), out_act_fn = 3)
+cat(stan_code)
+
+}
+\seealso{
+\itemize{
+\item \link{generate_stan_code_cont}: For continuous response models.
+\item \link{generate_stan_code_bin}: For binary response models.
+\item \link{generate_stan_code_cat}: For categorical response models.
+}
 }

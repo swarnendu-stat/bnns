@@ -17,7 +17,7 @@
 #'   \itemize{
 #'     \item \code{1} for linear (default)
 #'     \item \code{2} for sigmoid
-#'     \item \code{3} for tanh
+#'     \item \code{3} for softmax
 #'   }
 #' @param iter An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.
 #' @param warmup An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.
@@ -68,7 +68,7 @@ bnns <- function(train_x, train_y, L = 1, nodes = 16,
 #'   \itemize{
 #'     \item \code{1} for linear (default)
 #'     \item \code{2} for sigmoid
-#'     \item \code{3} for tanh
+#'     \item \code{3} for softmax
 #'   }
 #' @param iter An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.
 #' @param warmup An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.
@@ -103,23 +103,51 @@ bnns <- function(train_x, train_y, L = 1, nodes = 16,
 bnns.default <- function(train_x, train_y, L = 1, nodes = 16,
                          act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
                          thin = 10, chains = 2, cores = 2, seed = 123, ...){
-  stan_data <- list(
-    n = nrow(train_x),                    # Number of observations
-    m = ncol(train_x),                    # Number of features
-    L = L,
-    nodes = nodes,                                # Number of layers
-    X = train_x,                          # Input matrix
-    y = train_y,                          # Output vector
-    act_fn = act_fn,         # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
-    out_act_fn = out_act_fn            # Activation function for the output layer (1 = linear, 2 = sigmoid, 3 = tanh)
-  )
+  if(out_act_fn == 3){
+    stopifnot("train_y must be a factor" = is.factor(train_y))
+    stan_data <- list(
+      n = nrow(train_x),                    # Number of observations
+      m = ncol(train_x),                    # Number of features
+      L = L,
+      nodes = nodes,                                # Number of layers
+      X = train_x,                          # Input matrix
+      y = as.numeric(train_y),                          # Output vector
+      K = length(unique(train_y)),
+      act_fn = act_fn,         # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
+      out_act_fn = out_act_fn            # Activation function for the output layer (1 = linear, 2 = sigmoid, 3 = softmax)
+    )
+  }else if(out_act_fn == 2){
+    stopifnot("train_y must have only 0/1 values" = all(train_y %in% c(0, 1)))
+    stan_data <- list(
+      n = nrow(train_x),                    # Number of observations
+      m = ncol(train_x),                    # Number of features
+      L = L,
+      nodes = nodes,                                # Number of layers
+      X = train_x,                          # Input matrix
+      y = train_y,                          # Output vector
+      act_fn = act_fn,         # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
+      out_act_fn = out_act_fn            # Activation function for the output layer (1 = linear, 2 = sigmoid, 3 = softmax)
+    )
+  }else{
+    stan_data <- list(
+      n = nrow(train_x),                    # Number of observations
+      m = ncol(train_x),                    # Number of features
+      L = L,
+      nodes = nodes,                                # Number of layers
+      X = train_x,                          # Input matrix
+      y = train_y,                          # Output vector
+      act_fn = act_fn,         # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
+      out_act_fn = out_act_fn            # Activation function for the output layer (1 = linear, 2 = sigmoid, 3 = softmax)
+    )
+  }
 
   est <- list()
-
-  est$fit <-  suppressWarnings(rstan::stan(model_code = generate_stan_code(num_layers = L, nodes = nodes), data = stan_data, include = TRUE,
-                  pars = c(paste0("w", 1:L), paste0("b", 1:L), "w_out", "b_out", "sigma"),
-                  iter = iter, warmup = warmup, thin = thin, chains = chains, cores = cores,
-                  init = 0, seed = seed, verbose = TRUE, refresh = 0))
+  pars <- c(paste0("w", 1:L), paste0("b", 1:L), "w_out", "b_out")
+  if(out_act_fn == 1){ pars <- c(pars, "sigma") }
+  est$fit <-  suppressWarnings(rstan::stan(model_code = generate_stan_code(num_layers = L, nodes = nodes, out_act_fn = out_act_fn), data = stan_data, include = TRUE,
+                                           pars = pars,
+                                           iter = iter, warmup = warmup, thin = thin, chains = chains, cores = cores,
+                                           init = 0, seed = seed, verbose = TRUE, refresh = 0))
 
   est$call <- match.call()
   est$data <- stan_data
@@ -146,7 +174,7 @@ bnns.default <- function(train_x, train_y, L = 1, nodes = 16,
 #'   \itemize{
 #'     \item \code{1} for linear (default)
 #'     \item \code{2} for sigmoid
-#'     \item \code{3} for tanh
+#'     \item \code{3} for softmax
 #'   }
 #' @param iter An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.
 #' @param warmup An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.
@@ -188,4 +216,4 @@ bnns.formula <- function(formula, data=list(), L = 1, nodes = 16,
   est$call <- match.call()
   est$formula <- formula
   return(est)
-  }
+}
