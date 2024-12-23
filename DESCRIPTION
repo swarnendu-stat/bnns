@@ -13,3 +13,5 @@ Suggests:
 Config/testthat/edition: 3
 Imports: 
     rstan
+URL: https://github.com/swarnendu-stat/bnns
+BugReports: https://github.com/swarnendu-stat/bnns/issues
