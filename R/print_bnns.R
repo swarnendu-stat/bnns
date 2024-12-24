@@ -12,10 +12,12 @@
 #'   }
 #'
 #' @examples
+#' \dontrun{
 #' # Example usage:
 #' data <- data.frame(x1 = runif(100), x2 = runif(100), y = rnorm(100))
 #' model <- bnns(y ~ x1 + x2, data = data, L = 2, nodes = c(16, 8))
 #' print(model)
+#' }
 #'
 #' @seealso \code{\link{bnns}}, \code{\link{summary.bnns}}
 #'

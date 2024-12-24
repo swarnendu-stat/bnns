@@ -14,6 +14,7 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
+    pROC,
     rstan
 URL: https://github.com/swarnendu-stat/bnns
 BugReports: https://github.com/swarnendu-stat/bnns/issues

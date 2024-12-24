@@ -3,7 +3,10 @@
 #' @param x A numeric vector or matrix on which tanh transformation is going to be applied.........................
 #' @returns A numeric vector or matrix after tanh transformation.
 #' @examples
+#' \dontrun{
 #' tanh(matrix(1:4), nrow = 2)
+#' }
+#' @export
 
 tanh <- function(x){
   (exp(x) - exp(-x))/(exp(x) + exp(-x))
@@ -14,7 +17,10 @@ tanh <- function(x){
 #' @param x A numeric vector or matrix on which sigmoid transformation is going to be applied.........................
 #' @returns A numeric vector or matrix after sigmoid transformation.
 #' @examples
+#' \dontrun{
 #' sigmoid(matrix(1:4), nrow = 2)
+#' }
+#' @export
 
 sigmoid <- function(x){
   1/(1 + exp(-x))
@@ -25,7 +31,10 @@ sigmoid <- function(x){
 #' @param x A numeric vector or matrix on which softplus transformation is going to be applied.........................
 #' @returns A numeric vector or matrix after softplus transformation.
 #' @examples
+#' \dontrun{
 #' softplus(matrix(1:4), nrow = 2)
+#' }
+#' @export
 
 softplus <- function(x){
   log(1 + exp(x))
@@ -36,7 +45,10 @@ softplus <- function(x){
 #' @param x A numeric vector or matrix on which relu transformation is going to be applied.........................
 #' @returns A numeric vector or matrix after relu transformation.
 #' @examples
+#' \dontrun{
 #' relu(matrix(1:4), nrow = 2)
+#' }
+#' @export
 
 relu <- function(x){
   if(is.null(dim(x))){
@@ -66,9 +78,11 @@ relu <- function(x){
 #' `(i, j)`, normalizing the values along the third dimension `(k)` for each slice.
 #'
 #' @examples
+#' \dontrun{
 #' # Example: Apply softmax to a 3D array
 #' x <- array(runif(24), dim = c(2, 3, 4))  # Random 3D array (2x3x4)
 #' softmax_result <- softmax_3d(x)
+#'}
 #'
 #' @seealso [softmax()] for applying the softmax function in a 2D or vector context.
 #'

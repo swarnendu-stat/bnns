@@ -32,10 +32,12 @@
 #' @details The function serves as a generic interface to different methods of fitting Bayesian Neural Networks. The specific method dispatched depends on the class of the input arguments, allowing for flexibility in the types of inputs supported.
 #'
 #' @examples
+#' \dontrun{
 #' # Example usage with the default method:
 #' train_x <- matrix(runif(100), nrow = 10, ncol = 10)
 #' train_y <- rnorm(10)
 #' model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
+#' }
 #'
 #' # See the documentation for bnns.default for more details on the default implementation.
 #'
@@ -88,10 +90,12 @@ bnns <- function(train_x, train_y, L = 1, nodes = 16,
 #' @details The function uses the \code{generate_stan_code} function to dynamically generate Stan code based on the specified number of layers and nodes. Stan is then used to fit the Bayesian Neural Network.
 #'
 #' @examples
+#' \dontrun{
 #' # Example usage:
 #' train_x <- matrix(runif(100), nrow = 10, ncol = 10)
 #' train_y <- rnorm(10)
 #' model <- bnns.default(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
+#' }
 #'
 #' # Access Stan model fit
 #' model$fit
@@ -195,9 +199,11 @@ bnns.default <- function(train_x, train_y, L = 1, nodes = 16,
 #' @details The function uses the provided formula and data to generate the design matrix for the predictors and the response vector. It then calls \code{\link{bnns.default}} to fit the Bayesian Neural Network model.
 #'
 #' @examples
+#' \dontrun{
 #' # Example usage with formula interface:
 #' data <- data.frame(x1 = runif(100), x2 = runif(100), y = rnorm(100))
 #' model <- bnns(y ~ x1 + x2, data = data, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
+#' }
 #'
 #' @seealso \code{\link{bnns.default}}, \code{\link{bnns}}
 #'

@@ -6,6 +6,10 @@ model_nf <- bnns(with(data, cbind(x1, x2)), data$y, L = 1, nodes = 2, act_fn = 2
 model_nf_4 <- bnns(with(data, cbind(x1, x2)), data$y, L = 4, nodes = rep(2, 4), act_fn = 1:4, iter = 2e2, warmup = 1e2, chains = 1)
 new_data <- data.frame(x1 = runif(5), x2 = runif(5))
 
+data_cat <- data.frame(x1 = runif(10), x2 = runif(10), y = factor(sample(LETTERS[1:3], 10, replace = TRUE)))
+model_cat <- bnns(y ~ -1 + x1 + x2, data = data_cat, L = 4, nodes = rep(2, 4), act_fn = 1:4, iter = 2e2, warmup = 1e2, chains = 1, out_act_fn = 3)
+new_data_cat <- data.frame(x1 = runif(5), x2 = runif(5))
+
 # Redirect output for testing predictions
 capture_predictions <- function(object, newdata = NULL) {
   predict.bnns(object, newdata = newdata)
@@ -45,6 +49,16 @@ test_that("predict.bnns handles formula and non-formula cases", {
 
 test_that("predict.bnns works with for more than 1 layer with different activation functions", {
   predictions <- capture_predictions(model_nf_4, newdata = new_data)
+
+  # Test that predictions have correct dimensions
+  expect_equal(dim(predictions)[1], 5) # 5 rows
+
+  # Test that predictions are numeric
+  expect_type(predictions, "double")
+})
+
+test_that("predict.bnns works with for more than 1 layer with different activation functions for the categorical case", {
+  predictions <- capture_predictions(model_cat, newdata = new_data_cat)
 
   # Test that predictions have correct dimensions
   expect_equal(dim(predictions)[1], 5) # 5 rows

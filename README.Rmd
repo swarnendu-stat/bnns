@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Codecov test coverage](https://codecov.io/gh/swarnendu-stat/bnns/graph/badge.svg)](https://app.codecov.io/gh/swarnendu-stat/bnns)
 <!-- badges: end -->
 
 The `bnns` package provides tools to fit Bayesian Neural Networks (BNNs) for regression and classification problems. It is designed to be flexible, supporting various network architectures, activation functions, and output types, making it suitable for both simple and complex data analysis tasks.
@@ -126,4 +127,4 @@ Contributions are welcome! Please raise issues or submit pull requests on [GitHu
 
 ## License
 
-This package is licensed under the MIT License. See `LICENSE` for details.
+This package is licensed under the Apache License. See `LICENSE` for details.
