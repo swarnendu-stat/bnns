@@ -1,0 +1,129 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# bnns: Bayesian Neural Networks for Regression and Classification
+
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+<!-- badges: end -->
+
+The `bnns` package provides tools to fit Bayesian Neural Networks (BNNs) for regression and classification problems. It is designed to be flexible, supporting various network architectures, activation functions, and output types, making it suitable for both simple and complex data analysis tasks.
+
+## Features
+
+- Support for multi-layer neural networks with customizable architecture.
+- Choice of activation functions (e.g., sigmoid, ReLU, tanh).
+- Outputs for regression (continuous response) and classification (binary and multiclass).
+- Bayesian inference, providing posterior distributions for predictions and parameters.
+- Applications in domains such as clinical trials, predictive modeling, and more.
+
+## Installation
+
+To install the `bnns` package from GitHub, use the following:
+
+```{r}
+# Install devtools if not already installed
+if (!requireNamespace("devtools", quietly = TRUE)) {
+  install.packages("devtools")
+}
+
+# Install bnns
+devtools::install_github("swarnendu-stat/bnns")
+```
+
+## Getting Started
+
+### 1. Simulate Data
+
+Below is an example of how to simulate data for regression:
+
+```{r}
+set.seed(123)
+n <- 100
+x <- matrix(runif(n * 2), ncol = 2)
+y <- x[, 1] + x[, 2]^2 + rnorm(n, sd = 0.1)
+```
+
+### 2. Fit a BNN Model
+
+To fit a Bayesian Neural Network:
+
+```{r}
+library(bnns)
+
+model <- bnns(x, y, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
+              iter = 2000, warmup = 500, thin = 2, chains = 2, seed = 123)
+```
+
+### 3. Model Summary
+
+Summarize the fitted model:
+
+```{r}
+summary(model)
+```
+
+### 4. Predictions
+
+Make predictions using the trained model:
+
+```{r}
+pred <- predict(model, newdata = x)
+```
+
+### 5. Visualization
+
+Visualize true vs predicted values for regression:
+
+```{r}
+plot(y, rowMeans(pred), main = "True vs Predicted", xlab = "True Values", ylab = "Predicted Values")
+abline(0, 1, col = "red")
+```
+
+## Applications
+
+### Regression Example
+
+Use `bnns` for regression analysis to model continuous outcomes, such as predicting patient biomarkers in clinical trials.
+
+### Classification Example
+
+For binary or multiclass classification, set the `out_act_fn` to `2` (binary) or `3` (multiclass). For example:
+
+```{r}
+# Simulate binary classification data
+train_x <- matrix(runif(200), ncol = 2)
+train_y <- ifelse(train_x[, 1] + train_x[, 2] > 1, 1, 0)
+
+# Fit a binary classification BNN
+model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_act_fn = 2)
+```
+
+### Clinical Trial Applications
+
+Explore posterior probabilities to estimate treatment effects or success probabilities in clinical trials. For example, calculate the posterior probability of achieving a clinically meaningful outcome in a given population.
+
+## Documentation
+
+- Detailed vignettes are available to guide through various applications of the package.
+- See `help(bnns)` for more information about the `bnns` function and its arguments.
+
+## Contributing
+
+Contributions are welcome! Please raise issues or submit pull requests on [GitHub](https://github.com/swarnendu-stat/bnns).
+
+## License
+
+This package is licensed under the MIT License. See `LICENSE` for details.

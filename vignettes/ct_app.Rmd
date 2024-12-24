@@ -1,0 +1,192 @@
+---
+title: "Using Bayesian Neural Networks in Clinical Trials"
+author: "Swarnendu Chatterjee"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using Bayesian Neural Networks in Clinical Trials}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(bnns)
+```
+
+## Introduction
+
+Bayesian Neural Networks (BNNs) offer a robust framework for prediction in clinical trials by providing posterior distributions of predictions. This allows for probabilistic reasoning, such as computing the probability that a treatment achieves a certain efficacy threshold or proportion of success.
+
+In this vignette, we:
+1. Illustrate data preparation for a clinical trial setting.
+2. Fit a BNN to simulate clinical trial outcomes.
+3. Leverage posterior distributions for decision-making, such as calculating posterior probabilities of treatment success.
+
+---
+
+## 1. Data Preparation
+
+Consider a hypothetical clinical trial comparing the efficacy of a new treatment against a placebo. The response variable is binary, representing treatment success (1) or failure (0).
+
+### Simulating Data
+
+```{r}
+set.seed(123)
+
+# Simulate predictor variables (e.g., patient covariates)
+n_subjects <- 100
+Age <- runif(n_subjects, 18, 50)                  # Age in years
+Dose <- runif(n_subjects, 10, 100)                # Dose levels
+Severity <- runif(n_subjects, 1, 10)              # Baseline severity (arbitrary scale)
+
+# Define true probabilities using a nonlinear function
+beta_0 <- 1
+beta_1 <- 0.3
+beta_2 <- -0.1
+beta_3 <- -0.02
+beta_4 <- 0.005
+
+logit_p <- beta_0 + beta_1 * Dose + beta_2 * log(Severity) +
+           beta_3 * Age^2 + beta_4 * (Age * Dose)
+p_success <- 1 / (1 + exp(-logit_p))     # Sigmoid transformation
+
+# Simulate binary outcomes
+Success <- rbinom(n_subjects, size = 1, prob = p_success)
+
+trial_data <- cbind.data.frame(Success, Age, Dose, Severity)
+
+# Split into training and testing
+train_idx <- sample(seq_len(n_subjects), size = 0.8 * n_subjects)
+training_data <- trial_data[train_idx, ]
+test_data <- trial_data[-train_idx, ]
+```
+
+---
+
+## 2. Fitting a Bayesian Neural Network
+
+Fit a BNN to the simulated data. We use a binary classification model with a logistic sigmoid activation for the output layer.
+
+```{r}
+# Fit a BNN
+model <- bnns(
+  Success ~ -1 + .,
+  data = training_data,
+  L = 2,                # Number of hidden layers
+  nodes = c(16, 8),     # Nodes per layer
+  act_fn = c(2, 2),     # Activation functions for hidden layers
+  out_act_fn = 2,       # Output activation: logistic sigmoid
+  iterations = 1000,    # Bayesian sampling iterations
+  warmup = 500,         # Warmup iterations
+  chains = 2            # Number of MCMC chains
+)
+```
+
+---
+
+## 3. Posterior Predictions
+
+### Generating Predictions with Uncertainty
+
+The posterior distribution of predictions allows us to compute not just point estimates but also probabilistic metrics.
+
+```{r}
+# Generate posterior predictions for the test set
+posterior_preds <- predict(model, subset(test_data, select = -Success))
+head(posterior_preds)  # Each row corresponds to a subject, and columns are MCMC samples
+```
+
+Each entry in `posterior_preds` represents the predicted probability of success from a single posterior sample.
+
+---
+
+## 4. Posterior Probability of Treatment Success
+
+### Threshold-Based Decision-Making
+
+Suppose we define treatment success as a predicted probability ≥ 0.6. We can compute the posterior probability that this threshold is met for each subject.
+
+```{r}
+# Compute posterior probabilities of success (p_hat ≥ 0.6)
+success_threshold <- 0.6
+posterior_probs_success <- rowMeans(posterior_preds >= success_threshold)
+head(posterior_probs_success)
+```
+
+### Proportion of Subjects Likely to Achieve Success
+
+Next, we calculate the posterior probability that a certain proportion of subjects in the treatment group achieve success.
+
+```{r}
+# Define success proportion threshold
+prop_success_threshold <- 0.7
+
+# Simulate posterior proportion of success
+posterior_success_proportion <- colMeans(posterior_preds >= success_threshold)
+
+# Posterior probability that ≥ 70% of subjects achieve success
+posterior_prob_high_success <- mean(posterior_success_proportion >= prop_success_threshold)
+posterior_prob_high_success
+```
+
+---
+
+## 5. Visualizing Posterior Insights
+
+### Posterior Predictive Distribution
+
+```{r}
+library(ggplot2)
+
+# Plot posterior probabilities of success for individual subjects
+ggplot(data.frame(Subject = 1:nrow(test_data), Prob = posterior_probs_success), aes(x = Subject, y = Prob)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  geom_hline(yintercept = success_threshold, color = "red", linetype = "dashed") +
+  labs(
+    title = "Posterior Probability of Treatment Success",
+    x = "Subject",
+    y = "Posterior Probability"
+  )
+```
+
+### Distribution of Success Proportion
+
+```{r}
+# Histogram of posterior success proportions
+ggplot(data.frame(SuccessProp = posterior_success_proportion), aes(x = SuccessProp)) +
+  geom_histogram(fill = "green", bins = 20) +
+  geom_vline(xintercept = prop_success_threshold, color = "red", linetype = "dashed") +
+  labs(
+    title = "Posterior Distribution of Success Proportion",
+    x = "Proportion of Subjects Achieving Success",
+    y = "Frequency"
+  )
+```
+
+---
+
+## 6. Clinical Trial Decision-Making
+
+### Bayesian Probability Threshold
+
+The posterior probability can guide decision-making. For example:
+- If `posterior_prob_high_success > 0.9`, consider the treatment effective.
+- If `posterior_prob_high_success < 0.1`, consider the treatment ineffective.
+- Otherwise, collect more data or refine the model.
+
+---
+
+## 7. Conclusion
+
+The `bnns` package empowers clinical trial analysts to leverage Bayesian Neural Networks for predictive modeling and decision-making. By utilizing posterior distributions, we can:
+- Quantify uncertainty in predictions.
+- Make informed decisions about treatment efficacy.
+- Evaluate trial outcomes based on predefined success criteria.
+
+This probabilistic framework is particularly valuable in scenarios where uncertainty plays a critical role in decision-making, such as early-phase clinical trials.
+
+```

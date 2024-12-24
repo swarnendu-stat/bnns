@@ -16,10 +16,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(bnns)
-```
-
 ## Overview
 
 The `bnns` package provides an efficient and user-friendly implementation of **Bayesian Neural Networks (BNNs)** for regression, binary classification, and multiclass classification problems. By integrating Bayesian inference, `bnns` allows for uncertainty quantification in predictions and robust parameter estimation.
@@ -41,7 +37,7 @@ To install the package, use the following commands:
 #  install.packages("bnns")
 
 # Or install the development version from GitHub
-devtools::install_github("swarnendu-stat/bnns")
+# devtools::install_github("swarnendu-stat/bnns")
 ```
 
 Load the package in your R session:
@@ -79,13 +75,16 @@ Fit a Bayesian Neural Network using the `bnns()` function. Specify the network a
 
 ### Regression Example
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 model_reg <- bnns(
   train_x, train_y,
   L = 2,                  # Number of hidden layers
   nodes = c(16, 8),       # Nodes per layer
   act_fn = c(2, 3),       # Activation functions: 2 = Sigmoid, 3 = ReLU
-  out_act_fn = 1          # Output activation function: 1 = Identity (for regression)
+  out_act_fn = 1,          # Output activation function: 1 = Identity (for regression)
+  iter = 2e2, 
+  warmup = 1e2, 
+  chains = 1
 )
 ```
 
@@ -97,7 +96,10 @@ model_bin <- bnns(
   L = 1,
   nodes = c(16),
   act_fn = c(2),
-  out_act_fn = 2          # Output activation: 2 = Logistic sigmoid
+  out_act_fn = 2,          # Output activation: 2 = Logistic sigmoid
+  iter = 2e2, 
+  warmup = 1e2, 
+  chains = 1
 )
 ```
 
@@ -109,7 +111,10 @@ model_cat <- bnns(
   L = 3,
   nodes = c(32, 16, 8),
   act_fn = c(3, 2, 2),
-  out_act_fn = 3          # Output activation: 3 = Softmax
+  out_act_fn = 3,          # Output activation: 3 = Softmax
+  iter = 2e2, 
+  warmup = 1e2, 
+  chains = 1
 )
 ```
 
@@ -160,7 +165,7 @@ print(metrics_reg)
 
 ```{r}
 # True responses
-test_y_bin <- sample(0:1, 5, replace = TRUE)
+test_y_bin <- sample(c(rep(0, 2), rep(1, 3)), 5)
 
 # Evaluate predictions
 metrics_bin <- measure_bin(obs = test_y_bin, pred = pred_bin)
@@ -176,29 +181,6 @@ test_y_cat <- factor(sample(letters[1:3], 5, replace = TRUE))
 # Evaluate predictions
 metrics_cat <- measure_cat(obs = test_y_cat, pred = pred_cat)
 print(metrics_cat)
-```
-
-## 7. Advanced Options
-
-The `bnns` function offers several advanced options for controlling model fitting:
-- `iterations`: Number of iterations for Bayesian sampling.
-- `warmup`: Number of warmup iterations.
-- `chains`: Number of MCMC chains.
-- `adapt_delta`: Target acceptance probability for HMC.
-
-For example:
-
-```{r}
-model_advanced <- bnns(
-  train_x, train_y,
-  L = 2,
-  nodes = c(16, 8),
-  act_fn = c(2, 3),
-  iterations = 2000,
-  warmup = 500,
-  chains = 4,
-  adapt_delta = 0.9
-)
 ```
 
 ## 8. Notes on Bayesian Neural Networks

@@ -28,7 +28,7 @@ predict.bnns <- function(object, newdata=NULL, ...) {
     test_x <- object$data$X
   }else{
     if(!is.null(object$formula)){ ## model has been fitted using formula interface
-      test_x <- model.matrix(delete.response(terms(object$formula)), newdata)
+      test_x <- model.matrix(delete.response(terms.formula(object$formula, data = newdata)), newdata)
     } else{
       test_x <- as.matrix(newdata)
     }
