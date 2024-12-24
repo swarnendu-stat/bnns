@@ -60,16 +60,16 @@ summary.bnns <- function(object, ...){
 
   cat("\nPredictive Performance:\n")
   if(object$data$out_act_fn == 1){
-    measure <- measure_cont(obs = object$data$y, pred = predict(object))
+    measure <- measure_cont(obs = object$data$y, pred = predict.bnns(object))
     cat("RMSE (training):", measure$rmse, "\n")
     cat("MAE (training):", measure$mae, "\n")
   }else if(object$data$out_act_fn == 2){
-    measure <- measure_bin(obs = object$data$y, pred = predict(object))
+    measure <- measure_bin(obs = object$data$y, pred = predict.bnns(object))
     cat("Confusion matrix (training with 0.5 cutoff):", measure$conf_mat, "\n")
     cat("Accuracy (training with 0.5 cutoff):", measure$accuracy, "\n")
     cat(measure$AUC, "\n")
   }else if(object$data$out_act_fn == 3){
-    measure <- measure_cat(obs = factor(object$data$y), pred = predict(object))
+    measure <- measure_cat(obs = factor(object$data$y), pred = predict.bnns(object))
     cat("Log-loss (training):", measure$log_loss, "\n")
     cat("AUC (training):", measure$AUC, "\n")
   }

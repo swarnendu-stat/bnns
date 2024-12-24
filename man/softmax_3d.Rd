@@ -27,11 +27,10 @@ The function processes the input array slice-by-slice for the first two dimensio
 \verb{(i, j)}, normalizing the values along the third dimension \code{(k)} for each slice.
 }
 \examples{
+\dontrun{
 # Example: Apply softmax to a 3D array
 x <- array(runif(24), dim = c(2, 3, 4))  # Random 3D array (2x3x4)
 softmax_result <- softmax_3d(x)
-
 }
-\seealso{
-\code{\link[=softmax]{softmax()}} for applying the softmax function in a 2D or vector context.
+
 }

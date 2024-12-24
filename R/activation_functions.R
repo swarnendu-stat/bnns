@@ -84,8 +84,6 @@ relu <- function(x){
 #' softmax_result <- softmax_3d(x)
 #'}
 #'
-#' @seealso [softmax()] for applying the softmax function in a 2D or vector context.
-#'
 #' @export
 softmax_3d <- function(x){
   out <- x

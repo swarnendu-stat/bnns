@@ -13,6 +13,36 @@ test_that("bnns.default works for regression (linear output)", {
   expect_equal(result$data$out_act_fn, 1)
 })
 
+test_that("bnns works for both formula and default interfaces", {
+  set.seed(123)
+  train_x <- matrix(rnorm(20), nrow = 10, ncol = 2)
+  train_y <- rnorm(10)
+  train_data <- cbind.data.frame(train_y, train_x)
+
+  result_nf <- bnns(train_x, train_y, out_act_fn = 1, iter = 2e2, warmup = 1e2, chains = 1)
+  result_f <- bnns(train_y~-1+., data = train_data, out_act_fn = 1, iter = 2e2, warmup = 1e2, chains = 1)
+
+  # Check class of result
+  expect_s3_class(result_nf, "bnns")
+  expect_s3_class(result_f, "bnns")
+})
+
+test_that("bnns throws appropriate error for missing or misaligned inputs", {
+  set.seed(123)
+  train_x <- matrix(rnorm(20), nrow = 10, ncol = 2)
+  train_y <- rnorm(10)
+  train_data <- cbind.data.frame(train_y, train_x)
+
+  # Check class of result
+  expect_error(bnns(train_x = train_x, data = train_data, out_act_fn = 1, iter = 2e2, warmup = 1e2, chains = 1),
+               "Provide either (formula, data) or (train_x, train_y).", fixed = TRUE)
+  expect_error(bnns(formula = y~-1+., train_x = train_x, data = train_data, out_act_fn = 1, iter = 2e2, warmup = 1e2, chains = 1),
+               "Provide either (formula, data) or (train_x, train_y), but not both.", fixed = TRUE)
+  expect_error(bnns(formula = y~-1+., train_x = train_x, train_y = train_y, out_act_fn = 1, iter = 2e2, warmup = 1e2, chains = 1),
+               "Provide either (train_x, train_y) or (formula, data), but not both.", fixed = TRUE)
+})
+
+
 test_that("bnns.default works for binary classification (sigmoid output)", {
   set.seed(123)
   train_x <- matrix(rnorm(20), nrow = 10, ncol = 2)

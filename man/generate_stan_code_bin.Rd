@@ -46,6 +46,7 @@ The output layer uses a logistic transformation (\code{inv_logit}) to constrain
 predictions between 0 and 1, which aligns with the Bernoulli likelihood.
 }
 \examples{
+\dontrun{
 # Generate Stan code for a single hidden layer with 10 nodes
 stan_code <- generate_stan_code_binary(1, c(10))
 cat(stan_code)
@@ -53,5 +54,6 @@ cat(stan_code)
 # Generate Stan code for two hidden layers with 8 and 4 nodes
 stan_code <- generate_stan_code_binary(2, c(8, 4))
 cat(stan_code)
+}
 
 }

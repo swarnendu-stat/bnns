@@ -4,6 +4,8 @@
 #'
 #' @param train_x A numeric matrix or object containing the input features (predictors) for training. Rows correspond to observations, and columns correspond to features.
 #' @param train_y A numeric vector or object containing the target values for training. Its length must match the number of rows in `train_x`.
+#' @param formula A symbolic description of the model to be fitted. The formula should specify the response variable and predictors (e.g., \code{y ~ x1 + x2}).
+#' @param data A data frame or list containing the variables in the model. Default is an empty list.
 #' @param L An integer specifying the number of hidden layers in the neural network. Default is 1.
 #' @param nodes An integer or vector specifying the number of nodes in each hidden layer. If a single value is provided, it is applied to all layers. Default is 16.
 #' @param act_fn An integer or vector specifying the activation function(s) for the hidden layers. Options are:
@@ -21,7 +23,7 @@
 #'   }
 #' @param iter An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.
 #' @param warmup An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.
-#' @param thin An integer specifying the thinning interval for Stan samples. Default is 10.
+#' @param thin An integer specifying the thinning interval for Stan samples. Default is 1.
 #' @param chains An integer specifying the number of Markov chains. Default is 2.
 #' @param cores An integer specifying the number of CPU cores to use for parallel sampling. Default is 2.
 #' @param seed An integer specifying the random seed for reproducibility. Default is 123.
@@ -45,9 +47,23 @@
 #'
 #' @export
 
-bnns <- function(train_x, train_y, L = 1, nodes = 16,
+bnns <- function(formula, data = list(), train_x, train_y, L = 1, nodes = 16,
                  act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
-                 thin = 10, chains = 2, cores = 2, seed = 123, ...){
+                 thin = 1, chains = 2, cores = 2, seed = 123, ...){
+  # Validation: Check if both input types are provided
+  if ((!missing(formula) && !missing(data)) && (!missing(train_x) || !missing(train_y))) {
+    stop("Provide either (formula, data) or (train_x, train_y), but not both.")
+  }
+
+  if ((!missing(train_x) && !missing(train_y)) && (!missing(formula) || !missing(data))) {
+    stop("Provide either (train_x, train_y) or (formula, data), but not both.")
+  }
+
+  # Validation: Check if neither input type is provided
+  if ((missing(formula) || missing(data)) && (missing(train_x) || missing(train_y))) {
+    stop("Provide either (formula, data) or (train_x, train_y).")
+  }
+
   UseMethod("bnns")
 }
 
@@ -74,7 +90,7 @@ bnns <- function(train_x, train_y, L = 1, nodes = 16,
 #'   }
 #' @param iter An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.
 #' @param warmup An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.
-#' @param thin An integer specifying the thinning interval for Stan samples. Default is 10.
+#' @param thin An integer specifying the thinning interval for Stan samples. Default is 1.
 #' @param chains An integer specifying the number of Markov chains. Default is 2.
 #' @param cores An integer specifying the number of CPU cores to use for parallel sampling. Default is 2.
 #' @param seed An integer specifying the random seed for reproducibility. Default is 123.
@@ -95,10 +111,10 @@ bnns <- function(train_x, train_y, L = 1, nodes = 16,
 #' train_x <- matrix(runif(100), nrow = 10, ncol = 10)
 #' train_y <- rnorm(10)
 #' model <- bnns.default(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
-#' }
 #'
 #' # Access Stan model fit
 #' model$fit
+#' }
 #'
 #' @seealso \code{\link[rstan]{stan}}
 #'
@@ -106,7 +122,10 @@ bnns <- function(train_x, train_y, L = 1, nodes = 16,
 
 bnns.default <- function(train_x, train_y, L = 1, nodes = 16,
                          act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
-                         thin = 10, chains = 2, cores = 2, seed = 123, ...){
+                         thin = 1, chains = 2, cores = 2, seed = 123, ...){
+  stopifnot("Argument train_x is missing" = !missing(train_x))
+  stopifnot("Argument train_y is missing" = !missing(train_y))
+
   if(out_act_fn == 3){
     stopifnot("train_y must be a factor" = is.factor(train_y))
     stan_data <- list(
@@ -182,7 +201,7 @@ bnns.default <- function(train_x, train_y, L = 1, nodes = 16,
 #'   }
 #' @param iter An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.
 #' @param warmup An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.
-#' @param thin An integer specifying the thinning interval for Stan samples. Default is 10.
+#' @param thin An integer specifying the thinning interval for Stan samples. Default is 1.
 #' @param chains An integer specifying the number of Markov chains. Default is 2.
 #' @param cores An integer specifying the number of CPU cores to use for parallel sampling. Default is 2.
 #' @param seed An integer specifying the random seed for reproducibility. Default is 123.
@@ -211,10 +230,12 @@ bnns.default <- function(train_x, train_y, L = 1, nodes = 16,
 
 bnns.formula <- function(formula, data=list(), L = 1, nodes = 16,
                          act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
-                         thin = 10, chains = 2, cores = 2, seed = 123, ...) {
-  mf <- model.frame(formula=formula, data=data)
-  train_x <- model.matrix(attr(mf, "terms"), data=mf)
-  train_y <- model.response(mf)
+                         thin = 1, chains = 2, cores = 2, seed = 123, ...) {
+  stopifnot("Argument data is missing" = !missing(data))
+
+  mf <- stats::model.frame(formula=formula, data=data)
+  train_x <- stats::model.matrix(attr(mf, "terms"), data=mf)
+  train_y <- stats::model.response(mf)
   est <- bnns.default(train_x = train_x, train_y = train_y, L = L, nodes = nodes,
                       act_fn = act_fn, out_act_fn = out_act_fn, iter = iter,
                       warmup = warmup, thin = thin, chains = chains,

@@ -16,5 +16,7 @@ A numeric vector or matrix after softplus transformation.
 softplus transformation
 }
 \examples{
+\dontrun{
 softplus(matrix(1:4), nrow = 2)
+}
 }

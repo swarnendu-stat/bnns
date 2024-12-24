@@ -74,15 +74,15 @@ Fit a BNN to the simulated data. We use a binary classification model with a log
 ```{r}
 # Fit a BNN
 model <- bnns(
-  Success ~ -1 + .,
+  formula = Success ~ -1 + .,
   data = training_data,
   L = 2,                # Number of hidden layers
   nodes = c(16, 8),     # Nodes per layer
   act_fn = c(2, 2),     # Activation functions for hidden layers
   out_act_fn = 2,       # Output activation: logistic sigmoid
-  iterations = 1000,    # Bayesian sampling iterations
-  warmup = 500,         # Warmup iterations
-  chains = 2            # Number of MCMC chains
+  iter = 2e2,    # Bayesian sampling iterations
+  warmup = 1e2,         # Warmup iterations
+  chains = 1            # Number of MCMC chains
 )
 ```
 

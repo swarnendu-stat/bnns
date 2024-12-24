@@ -5,6 +5,8 @@
 \title{Generic Function for Fitting Bayesian Neural Network Models}
 \usage{
 bnns(
+  formula,
+  data = list(),
   train_x,
   train_y,
   L = 1,
@@ -13,7 +15,7 @@ bnns(
   out_act_fn = 1,
   iter = 1000,
   warmup = 200,
-  thin = 10,
+  thin = 1,
   chains = 2,
   cores = 2,
   seed = 123,
@@ -21,6 +23,10 @@ bnns(
 )
 }
 \arguments{
+\item{formula}{A symbolic description of the model to be fitted. The formula should specify the response variable and predictors (e.g., \code{y ~ x1 + x2}).}
+
+\item{data}{A data frame or list containing the variables in the model. Default is an empty list.}
+
 \item{train_x}{A numeric matrix or object containing the input features (predictors) for training. Rows correspond to observations, and columns correspond to features.}
 
 \item{train_y}{A numeric vector or object containing the target values for training. Its length must match the number of rows in \code{train_x}.}
@@ -48,7 +54,7 @@ bnns(
 
 \item{warmup}{An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.}
 
-\item{thin}{An integer specifying the thinning interval for Stan samples. Default is 10.}
+\item{thin}{An integer specifying the thinning interval for Stan samples. Default is 1.}
 
 \item{chains}{An integer specifying the number of Markov chains. Default is 2.}
 
@@ -68,10 +74,12 @@ This is a generic function for fitting Bayesian Neural Network (BNN) models. It 
 The function serves as a generic interface to different methods of fitting Bayesian Neural Networks. The specific method dispatched depends on the class of the input arguments, allowing for flexibility in the types of inputs supported.
 }
 \examples{
+\dontrun{
 # Example usage with the default method:
 train_x <- matrix(runif(100), nrow = 10, ncol = 10)
 train_y <- rnorm(10)
 model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
+}
 
 # See the documentation for bnns.default for more details on the default implementation.
 

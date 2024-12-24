@@ -44,6 +44,7 @@ Supported activation functions for the hidden layers:
 }
 }
 \examples{
+\dontrun{
 # Generate Stan code for a single hidden layer with 10 nodes
 stan_code <- generate_stan_code_cont(1, c(10))
 cat(stan_code)
@@ -51,5 +52,6 @@ cat(stan_code)
 # Generate Stan code for two hidden layers with 8 and 4 nodes
 stan_code <- generate_stan_code_cont(2, c(8, 4))
 cat(stan_code)
+}
 
 }

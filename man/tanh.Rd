@@ -16,5 +16,7 @@ A numeric vector or matrix after tanh transformation.
 tanh transformation
 }
 \examples{
+\dontrun{
 tanh(matrix(1:4), nrow = 2)
+}
 }

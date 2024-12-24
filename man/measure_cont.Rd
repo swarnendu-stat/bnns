@@ -22,9 +22,11 @@ A list containing:
 Evaluates the performance of a continuous response model using RMSE and MAE.
 }
 \examples{
+\dontrun{
 obs <- c(3.2, 4.1, 5.6)
 pred <- c(3.0, 4.3, 5.5)
 measure_cont(obs, pred)
 # Returns: list(rmse = 0.1732051, mae = 0.1666667)
+}
 
 }

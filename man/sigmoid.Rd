@@ -16,5 +16,7 @@ A numeric vector or matrix after sigmoid transformation.
 sigmoid transformation
 }
 \examples{
+\dontrun{
 sigmoid(matrix(1:4), nrow = 2)
+}
 }

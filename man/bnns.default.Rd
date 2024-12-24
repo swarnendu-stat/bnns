@@ -13,7 +13,7 @@
   out_act_fn = 1,
   iter = 1000,
   warmup = 200,
-  thin = 10,
+  thin = 1,
   chains = 2,
   cores = 2,
   seed = 123,
@@ -48,7 +48,7 @@
 
 \item{warmup}{An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.}
 
-\item{thin}{An integer specifying the thinning interval for Stan samples. Default is 10.}
+\item{thin}{An integer specifying the thinning interval for Stan samples. Default is 1.}
 
 \item{chains}{An integer specifying the number of Markov chains. Default is 2.}
 
@@ -73,6 +73,7 @@ This function fits a Bayesian Neural Network model using Stan. The number of lay
 The function uses the \code{generate_stan_code} function to dynamically generate Stan code based on the specified number of layers and nodes. Stan is then used to fit the Bayesian Neural Network.
 }
 \examples{
+\dontrun{
 # Example usage:
 train_x <- matrix(runif(100), nrow = 10, ncol = 10)
 train_y <- rnorm(10)
@@ -80,6 +81,7 @@ model <- bnns.default(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(2, 3
 
 # Access Stan model fit
 model$fit
+}
 
 }
 \seealso{

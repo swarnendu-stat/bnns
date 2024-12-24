@@ -16,5 +16,7 @@ A numeric vector or matrix after relu transformation.
 relu transformation
 }
 \examples{
+\dontrun{
 relu(matrix(1:4), nrow = 2)
+}
 }

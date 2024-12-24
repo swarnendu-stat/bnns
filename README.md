@@ -42,20 +42,30 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 # Install bnns
 devtools::install_github("swarnendu-stat/bnns")
 #> Downloading GitHub repo swarnendu-stat/bnns@HEAD
-#> matrixStats (1.2.0 -> 1.4.1) [CRAN]
-#> checkmate   (2.3.1 -> 2.3.2) [CRAN]
-#> loo         (2.6.0 -> 2.8.0) [CRAN]
-#> Installing 3 packages: matrixStats, checkmate, loo
-#> Installing packages into '/tmp/Rtmp5836Jm/temp_libpath33801598971d'
+#> tensorA     (NA    -> 0.36.2.1) [CRAN]
+#> posterior   (NA    -> 1.6.0   ) [CRAN]
+#> matrixStats (1.2.0 -> 1.4.1   ) [CRAN]
+#> checkmate   (2.3.1 -> 2.3.2   ) [CRAN]
+#> loo         (2.6.0 -> 2.8.0   ) [CRAN]
+#> Installing 5 packages: tensorA, posterior, matrixStats, checkmate, loo
+#> Installing packages into '/tmp/RtmpxaRO2P/temp_libpath9d6c3f2b1a5c'
 #> (as 'lib' is unspecified)
+#> Warning in i.p(...): installation of package 'tensorA' had non-zero exit status
+#> Warning in i.p(...): installation of package 'matrixStats' had non-zero exit
+#> status
+#> Warning in i.p(...): installation of package 'checkmate' had non-zero exit
+#> status
+#> Warning in i.p(...): installation of package 'posterior' had non-zero exit
+#> status
+#> Warning in i.p(...): installation of package 'loo' had non-zero exit status
 #> ── R CMD build ─────────────────────────────────────────────────────────────────
-#> * checking for file ‘/tmp/Rtmp7GbjPv/remotes5adf77e05dd2/swarnendu-stat-bnns-af87442/DESCRIPTION’ ... OK
+#> * checking for file ‘/tmp/RtmpWVUm69/remotesebe72dc71cdd/swarnendu-stat-bnns-227a118/DESCRIPTION’ ... OK
 #> * preparing ‘bnns’:
 #> * checking DESCRIPTION meta-information ... OK
 #> * checking for LF line-endings in source and make files and shell scripts
 #> * checking for empty or unneeded directories
 #> * building ‘bnns_0.0.0.9000.tar.gz’
-#> Installing package into '/tmp/Rtmp5836Jm/temp_libpath33801598971d'
+#> Installing package into '/tmp/RtmpxaRO2P/temp_libpath9d6c3f2b1a5c'
 #> (as 'lib' is unspecified)
 ```
 
@@ -80,10 +90,23 @@ To fit a Bayesian Neural Network:
 library(bnns)
 
 model <- bnns(x, y, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
-              iter = 2000, warmup = 500, thin = 2, chains = 2, seed = 123)
+              iter = 2e2, warmup = 1e2, chains = 1, seed = 123)
 #> 
 #> TRANSLATING MODEL '' FROM Stan CODE TO C++ CODE NOW.
-#> OS: x86_64, linux-gnu; rstan: 2.32.6; Rcpp: 1.0.13.1; inline: 0.3.20 
+#> OS: x86_64, linux-gnu; rstan: 2.32.6; Rcpp: 1.0.13.1; inline: 0.3.20
+#> Trying to compile a simple C file
+#> Running /usr/lib/R/bin/R CMD SHLIB foo.c
+#> using C compiler: ‘gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0’
+#> gcc -I"/usr/share/R/include" -DNDEBUG   -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/unsupported"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/BH/include" -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/src/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppParallel/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1       -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c foo.c -o foo.o
+#> In file included from /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/Eigen/Core:19,
+#>                  from /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/Eigen/Dense:1,
+#>                  from /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:22,
+#>                  from <command-line>:
+#> /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/Eigen/src/Core/util/Macros.h:679:10: fatal error: cmath: No such file or directory
+#>   679 | #include <cmath>
+#>       |          ^~~~~~~
+#> compilation terminated.
+#> make: *** [/usr/lib/R/etc/Makeconf:195: foo.o] Error 1
 #>  >> setting environment variables: 
 #> PKG_LIBS =  '/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/rstan/lib//libStanServices.a' -L'/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/lib/' -lStanHeaders -L'/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppParallel/lib/' -ltbb 
 #> PKG_CPPFLAGS =   -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/unsupported"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/BH/include" -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/src/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppParallel/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1 
@@ -106,7 +129,7 @@ model <- bnns(x, y, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
 #>   15 : #endif
 #>   16 : // Code generated by stanc v2.32.2
 #>   17 : #include <stan/model/model_header.hpp>
-#>   18 : namespace model5adf76affdf0__namespace {
+#>   18 : namespace modelebe7592feff3__namespace {
 #>   19 : using stan::model::model_base_crtp;
 #>   20 : using namespace stan::math;
 #>   21 : stan::math::profile_map profiles__;
@@ -177,7 +200,7 @@ model <- bnns(x, y, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
 #>   86 :   " (in 'anon_model', line 23, column 9 to column 10)",
 #>   87 :   " (in 'anon_model', line 23, column 12 to column 20)",
 #>   88 :   " (in 'anon_model', line 24, column 9 to column 10)"};
-#>   89 : class model5adf76affdf0_ final : public model_base_crtp<model5adf76affdf0_> {
+#>   89 : class modelebe7592feff3_ final : public model_base_crtp<modelebe7592feff3_> {
 #>   90 : private:
 #>   91 :   int n;
 #>   92 :   int m;
@@ -199,8 +222,8 @@ model <- bnns(x, y, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
 #>  108 :   Eigen::Map<Eigen::Matrix<double,-1,-1>> X{nullptr, 0, 0};
 #>  109 :   Eigen::Map<Eigen::Matrix<double,-1,1>> y{nullptr, 0};
 #>  110 : public:
-#>  111 :   ~model5adf76affdf0_() {}
-#>  112 :   model5adf76affdf0_(stan::io::var_context& context__, unsigned int
+#>  111 :   ~modelebe7592feff3_() {}
+#>  112 :   modelebe7592feff3_(stan::io::var_context& context__, unsigned int
 #>  113 :                      random_seed__ = 0, std::ostream* pstream__ = nullptr)
 #>  114 :       : model_base_crtp(0) {
 #>  115 :     int current_statement__ = 0;
@@ -210,7 +233,7 @@ model <- bnns(x, y, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
 #>  119 :     // suppress unused var warning
 #>  120 :     (void) base_rng__;
 #>  121 :     static constexpr const char* function__ =
-#>  122 :       "model5adf76affdf0__namespace::model5adf76affdf0_";
+#>  122 :       "modelebe7592feff3__namespace::modelebe7592feff3_";
 #>  123 :     // suppress unused var warning
 #>  124 :     (void) function__;
 #>  125 :     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -405,7 +428,7 @@ model <- bnns(x, y, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
 #>  314 :       b2_1dim__ + w_out_1dim__ + 1 + 1;
 #>  315 :   }
 #>  316 :   inline std::string model_name() const final {
-#>  317 :     return "model5adf76affdf0_";
+#>  317 :     return "modelebe7592feff3_";
 #>  318 :   }
 #>  319 :   inline std::vector<std::string> model_compile_info() const noexcept {
 #>  320 :     return std::vector<std::string>{"stanc_version = stanc3 v2.32.2",
@@ -427,7 +450,7 @@ model <- bnns(x, y, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
 #>  336 :     // suppress unused var warning
 #>  337 :     (void) DUMMY_VAR__;
 #>  338 :     static constexpr const char* function__ =
-#>  339 :       "model5adf76affdf0__namespace::log_prob";
+#>  339 :       "modelebe7592feff3__namespace::log_prob";
 #>  340 :     // suppress unused var warning
 #>  341 :     (void) function__;
 #>  342 :     try {
@@ -615,7 +638,7 @@ model <- bnns(x, y, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
 #>  524 :     (void) DUMMY_VAR__;
 #>  525 :     constexpr bool jacobian__ = false;
 #>  526 :     static constexpr const char* function__ =
-#>  527 :       "model5adf76affdf0__namespace::write_array";
+#>  527 :       "modelebe7592feff3__namespace::write_array";
 #>  528 :     // suppress unused var warning
 #>  529 :     (void) function__;
 #>  530 :     try {
@@ -1258,7 +1281,7 @@ model <- bnns(x, y, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
 #> 1167 :   }
 #> 1168 : };
 #> 1169 : }
-#> 1170 : using stan_model = model5adf76affdf0__namespace::model5adf76affdf0_;
+#> 1170 : using stan_model = modelebe7592feff3__namespace::modelebe7592feff3_;
 #> 1171 : #ifndef USING_R
 #> 1172 : // Boilerplate
 #> 1173 : stan::model::model_base&
@@ -1268,14 +1291,14 @@ model <- bnns(x, y, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
 #> 1177 :   return *m;
 #> 1178 : }
 #> 1179 : stan::math::profile_map& get_stan_profile_data() {
-#> 1180 :   return model5adf76affdf0__namespace::profiles__;
+#> 1180 :   return modelebe7592feff3__namespace::profiles__;
 #> 1181 : }
 #> 1182 : #endif
 #> 1183 : #endif
 #> 1184 : 
-#> 1185 : RCPP_MODULE(stan_fit4model5adf76affdf0__mod) {
+#> 1185 : RCPP_MODULE(stan_fit4modelebe7592feff3__mod) {
 #> 1186 :   class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >(
-#> 1187 :       "stan_fit4model5adf76affdf0_")
+#> 1187 :       "stan_fit4modelebe7592feff3_")
 #> 1188 : 
 #> 1189 :       .constructor<SEXP, SEXP, SEXP>()
 #> 1190 : 
@@ -1334,25 +1357,13 @@ model <- bnns(x, y, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
 #> 1243 : 
 #> 1244 : // declarations
 #> 1245 : extern "C" {
-#> 1246 : SEXP file5adf6c6567ea( ) ;
+#> 1246 : SEXP fileebe771c1506( ) ;
 #> 1247 : }
 #> 1248 : 
 #> 1249 : // definition
-#> 1250 : SEXP file5adf6c6567ea() {
+#> 1250 : SEXP fileebe771c1506() {
 #> 1251 :  return Rcpp::wrap("anon_model");
 #> 1252 : }
-#> 
-#> CHECKING DATA AND PREPROCESSING FOR MODEL 'anon_model' NOW.
-#> 
-#> COMPILING MODEL 'anon_model' NOW.
-#> 
-#> STARTING SAMPLER FOR MODEL 'anon_model' NOW.
-#> 
-#> CHECKING DATA AND PREPROCESSING FOR MODEL 'anon_model' NOW.
-#> 
-#> COMPILING MODEL 'anon_model' NOW.
-#> 
-#> STARTING SAMPLER FOR MODEL 'anon_model' NOW.
 #> 
 #> CHECKING DATA AND PREPROCESSING FOR MODEL 'anon_model' NOW.
 #> 
@@ -1369,8 +1380,8 @@ Summarize the fitted model:
 summary(model)
 #> Call:
 #> bnns.default(train_x = x, train_y = y, L = 2, nodes = c(10, 8), 
-#>     act_fn = c(2, 3), out_act_fn = 1, iter = 2000, warmup = 500, 
-#>     thin = 2, chains = 2, seed = 123)
+#>     act_fn = c(2, 3), out_act_fn = 1, iter = 200, warmup = 100, 
+#>     chains = 1, seed = 123)
 #> 
 #> Data Summary:
 #> Number of observations: 100 
@@ -1383,38 +1394,38 @@ summary(model)
 #> Output activation function: 1 
 #> 
 #> Posterior Summary (Key Parameters):
-#>                mean      se_mean          sd        2.5%         25%        50%
-#> w_out[1] 0.16369640 0.0559873926 1.045182186 -1.81055721 -0.57313089 0.12949900
-#> w_out[2] 0.09867386 0.0687668958 1.072101655 -1.91563644 -0.65468628 0.10740574
-#> w_out[3] 0.14812857 0.0705399395 1.064292172 -1.83387186 -0.62734508 0.12822503
-#> w_out[4] 0.21570555 0.0696386817 1.109233170 -1.93643342 -0.53134826 0.21866180
-#> w_out[5] 0.25514920 0.0811022262 1.084018529 -1.80320664 -0.54034475 0.28074977
-#> w_out[6] 0.20690835 0.0664668536 1.104898760 -1.82829135 -0.63268508 0.23360381
-#> w_out[7] 0.18277292 0.0766566404 1.122754301 -1.92309261 -0.62598628 0.17237874
-#> w_out[8] 0.15254388 0.0787167486 1.133041225 -2.02430101 -0.63816560 0.16005581
-#> b_out    0.09049000 0.0550823761 1.030232642 -1.87280640 -0.66453092 0.03782221
-#> sigma    0.10090372 0.0003613676 0.007786356  0.08744712  0.09526055 0.10035097
-#>                75%     97.5%    n_eff     Rhat
-#> w_out[1] 0.9156138 2.1408308 348.5006 1.002138
-#> w_out[2] 0.8124740 2.2111805 243.0598 1.005845
-#> w_out[3] 0.9183307 2.2300361 227.6416 1.018479
-#> w_out[4] 1.0203713 2.3043365 253.7141 1.005436
-#> w_out[5] 1.0232616 2.3227328 178.6520 1.028468
-#> w_out[6] 0.9824380 2.3451923 276.3343 1.003133
-#> w_out[7] 0.9862218 2.3473415 214.5210 1.008222
-#> w_out[8] 0.9489171 2.2797616 207.1844 1.009869
-#> b_out    0.8307725 2.0407691 349.8205 1.005341
-#> sigma    0.1057902 0.1177353 464.2693 1.002747
+#>                 mean    se_mean          sd      2.5%         25%         50%
+#> w_out[1]  0.37765681 0.49084461 1.552186932 -2.021435 -0.69640182  0.72873347
+#> w_out[2]  0.08085825 0.49466747 1.564275878 -1.824147 -0.83460284 -0.09089006
+#> w_out[3]  0.03554780 0.34825200 1.101269523 -1.356821 -0.81973731 -0.10806926
+#> w_out[4]  0.13263825 0.22211857 0.702400605 -1.187734 -0.01558736  0.22629486
+#> w_out[5] -0.22630920 0.38065423 0.972702738 -1.691752 -0.72899621 -0.16208718
+#> w_out[6]  0.31238085 0.37451368 1.124248223 -1.348513 -0.11501565  0.01633858
+#> w_out[7]  0.82649504 0.45905457 1.292029626 -1.293782 -0.12842945  1.14283833
+#> w_out[8] -0.14505881 0.29609888 0.936346880 -1.478512 -0.91612304  0.05021208
+#> b_out    -0.03053170 0.30092281 0.951601475 -1.285772 -0.87033069  0.10119568
+#> sigma     0.10078409 0.00213722 0.006758484  0.087779  0.09789791  0.10355669
+#>                  75%     97.5%     n_eff      Rhat
+#> w_out[1]  1.63241545 2.0964588 10.000000 0.9354371
+#> w_out[2]  0.47724327 3.0504931 10.000000 0.9310465
+#> w_out[3]  0.64577360 1.8801237 10.000000 1.0598412
+#> w_out[4]  0.30558334 1.1299385 10.000000 0.9831385
+#> w_out[5] -0.02764562 1.4940065  6.529786 0.9017751
+#> w_out[6]  1.07041951 2.0931474  9.011333 0.9740991
+#> w_out[7]  1.84870243 2.2818718  7.921662 0.9033829
+#> w_out[8]  0.52843085 1.1829361 10.000000 1.0635145
+#> b_out     0.40176004 1.5356009 10.000000 1.1186968
+#> sigma     0.10523160 0.1075431 10.000000 0.9061298
 #> 
 #> Model Fit Information:
-#> Iterations: 2000 
-#> Warmup: 500 
-#> Thinning: 2 
-#> Chains: 2 
+#> Iterations: 200 
+#> Warmup: 100 
+#> Thinning: 10 
+#> Chains: 1 
 #> 
 #> Predictive Performance:
-#> RMSE (training): 0.09627297 
-#> MAE (training): 0.07552622 
+#> RMSE (training): 0.09669467 
+#> MAE (training): 0.07592263 
 #> 
 #> Notes:
 #> Check convergence diagnostics for parameters with high R-hat values.
@@ -1457,10 +1468,23 @@ train_x <- matrix(runif(200), ncol = 2)
 train_y <- ifelse(train_x[, 1] + train_x[, 2] > 1, 1, 0)
 
 # Fit a binary classification BNN
-model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_act_fn = 2)
+model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_act_fn = 2, iter = 2e2, warmup = 1e2, chains = 1)
 #> 
 #> TRANSLATING MODEL '' FROM Stan CODE TO C++ CODE NOW.
-#> OS: x86_64, linux-gnu; rstan: 2.32.6; Rcpp: 1.0.13.1; inline: 0.3.20 
+#> OS: x86_64, linux-gnu; rstan: 2.32.6; Rcpp: 1.0.13.1; inline: 0.3.20
+#> Trying to compile a simple C file
+#> Running /usr/lib/R/bin/R CMD SHLIB foo.c
+#> using C compiler: ‘gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0’
+#> gcc -I"/usr/share/R/include" -DNDEBUG   -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/unsupported"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/BH/include" -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/src/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppParallel/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1       -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c foo.c -o foo.o
+#> In file included from /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/Eigen/Core:19,
+#>                  from /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/Eigen/Dense:1,
+#>                  from /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:22,
+#>                  from <command-line>:
+#> /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/Eigen/src/Core/util/Macros.h:679:10: fatal error: cmath: No such file or directory
+#>   679 | #include <cmath>
+#>       |          ^~~~~~~
+#> compilation terminated.
+#> make: *** [/usr/lib/R/etc/Makeconf:195: foo.o] Error 1
 #>  >> setting environment variables: 
 #> PKG_LIBS =  '/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/rstan/lib//libStanServices.a' -L'/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/lib/' -lStanHeaders -L'/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppParallel/lib/' -ltbb 
 #> PKG_CPPFLAGS =   -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/unsupported"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/BH/include" -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/src/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppParallel/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1 
@@ -1483,7 +1507,7 @@ model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_a
 #>   15 : #endif
 #>   16 : // Code generated by stanc v2.32.2
 #>   17 : #include <stan/model/model_header.hpp>
-#>   18 : namespace model5adf514d8a69__namespace {
+#>   18 : namespace modelebe77203b239__namespace {
 #>   19 : using stan::model::model_base_crtp;
 #>   20 : using namespace stan::math;
 #>   21 : stan::math::profile_map profiles__;
@@ -1552,7 +1576,7 @@ model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_a
 #>   84 :   " (in 'anon_model', line 22, column 9 to column 10)",
 #>   85 :   " (in 'anon_model', line 22, column 12 to column 20)",
 #>   86 :   " (in 'anon_model', line 23, column 9 to column 10)"};
-#>   87 : class model5adf514d8a69_ final : public model_base_crtp<model5adf514d8a69_> {
+#>   87 : class modelebe77203b239_ final : public model_base_crtp<modelebe77203b239_> {
 #>   88 : private:
 #>   89 :   int n;
 #>   90 :   int m;
@@ -1573,8 +1597,8 @@ model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_a
 #>  105 :   int a2_2dim__;
 #>  106 :   Eigen::Map<Eigen::Matrix<double,-1,-1>> X{nullptr, 0, 0};
 #>  107 : public:
-#>  108 :   ~model5adf514d8a69_() {}
-#>  109 :   model5adf514d8a69_(stan::io::var_context& context__, unsigned int
+#>  108 :   ~modelebe77203b239_() {}
+#>  109 :   modelebe77203b239_(stan::io::var_context& context__, unsigned int
 #>  110 :                      random_seed__ = 0, std::ostream* pstream__ = nullptr)
 #>  111 :       : model_base_crtp(0) {
 #>  112 :     int current_statement__ = 0;
@@ -1584,7 +1608,7 @@ model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_a
 #>  116 :     // suppress unused var warning
 #>  117 :     (void) base_rng__;
 #>  118 :     static constexpr const char* function__ =
-#>  119 :       "model5adf514d8a69__namespace::model5adf514d8a69_";
+#>  119 :       "modelebe77203b239__namespace::modelebe77203b239_";
 #>  120 :     // suppress unused var warning
 #>  121 :     (void) function__;
 #>  122 :     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1768,7 +1792,7 @@ model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_a
 #>  300 :       b2_1dim__ + w_out_1dim__ + 1;
 #>  301 :   }
 #>  302 :   inline std::string model_name() const final {
-#>  303 :     return "model5adf514d8a69_";
+#>  303 :     return "modelebe77203b239_";
 #>  304 :   }
 #>  305 :   inline std::vector<std::string> model_compile_info() const noexcept {
 #>  306 :     return std::vector<std::string>{"stanc_version = stanc3 v2.32.2",
@@ -1790,7 +1814,7 @@ model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_a
 #>  322 :     // suppress unused var warning
 #>  323 :     (void) DUMMY_VAR__;
 #>  324 :     static constexpr const char* function__ =
-#>  325 :       "model5adf514d8a69__namespace::log_prob";
+#>  325 :       "modelebe77203b239__namespace::log_prob";
 #>  326 :     // suppress unused var warning
 #>  327 :     (void) function__;
 #>  328 :     try {
@@ -1972,7 +1996,7 @@ model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_a
 #>  504 :     (void) DUMMY_VAR__;
 #>  505 :     constexpr bool jacobian__ = false;
 #>  506 :     static constexpr const char* function__ =
-#>  507 :       "model5adf514d8a69__namespace::write_array";
+#>  507 :       "modelebe77203b239__namespace::write_array";
 #>  508 :     // suppress unused var warning
 #>  509 :     (void) function__;
 #>  510 :     try {
@@ -2597,7 +2621,7 @@ model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_a
 #> 1129 :   }
 #> 1130 : };
 #> 1131 : }
-#> 1132 : using stan_model = model5adf514d8a69__namespace::model5adf514d8a69_;
+#> 1132 : using stan_model = modelebe77203b239__namespace::modelebe77203b239_;
 #> 1133 : #ifndef USING_R
 #> 1134 : // Boilerplate
 #> 1135 : stan::model::model_base&
@@ -2607,14 +2631,14 @@ model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_a
 #> 1139 :   return *m;
 #> 1140 : }
 #> 1141 : stan::math::profile_map& get_stan_profile_data() {
-#> 1142 :   return model5adf514d8a69__namespace::profiles__;
+#> 1142 :   return modelebe77203b239__namespace::profiles__;
 #> 1143 : }
 #> 1144 : #endif
 #> 1145 : #endif
 #> 1146 : 
-#> 1147 : RCPP_MODULE(stan_fit4model5adf514d8a69__mod) {
+#> 1147 : RCPP_MODULE(stan_fit4modelebe77203b239__mod) {
 #> 1148 :   class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >(
-#> 1149 :       "stan_fit4model5adf514d8a69_")
+#> 1149 :       "stan_fit4modelebe77203b239_")
 #> 1150 : 
 #> 1151 :       .constructor<SEXP, SEXP, SEXP>()
 #> 1152 : 
@@ -2673,25 +2697,13 @@ model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_a
 #> 1205 : 
 #> 1206 : // declarations
 #> 1207 : extern "C" {
-#> 1208 : SEXP file5adf5aabe0( ) ;
+#> 1208 : SEXP fileebe71179a9ae( ) ;
 #> 1209 : }
 #> 1210 : 
 #> 1211 : // definition
-#> 1212 : SEXP file5adf5aabe0() {
+#> 1212 : SEXP fileebe71179a9ae() {
 #> 1213 :  return Rcpp::wrap("anon_model");
 #> 1214 : }
-#> 
-#> CHECKING DATA AND PREPROCESSING FOR MODEL 'anon_model' NOW.
-#> 
-#> COMPILING MODEL 'anon_model' NOW.
-#> 
-#> STARTING SAMPLER FOR MODEL 'anon_model' NOW.
-#> 
-#> CHECKING DATA AND PREPROCESSING FOR MODEL 'anon_model' NOW.
-#> 
-#> COMPILING MODEL 'anon_model' NOW.
-#> 
-#> STARTING SAMPLER FOR MODEL 'anon_model' NOW.
 #> 
 #> CHECKING DATA AND PREPROCESSING FOR MODEL 'anon_model' NOW.
 #> 

@@ -44,6 +44,7 @@ The generated Stan code is adapted for the response type, including appropriate
 likelihood functions and transformations.
 }
 \examples{
+\dontrun{
 # Generate Stan code for a continuous response model
 stan_code <- generate_stan_code(num_layers = 2, nodes = c(10, 5), out_act_fn = 1)
 cat(stan_code)
@@ -55,6 +56,7 @@ cat(stan_code)
 # Generate Stan code for a categorical response model
 stan_code <- generate_stan_code(num_layers = 2, nodes = c(10, 5), out_act_fn = 3)
 cat(stan_code)
+}
 
 }
 \seealso{

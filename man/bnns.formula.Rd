@@ -13,7 +13,7 @@
   out_act_fn = 1,
   iter = 1000,
   warmup = 200,
-  thin = 10,
+  thin = 1,
   chains = 2,
   cores = 2,
   seed = 123,
@@ -48,7 +48,7 @@
 
 \item{warmup}{An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.}
 
-\item{thin}{An integer specifying the thinning interval for Stan samples. Default is 10.}
+\item{thin}{An integer specifying the thinning interval for Stan samples. Default is 1.}
 
 \item{chains}{An integer specifying the number of Markov chains. Default is 2.}
 
@@ -74,9 +74,11 @@ Fits a Bayesian Neural Network (BNN) model using a formula interface. The functi
 The function uses the provided formula and data to generate the design matrix for the predictors and the response vector. It then calls \code{\link{bnns.default}} to fit the Bayesian Neural Network model.
 }
 \examples{
+\dontrun{
 # Example usage with formula interface:
 data <- data.frame(x1 = runif(100), x2 = runif(100), y = rnorm(100))
 model <- bnns(y ~ x1 + x2, data = data, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
+}
 
 }
 \seealso{

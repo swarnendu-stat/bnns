@@ -9,13 +9,15 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 
+    ggplot2,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
     pROC,
-    rstan
+    rstan,
+    stats
 URL: https://github.com/swarnendu-stat/bnns
 BugReports: https://github.com/swarnendu-stat/bnns/issues
 VignetteBuilder: knitr
