@@ -7,8 +7,6 @@
 bnns(
   formula,
   data = list(),
-  train_x,
-  train_y,
   L = 1,
   nodes = 16,
   act_fn = 2,
@@ -26,10 +24,6 @@ bnns(
 \item{formula}{A symbolic description of the model to be fitted. The formula should specify the response variable and predictors (e.g., \code{y ~ x1 + x2}).}
 
 \item{data}{A data frame or list containing the variables in the model. Default is an empty list.}
-
-\item{train_x}{A numeric matrix or object containing the input features (predictors) for training. Rows correspond to observations, and columns correspond to features.}
-
-\item{train_y}{A numeric vector or object containing the target values for training. Its length must match the number of rows in \code{train_x}.}
 
 \item{L}{An integer specifying the number of hidden layers in the neural network. Default is 1.}
 

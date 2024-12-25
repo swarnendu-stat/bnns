@@ -20,9 +20,8 @@
 #' @examples
 #' \dontrun{
 #' # Fit a Bayesian Neural Network
-#' train_x <- matrix(runif(100), nrow = 10, ncol = 10)
-#' train_y <- rnorm(10)
-#' model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
+#' df <- data.frame(x1 = runif(100), x2 = runif(100), y = rnorm(100))
+#' model <- bnns(y ~ -1 + x1 + x2, data = df, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
 #'
 #' # Get a summary of the model
 #' summary(model)

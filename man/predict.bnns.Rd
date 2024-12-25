@@ -7,7 +7,7 @@
 \method{predict}{bnns}(object, newdata = NULL, ...)
 }
 \arguments{
-\item{object}{An object of class \code{"bnns"}, typically the result of a call to \code{\link{bnns.default}} or \code{\link{bnns.formula}}.}
+\item{object}{An object of class \code{"bnns"}, typically the result of a call to \code{\link{bnns.default}}.}
 
 \item{newdata}{A matrix or data frame of new input data for which predictions are required. If \code{NULL}, predictions are made on the training data used to fit the model.}
 

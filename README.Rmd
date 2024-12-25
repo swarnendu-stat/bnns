@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Codecov test coverage](https://codecov.io/gh/swarnendu-stat/bnns/graph/badge.svg)](https://app.codecov.io/gh/swarnendu-stat/bnns)
+[![R-CMD-check](https://github.com/swarnendu-stat/bnns/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/swarnendu-stat/bnns/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The `bnns` package provides tools to fit Bayesian Neural Networks (BNNs) for regression and classification problems. It is designed to be flexible, supporting various network architectures, activation functions, and output types, making it suitable for both simple and complex data analysis tasks.
@@ -52,9 +53,7 @@ Below is an example of how to simulate data for regression:
 
 ```{r}
 set.seed(123)
-n <- 100
-x <- matrix(runif(n * 2), ncol = 2)
-y <- x[, 1] + x[, 2]^2 + rnorm(n, sd = 0.1)
+df <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
 ```
 
 ### 2. Fit a BNN Model
@@ -64,7 +63,7 @@ To fit a Bayesian Neural Network:
 ```{r}
 library(bnns)
 
-model <- bnns(x, y, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
+model <- bnns(y ~ -1 + x1 + x2, data = df, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
               iter = 2e2, warmup = 1e2, chains = 1, seed = 123)
 ```
 
@@ -81,7 +80,7 @@ summary(model)
 Make predictions using the trained model:
 
 ```{r}
-pred <- predict(model, newdata = x)
+pred <- predict(model)
 ```
 
 ### 5. Visualization
@@ -89,7 +88,7 @@ pred <- predict(model, newdata = x)
 Visualize true vs predicted values for regression:
 
 ```{r}
-plot(y, rowMeans(pred), main = "True vs Predicted", xlab = "True Values", ylab = "Predicted Values")
+plot(df$y, rowMeans(pred), main = "True vs Predicted", xlab = "True Values", ylab = "Predicted Values")
 abline(0, 1, col = "red")
 ```
 
@@ -105,11 +104,10 @@ For binary or multiclass classification, set the `out_act_fn` to `2` (binary) or
 
 ```{r}
 # Simulate binary classification data
-train_x <- matrix(runif(200), ncol = 2)
-train_y <- ifelse(train_x[, 1] + train_x[, 2] > 1, 1, 0)
+df <- data.frame(x1 = runif(10), x2 = runif(10), y = sample(0:1, 10, replace = TRUE))
 
 # Fit a binary classification BNN
-model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_act_fn = 2, iter = 2e2, warmup = 1e2, chains = 1)
+model <- bnns(y ~ -1 + x1 + x2, data = df, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_act_fn = 2, iter = 2e2, warmup = 1e2, chains = 1)
 ```
 
 ### Clinical Trial Applications

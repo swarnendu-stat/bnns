@@ -2,7 +2,7 @@
 #'
 #' Generates predictions from a fitted Bayesian Neural Network (BNN) model.
 #'
-#' @param object An object of class \code{"bnns"}, typically the result of a call to \code{\link{bnns.default}} or \code{\link{bnns.formula}}.
+#' @param object An object of class \code{"bnns"}, typically the result of a call to \code{\link{bnns.default}}.
 #' @param newdata A matrix or data frame of new input data for which predictions are required. If \code{NULL}, predictions are made on the training data used to fit the model.
 #' @param ... Additional arguments (currently not used).
 #'
@@ -29,7 +29,7 @@ predict.bnns <- function(object, newdata=NULL, ...) {
   if(is.null(newdata)){
     test_x <- object$data$X
   }else{
-    if(!is.null(object$formula)){ ## model has been fitted using formula interface
+    if(!is.null(object$formula)){
       test_x <- stats::model.matrix(stats::delete.response(stats::terms.formula(object$formula, data = newdata)), newdata)
     } else{
       test_x <- as.matrix(newdata)

@@ -7,7 +7,7 @@
 \method{print}{bnns}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{"bnns"}, typically the result of a call to \code{\link{bnns.default}} or \code{\link{bnns.formula}}.}
+\item{x}{An object of class \code{"bnns"}, typically the result of a call to \code{\link{bnns.default}}.}
 
 \item{...}{Additional arguments (currently not used).}
 }
@@ -24,8 +24,8 @@ Displays a summary of a fitted Bayesian Neural Network (BNN) model, including th
 \examples{
 \dontrun{
 # Example usage:
-data <- data.frame(x1 = runif(100), x2 = runif(100), y = rnorm(100))
-model <- bnns(y ~ x1 + x2, data = data, L = 2, nodes = c(16, 8))
+df <- data.frame(x1 = runif(100), x2 = runif(100), y = rnorm(100))
+model <- bnns(y ~ x1 + x2, data = df, L = 2, nodes = c(16, 8))
 print(model)
 }
 

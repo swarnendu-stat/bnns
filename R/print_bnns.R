@@ -2,7 +2,7 @@
 #'
 #' Displays a summary of a fitted Bayesian Neural Network (BNN) model, including the function call and the Stan fit details.
 #'
-#' @param x An object of class \code{"bnns"}, typically the result of a call to \code{\link{bnns.default}} or \code{\link{bnns.formula}}.
+#' @param x An object of class \code{"bnns"}, typically the result of a call to \code{\link{bnns.default}}.
 #' @param ... Additional arguments (currently not used).
 #'
 #' @return The function is called for its side effects and does not return a value. It prints the following:
@@ -14,8 +14,8 @@
 #' @examples
 #' \dontrun{
 #' # Example usage:
-#' data <- data.frame(x1 = runif(100), x2 = runif(100), y = rnorm(100))
-#' model <- bnns(y ~ x1 + x2, data = data, L = 2, nodes = c(16, 8))
+#' df <- data.frame(x1 = runif(100), x2 = runif(100), y = rnorm(100))
+#' model <- bnns(y ~ x1 + x2, data = df, L = 2, nodes = c(16, 8))
 #' print(model)
 #' }
 #'

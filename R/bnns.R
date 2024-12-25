@@ -2,8 +2,6 @@
 #'
 #' This is a generic function for fitting Bayesian Neural Network (BNN) models. It dispatches to methods based on the class of the input data.
 #'
-#' @param train_x A numeric matrix or object containing the input features (predictors) for training. Rows correspond to observations, and columns correspond to features.
-#' @param train_y A numeric vector or object containing the target values for training. Its length must match the number of rows in `train_x`.
 #' @param formula A symbolic description of the model to be fitted. The formula should specify the response variable and predictors (e.g., \code{y ~ x1 + x2}).
 #' @param data A data frame or list containing the variables in the model. Default is an empty list.
 #' @param L An integer specifying the number of hidden layers in the neural network. Default is 1.
@@ -47,29 +45,16 @@
 #'
 #' @export
 
-bnns <- function(formula, data = list(), train_x, train_y, L = 1, nodes = 16,
+bnns <- function(formula, data = list(), L = 1, nodes = 16,
                  act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
                  thin = 1, chains = 2, cores = 2, seed = 123, ...){
-  # Validation: Check if both input types are provided
-  if ((!missing(formula) && !missing(data)) && (!missing(train_x) || !missing(train_y))) {
-    stop("Provide either (formula, data) or (train_x, train_y), but not both.")
-  }
-
-  if ((!missing(train_x) && !missing(train_y)) && (!missing(formula) || !missing(data))) {
-    stop("Provide either (train_x, train_y) or (formula, data), but not both.")
-  }
-
-  # Validation: Check if neither input type is provided
-  if ((missing(formula) || missing(data)) && (missing(train_x) || missing(train_y))) {
-    stop("Provide either (formula, data) or (train_x, train_y).")
-  }
-
   UseMethod("bnns")
 }
 
-#' Fit a Bayesian Neural Network Model
+#' Internal function for training the BNN
 #'
-#' This function fits a Bayesian Neural Network model using Stan. The number of layers, nodes per layer, activation functions, and other hyperparameters can be customized.
+#' This function performs the actual fitting of the Bayesian Neural Network.
+#' It is called by the exported bnns methods and is not intended for direct use.
 #'
 #' @param train_x A numeric matrix representing the input features (predictors) for training. Rows correspond to observations, and columns correspond to features.
 #' @param train_y A numeric vector representing the target values for training. Its length must match the number of rows in `train_x`.
@@ -110,17 +95,16 @@ bnns <- function(formula, data = list(), train_x, train_y, L = 1, nodes = 16,
 #' # Example usage:
 #' train_x <- matrix(runif(100), nrow = 10, ncol = 10)
 #' train_y <- rnorm(10)
-#' model <- bnns.default(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
+#' model <- bnns.train(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
 #'
 #' # Access Stan model fit
 #' model$fit
 #' }
 #'
 #' @seealso \code{\link[rstan]{stan}}
-#'
-#' @export
+#' @keywords internal
 
-bnns.default <- function(train_x, train_y, L = 1, nodes = 16,
+bnns.train <- function(train_x, train_y, L = 1, nodes = 16,
                          act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
                          thin = 1, chains = 2, cores = 2, seed = 123, ...){
   stopifnot("Argument train_x is missing" = !missing(train_x))
@@ -178,7 +162,7 @@ bnns.default <- function(train_x, train_y, L = 1, nodes = 16,
   return(est)
 }
 
-#' Bayesian Neural Network Model Using Formula Interface
+#' Bayesian Neural Network Model Using Formula(default) Interface
 #'
 #' Fits a Bayesian Neural Network (BNN) model using a formula interface. The function parses the formula and data to create the input feature matrix and target vector, then fits the model using \code{\link{bnns.default}}.
 #'
@@ -205,7 +189,7 @@ bnns.default <- function(train_x, train_y, L = 1, nodes = 16,
 #' @param chains An integer specifying the number of Markov chains. Default is 2.
 #' @param cores An integer specifying the number of CPU cores to use for parallel sampling. Default is 2.
 #' @param seed An integer specifying the random seed for reproducibility. Default is 123.
-#' @param ... Additional arguments passed to \code{\link{bnns.default}}.
+#' @param ... Additional arguments passed to \code{\link{bnns.train}}.
 #'
 #' @return An object of class \code{"bnns"} containing the fitted model and associated information, including:
 #'   \itemize{
@@ -228,15 +212,17 @@ bnns.default <- function(train_x, train_y, L = 1, nodes = 16,
 #'
 #' @export
 
-bnns.formula <- function(formula, data=list(), L = 1, nodes = 16,
+bnns.default <- function(formula, data=list(), L = 1, nodes = 16,
                          act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
                          thin = 1, chains = 2, cores = 2, seed = 123, ...) {
-  stopifnot("Argument data is missing" = !missing(data))
+  if (missing(formula) || missing(data)) {
+    stop("Both 'formula' and 'data' must be provided.")
+  }
 
   mf <- stats::model.frame(formula=formula, data=data)
   train_x <- stats::model.matrix(attr(mf, "terms"), data=mf)
   train_y <- stats::model.response(mf)
-  est <- bnns.default(train_x = train_x, train_y = train_y, L = L, nodes = nodes,
+  est <- bnns.train(train_x = train_x, train_y = train_y, L = L, nodes = nodes,
                       act_fn = act_fn, out_act_fn = out_act_fn, iter = iter,
                       warmup = warmup, thin = thin, chains = chains,
                       cores = cores, seed = seed, ...)

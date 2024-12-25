@@ -2,11 +2,11 @@
 % Please edit documentation in R/bnns.R
 \name{bnns.default}
 \alias{bnns.default}
-\title{Fit a Bayesian Neural Network Model}
+\title{Bayesian Neural Network Model Using Formula(default) Interface}
 \usage{
 \method{bnns}{default}(
-  train_x,
-  train_y,
+  formula,
+  data = list(),
   L = 1,
   nodes = 16,
   act_fn = 2,
@@ -21,9 +21,9 @@
 )
 }
 \arguments{
-\item{train_x}{A numeric matrix representing the input features (predictors) for training. Rows correspond to observations, and columns correspond to features.}
+\item{formula}{A symbolic description of the model to be fitted. The formula should specify the response variable and predictors (e.g., \code{y ~ x1 + x2}).}
 
-\item{train_y}{A numeric vector representing the target values for training. Its length must match the number of rows in \code{train_x}.}
+\item{data}{A data frame or list containing the variables in the model. Default is an empty list.}
 
 \item{L}{An integer specifying the number of hidden layers in the neural network. Default is 1.}
 
@@ -56,34 +56,31 @@
 
 \item{seed}{An integer specifying the random seed for reproducibility. Default is 123.}
 
-\item{...}{Additional arguments passed to the Stan sampler.}
+\item{...}{Additional arguments passed to \code{\link{bnns.train}}.}
 }
 \value{
-An object of class \code{"bnns"} containing the following components:
-\describe{
-\item{\code{fit}}{The fitted Stan model object.}
-\item{\code{call}}{The matched call.}
-\item{\code{data}}{A list containing the Stan data used in the model.}
+An object of class \code{"bnns"} containing the fitted model and associated information, including:
+\itemize{
+\item \code{fit}: The fitted Stan model object.
+\item \code{data}: A list containing the processed training data.
+\item \code{call}: The matched function call.
+\item \code{formula}: The formula used for the model.
 }
 }
 \description{
-This function fits a Bayesian Neural Network model using Stan. The number of layers, nodes per layer, activation functions, and other hyperparameters can be customized.
+Fits a Bayesian Neural Network (BNN) model using a formula interface. The function parses the formula and data to create the input feature matrix and target vector, then fits the model using \code{\link{bnns.default}}.
 }
 \details{
-The function uses the \code{generate_stan_code} function to dynamically generate Stan code based on the specified number of layers and nodes. Stan is then used to fit the Bayesian Neural Network.
+The function uses the provided formula and data to generate the design matrix for the predictors and the response vector. It then calls \code{\link{bnns.default}} to fit the Bayesian Neural Network model.
 }
 \examples{
 \dontrun{
-# Example usage:
-train_x <- matrix(runif(100), nrow = 10, ncol = 10)
-train_y <- rnorm(10)
-model <- bnns.default(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
-
-# Access Stan model fit
-model$fit
+# Example usage with formula interface:
+data <- data.frame(x1 = runif(100), x2 = runif(100), y = rnorm(100))
+model <- bnns(y ~ x1 + x2, data = data, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
 }
 
 }
 \seealso{
-\code{\link[rstan]{stan}}
+\code{\link{bnns.default}}, \code{\link{bnns}}
 }
