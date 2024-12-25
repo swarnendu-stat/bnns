@@ -194,4 +194,4 @@ print(metrics_cat)
 
 ## References
 
-For more details, refer to the [package documentation](https://your-package-doc-link) or consult the source code on [GitHub](https://github.com/swarnendu/bnns).
+For more details, consult the source code on [GitHub](https://github.com/swarnendu-stat/bnns).

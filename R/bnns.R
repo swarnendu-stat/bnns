@@ -95,7 +95,7 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 #' # Example usage:
 #' train_x <- matrix(runif(100), nrow = 10, ncol = 10)
 #' train_y <- rnorm(10)
-#' model <- bnns.train(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
+#' model <- bnns_train(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
 #'
 #' # Access Stan model fit
 #' model$fit
@@ -104,7 +104,7 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 #' @seealso \code{\link[rstan]{stan}}
 #' @keywords internal
 
-bnns.train <- function(train_x, train_y, L = 1, nodes = 16,
+bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
                          act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
                          thin = 1, chains = 2, cores = 2, seed = 123, ...){
   stopifnot("Argument train_x is missing" = !missing(train_x))
@@ -189,7 +189,7 @@ bnns.train <- function(train_x, train_y, L = 1, nodes = 16,
 #' @param chains An integer specifying the number of Markov chains. Default is 2.
 #' @param cores An integer specifying the number of CPU cores to use for parallel sampling. Default is 2.
 #' @param seed An integer specifying the random seed for reproducibility. Default is 123.
-#' @param ... Additional arguments passed to \code{\link{bnns.train}}.
+#' @param ... Additional arguments passed to \code{\link{bnns_train}}.
 #'
 #' @return An object of class \code{"bnns"} containing the fitted model and associated information, including:
 #'   \itemize{
@@ -222,7 +222,7 @@ bnns.default <- function(formula, data=list(), L = 1, nodes = 16,
   mf <- stats::model.frame(formula=formula, data=data)
   train_x <- stats::model.matrix(attr(mf, "terms"), data=mf)
   train_y <- stats::model.response(mf)
-  est <- bnns.train(train_x = train_x, train_y = train_y, L = L, nodes = nodes,
+  est <- bnns_train(train_x = train_x, train_y = train_y, L = L, nodes = nodes,
                       act_fn = act_fn, out_act_fn = out_act_fn, iter = iter,
                       warmup = warmup, thin = thin, chains = chains,
                       cores = cores, seed = seed, ...)

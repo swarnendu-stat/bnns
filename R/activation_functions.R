@@ -1,17 +1,3 @@
-#' tanh transformation
-#'
-#' @param x A numeric vector or matrix on which tanh transformation is going to be applied.........................
-#' @returns A numeric vector or matrix after tanh transformation.
-#' @examples
-#' \dontrun{
-#' tanh(matrix(1:4), nrow = 2)
-#' }
-#' @export
-
-tanh <- function(x){
-  (exp(x) - exp(-x))/(exp(x) + exp(-x))
-}
-
 #' sigmoid transformation
 #'
 #' @param x A numeric vector or matrix on which sigmoid transformation is going to be applied.........................

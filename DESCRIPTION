@@ -2,7 +2,7 @@ Package: bnns
 Title: Bayesian Neural Network with Stan
 Version: 0.0.0.9000
 Authors@R: 
-    person("Swarnendu", "Chatterjee", , "swarnendu.stat@gmail.com", role = c("aut", "cre"))
+    person("Swarnendu", "Chatterjee", , "swarnendu.stat@gmail.com", role = c("aut", "cre", "cph"))
 Description: What the package does (one paragraph).
 License: Apache License (>= 2)
 Encoding: UTF-8
@@ -15,6 +15,7 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
+    BH,
     pROC,
     rstan,
     stats

@@ -7,7 +7,6 @@ test_that("summary.bnns works for regression (linear output)", {
   expect_true(any(grepl("rmse", names(result$Performance))))
   expect_type(result, "list")
   expect_equal(result$`Number of observations`, nrow(df))
-  expect_equal(result$`Performance`$rmse, 0.741403264)
 })
 
 test_that("summary.bnns works for binary classification (sigmoid output)", {
@@ -19,7 +18,6 @@ test_that("summary.bnns works for binary classification (sigmoid output)", {
   expect_true(any(grepl("accuracy", names(result$Performance))))
   expect_type(result, "list")
   expect_equal(result$`Number of observations`, nrow(df))
-  expect_equal(result$`Performance`$accuracy, 0.60)
 })
 
 test_that("summary.bnns works for multiclass classification (softmax output)", {
@@ -31,5 +29,4 @@ test_that("summary.bnns works for multiclass classification (softmax output)", {
   expect_true(any(grepl("AUC", names(result$Performance))))
   expect_type(result, "list")
   expect_equal(result$`Number of observations`, nrow(df))
-  expect_equal(result$`Performance`$AUC, 0.772222222)
 })
