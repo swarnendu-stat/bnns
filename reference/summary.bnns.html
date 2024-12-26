@@ -21,6 +21,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/ct_app.html">Using Bayesian Neural Networks in Clinical Trials</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/swarnendu-stat/bnns/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -61,7 +62,19 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>None. The function prints the summary to the console.</p>
+    <p>A list (returned invisibly) containing the following elements:</p><ul><li><p><code>"Number of observations"</code>: The number of observations in the training data.</p></li>
+<li><p><code>"Number of features"</code>: The number of features in the training data.</p></li>
+<li><p><code>"Number of hidden layers"</code>: The number of hidden layers in the neural network.</p></li>
+<li><p><code>"Nodes per layer"</code>: A comma-separated string representing the number of nodes in each hidden layer.</p></li>
+<li><p><code>"Activation functions"</code>: A comma-separated string representing the activation functions used in each hidden layer.</p></li>
+<li><p><code>"Output activation function"</code>: The activation function used in the output layer.</p></li>
+<li><p><code>"Stanfit Summary"</code>: A summary of the Stan model, including key parameter posterior distributions.</p></li>
+<li><p><code>"Iterations"</code>: The total number of iterations used for sampling in the Bayesian model.</p></li>
+<li><p><code>"Warmup"</code>: The number of iterations used as warmup in the Bayesian model.</p></li>
+<li><p><code>"Thinning"</code>: The thinning interval used in the Bayesian model.</p></li>
+<li><p><code>"Chains"</code>: The number of Markov chains used in the Bayesian model.</p></li>
+<li><p><code>"Performance"</code>: Predictive performance metrics, which vary based on the output activation function.</p></li>
+</ul><p>The function also prints the summary to the console.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
