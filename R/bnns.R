@@ -95,7 +95,7 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 #' # Example usage:
 #' train_x <- matrix(runif(100), nrow = 10, ncol = 10)
 #' train_y <- rnorm(10)
-#' model <- bnns_train(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
+#' model <- bnns:::bnns_train(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
 #'
 #' # Access Stan model fit
 #' model$fit

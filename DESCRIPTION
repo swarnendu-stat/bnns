@@ -3,7 +3,7 @@ Title: Bayesian Neural Network with Stan
 Version: 0.0.0.9000
 Authors@R: 
     person("Swarnendu", "Chatterjee", , "swarnendu.stat@gmail.com", role = c("aut", "cre", "cph"))
-Description: What the package does (one paragraph).
+Description: Provides a flexible formula-based interface for building and training Bayesian Neural Networks (BNNs) using Stan. Enables users to model complex relationships while quantifying uncertainty through posterior distributions. Suitable for applications in domains such as clinical trials, finance, and other areas requiring interpretable Bayesian predictions.
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

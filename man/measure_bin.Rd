@@ -18,6 +18,8 @@ A list containing:
 \describe{
 \item{\code{conf_mat}}{A confusion matrix comparing observed and predicted class labels.}
 \item{\code{accuracy}}{The proportion of correct predictions.}
+\item{\code{ROC}}{ROC generated using \code{pROC::roc}}
+\item{\code{AUC}}{Area under the ROC curve.}
 }
 }
 \description{

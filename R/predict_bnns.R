@@ -6,7 +6,7 @@
 #' @param newdata A matrix or data frame of new input data for which predictions are required. If \code{NULL}, predictions are made on the training data used to fit the model.
 #' @param ... Additional arguments (currently not used).
 #'
-#' @return A vector of predicted values corresponding to the rows of \code{newdata} or the training data if \code{newdata} is \code{NULL}.
+#' @return A matrix/array of predicted values(regression)/probabilities(classification) where first dimension corresponds to the rows of \code{newdata} or the training data if \code{newdata} is \code{NULL}. Second dimension corresponds to the number of posterior samples. In case of `out_act_fn = 3`, the third dimension corresponds to the class.
 #'
 #' @details
 #' This function uses the posterior distribution from the Stan model in the \code{bnns} object to compute predictions for the provided input data.

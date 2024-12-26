@@ -14,7 +14,7 @@
 \item{...}{Additional arguments (currently not used).}
 }
 \value{
-A vector of predicted values corresponding to the rows of \code{newdata} or the training data if \code{newdata} is \code{NULL}.
+A matrix/array of predicted values(regression)/probabilities(classification) where first dimension corresponds to the rows of \code{newdata} or the training data if \code{newdata} is \code{NULL}. Second dimension corresponds to the number of posterior samples. In case of \code{out_act_fn = 3}, the third dimension corresponds to the class.
 }
 \description{
 Generates predictions from a fitted Bayesian Neural Network (BNN) model.

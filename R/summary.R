@@ -15,7 +15,22 @@
 #'   \item \strong{Notes:} Remarks and warnings, such as checks for convergence diagnostics.
 #' }
 #'
-#' @return None. The function prints the summary to the console.
+#' @return A list (returned invisibly) containing the following elements:
+#' \itemize{
+#'   \item \code{"Number of observations"}: The number of observations in the training data.
+#'   \item \code{"Number of features"}: The number of features in the training data.
+#'   \item \code{"Number of hidden layers"}: The number of hidden layers in the neural network.
+#'   \item \code{"Nodes per layer"}: A comma-separated string representing the number of nodes in each hidden layer.
+#'   \item \code{"Activation functions"}: A comma-separated string representing the activation functions used in each hidden layer.
+#'   \item \code{"Output activation function"}: The activation function used in the output layer.
+#'   \item \code{"Stanfit Summary"}: A summary of the Stan model, including key parameter posterior distributions.
+#'   \item \code{"Iterations"}: The total number of iterations used for sampling in the Bayesian model.
+#'   \item \code{"Warmup"}: The number of iterations used as warmup in the Bayesian model.
+#'   \item \code{"Thinning"}: The thinning interval used in the Bayesian model.
+#'   \item \code{"Chains"}: The number of Markov chains used in the Bayesian model.
+#'   \item \code{"Performance"}: Predictive performance metrics, which vary based on the output activation function.
+#' }
+#' The function also prints the summary to the console.
 #'
 #' @examples
 #' \dontrun{

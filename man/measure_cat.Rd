@@ -16,6 +16,7 @@ and each column corresponds to a class. The number of columns must match the num
 A list containing:
 \describe{
 \item{\code{log_loss}}{The negative log-likelihood averaged across observations.}
+\item{\code{ROC}}{ROC generated using \code{pROC::roc}}
 \item{\code{AUC}}{The multiclass Area Under the Curve (AUC) as computed by \code{pROC::multiclass.roc}.}
 }
 }
@@ -40,7 +41,7 @@ pred <- matrix(c(0.8, 0.1, 0.1,
                  0.7, 0.2, 0.1),
                nrow = 3, byrow = TRUE)
 measure_cat(obs, pred)
-# Returns: list(log_loss = 1.012185, AUC = 0.75)
+# Returns: list(log_loss = 1.012185, ROC = <ROC>, AUC = 0.75)
 }
 
 }

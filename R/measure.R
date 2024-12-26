@@ -42,6 +42,8 @@ measure_cont <- function(obs, pred) {
 #' \describe{
 #'   \item{`conf_mat`}{A confusion matrix comparing observed and predicted class labels.}
 #'   \item{`accuracy`}{The proportion of correct predictions.}
+#'   \item{`ROC`}{ROC generated using `pROC::roc`}
+#'   \item{`AUC`}{Area under the ROC curve.}
 #' }
 #'
 #' @examples
@@ -80,6 +82,7 @@ measure_bin <- function(obs, pred, cut = 0.5) {
 #' @return A list containing:
 #' \describe{
 #'   \item{`log_loss`}{The negative log-likelihood averaged across observations.}
+#'   \item{`ROC`}{ROC generated using `pROC::roc`}
 #'   \item{`AUC`}{The multiclass Area Under the Curve (AUC) as computed by `pROC::multiclass.roc`.}
 #' }
 #'
@@ -101,7 +104,7 @@ measure_bin <- function(obs, pred, cut = 0.5) {
 #'                  0.7, 0.2, 0.1),
 #'                nrow = 3, byrow = TRUE)
 #' measure_cat(obs, pred)
-#' # Returns: list(log_loss = 1.012185, AUC = 0.75)
+#' # Returns: list(log_loss = 1.012185, ROC = <ROC>, AUC = 0.75)
 #' }
 #'
 #' @export
