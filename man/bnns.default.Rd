@@ -56,7 +56,7 @@
 
 \item{seed}{An integer specifying the random seed for reproducibility. Default is 123.}
 
-\item{...}{Additional arguments passed to \code{\link{bnns_train}}.}
+\item{...}{Additional arguments passed to helper function bnns_train.}
 }
 \value{
 An object of class \code{"bnns"} containing the fitted model and associated information, including:
@@ -71,7 +71,7 @@ An object of class \code{"bnns"} containing the fitted model and associated info
 Fits a Bayesian Neural Network (BNN) model using a formula interface. The function parses the formula and data to create the input feature matrix and target vector, then fits the model using \code{\link{bnns.default}}.
 }
 \details{
-The function uses the provided formula and data to generate the design matrix for the predictors and the response vector. It then calls \code{\link{bnns.default}} to fit the Bayesian Neural Network model.
+The function uses the provided formula and data to generate the design matrix for the predictors and the response vector. It then calls helper function bnns_train to fit the Bayesian Neural Network model.
 }
 \examples{
 \dontrun{
@@ -80,7 +80,4 @@ data <- data.frame(x1 = runif(100), x2 = runif(100), y = rnorm(100))
 model <- bnns(y ~ x1 + x2, data = data, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
 }
 
-}
-\seealso{
-\code{\link{bnns.default}}, \code{\link{bnns}}
 }

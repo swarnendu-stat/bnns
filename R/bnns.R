@@ -189,7 +189,7 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 #' @param chains An integer specifying the number of Markov chains. Default is 2.
 #' @param cores An integer specifying the number of CPU cores to use for parallel sampling. Default is 2.
 #' @param seed An integer specifying the random seed for reproducibility. Default is 123.
-#' @param ... Additional arguments passed to \code{\link{bnns_train}}.
+#' @param ... Additional arguments passed to helper function bnns_train.
 #'
 #' @return An object of class \code{"bnns"} containing the fitted model and associated information, including:
 #'   \itemize{
@@ -199,7 +199,7 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 #'     \item \code{formula}: The formula used for the model.
 #'   }
 #'
-#' @details The function uses the provided formula and data to generate the design matrix for the predictors and the response vector. It then calls \code{\link{bnns.default}} to fit the Bayesian Neural Network model.
+#' @details The function uses the provided formula and data to generate the design matrix for the predictors and the response vector. It then calls helper function bnns_train to fit the Bayesian Neural Network model.
 #'
 #' @examples
 #' \dontrun{
@@ -207,8 +207,6 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 #' data <- data.frame(x1 = runif(100), x2 = runif(100), y = rnorm(100))
 #' model <- bnns(y ~ x1 + x2, data = data, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
 #' }
-#'
-#' @seealso \code{\link{bnns.default}}, \code{\link{bnns}}
 #'
 #' @export
 
