@@ -33,7 +33,6 @@ The AUC is computed using the \code{pROC::multiclass.roc} function, which provid
 of model performance for multiclass classification.
 }
 \examples{
-\dontrun{
 library(pROC)
 obs <- factor(c("A", "B", "C"), levels = LETTERS[1:3])
 pred <- matrix(c(0.8, 0.1, 0.1,
@@ -42,6 +41,5 @@ pred <- matrix(c(0.8, 0.1, 0.1,
                nrow = 3, byrow = TRUE)
 measure_cat(obs, pred)
 # Returns: list(log_loss = 1.012185, ROC = <ROC>, AUC = 0.75)
-}
 
 }

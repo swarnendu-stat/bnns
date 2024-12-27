@@ -29,7 +29,6 @@
 #' likelihood functions and transformations.
 #'
 #' @examples
-#' \dontrun{
 #' # Generate Stan code for a continuous response model
 #' stan_code <- generate_stan_code(num_layers = 2, nodes = c(10, 5), out_act_fn = 1)
 #' cat(stan_code)
@@ -41,7 +40,6 @@
 #' # Generate Stan code for a categorical response model
 #' stan_code <- generate_stan_code(num_layers = 2, nodes = c(10, 5), out_act_fn = 3)
 #' cat(stan_code)
-#' }
 #'
 #' @seealso
 #' - [generate_stan_code_cont]: For continuous response models.
@@ -96,7 +94,6 @@ generate_stan_code <- function(num_layers, nodes, out_act_fn = 1){
 #' - 4: ReLU
 #'
 #' @examples
-#' \dontrun{
 #' # Generate Stan code for a single hidden layer with 10 nodes
 #' stan_code <- generate_stan_code_cont(1, c(10))
 #' cat(stan_code)
@@ -104,7 +101,6 @@ generate_stan_code <- function(num_layers, nodes, out_act_fn = 1){
 #' # Generate Stan code for two hidden layers with 8 and 4 nodes
 #' stan_code <- generate_stan_code_cont(2, c(8, 4))
 #' cat(stan_code)
-#' }
 #'
 #' @export
 
@@ -258,15 +254,13 @@ data {
 #' predictions between 0 and 1, which aligns with the Bernoulli likelihood.
 #'
 #' @examples
-#' \dontrun{
 #' # Generate Stan code for a single hidden layer with 10 nodes
-#' stan_code <- generate_stan_code_binary(1, c(10))
+#' stan_code <- generate_stan_code_bin(1, c(10))
 #' cat(stan_code)
 #'
 #' # Generate Stan code for two hidden layers with 8 and 4 nodes
-#' stan_code <- generate_stan_code_binary(2, c(8, 4))
+#' stan_code <- generate_stan_code_bin(2, c(8, 4))
 #' cat(stan_code)
-#' }
 #'
 #' @export
 
@@ -415,13 +409,11 @@ data {
 #' where `K` is the total number of categories.
 #'
 #' @examples
-#' \dontrun{
 #' # Generate Stan code for a neural network with 3 layers
 #' num_layers <- 3
 #' nodes <- c(10, 8, 6)  # 10 nodes in the first layer, 8 in the second, 6 in the third
 #' stan_code <- generate_stan_code_cat(num_layers, nodes)
 #' cat(stan_code)
-#' }
 #'
 #' @seealso [generate_stan_code_bin()], [generate_stan_code_cont()]
 #'

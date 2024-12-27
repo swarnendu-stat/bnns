@@ -74,15 +74,14 @@ It is called by the exported bnns methods and is not intended for direct use.
 The function uses the \code{generate_stan_code} function to dynamically generate Stan code based on the specified number of layers and nodes. Stan is then used to fit the Bayesian Neural Network.
 }
 \examples{
-\dontrun{
 # Example usage:
-train_x <- matrix(runif(100), nrow = 10, ncol = 10)
+train_x <- matrix(runif(20), nrow = 10, ncol = 2)
 train_y <- rnorm(10)
-model <- bnns:::bnns_train(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
+model <- bnns:::bnns_train(train_x, train_y, L = 1, nodes = 2, act_fn = 2,
+iter = 1e2, warmup = 5e1, chains = 1)
 
 # Access Stan model fit
 model$fit
-}
 
 }
 \seealso{

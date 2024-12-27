@@ -21,7 +21,7 @@ bnns(
 )
 }
 \arguments{
-\item{formula}{A symbolic description of the model to be fitted. The formula should specify the response variable and predictors (e.g., \code{y ~ x1 + x2}).}
+\item{formula}{A symbolic description of the model to be fitted. The formula should specify the response variable and predictors (e.g., \code{y ~ x1 + x2}). \code{y} must be continuous for regression (\code{out_act_fn = 1}), numeric 0/1 for binary classification (\code{out_act_fn = 2}), and factor with at least 3 levels for multi-classification (\code{out_act_fn = 3}).}
 
 \item{data}{A data frame or list containing the variables in the model. Default is an empty list.}
 
@@ -68,12 +68,10 @@ This is a generic function for fitting Bayesian Neural Network (BNN) models. It 
 The function serves as a generic interface to different methods of fitting Bayesian Neural Networks. The specific method dispatched depends on the class of the input arguments, allowing for flexibility in the types of inputs supported.
 }
 \examples{
-\dontrun{
-# Example usage with the default method:
-train_x <- matrix(runif(100), nrow = 10, ncol = 10)
-train_y <- rnorm(10)
-model <- bnns(train_x, train_y, L = 2, nodes = c(16, 8), act_fn = c(2, 3))
-}
+# Example usage with formula interface:
+data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
+model <- bnns(y ~ -1 + x1 + x2, data = data, L = 1, nodes = 2, act_fn = 1,
+iter = 1e2, warmup = 5e1, chains = 1)
 
 # See the documentation for bnns.default for more details on the default implementation.
 

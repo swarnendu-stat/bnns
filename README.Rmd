@@ -64,7 +64,7 @@ To fit a Bayesian Neural Network:
 library(bnns)
 
 model <- bnns(y ~ -1 + x1 + x2, data = df, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
-              iter = 2e2, warmup = 1e2, chains = 1, seed = 123)
+              iter = 1e2, warmup = 5e1, chains = 1, seed = 123)
 ```
 
 ### 3. Model Summary
@@ -107,7 +107,7 @@ For binary or multiclass classification, set the `out_act_fn` to `2` (binary) or
 df <- data.frame(x1 = runif(10), x2 = runif(10), y = sample(0:1, 10, replace = TRUE))
 
 # Fit a binary classification BNN
-model <- bnns(y ~ -1 + x1 + x2, data = df, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_act_fn = 2, iter = 2e2, warmup = 1e2, chains = 1)
+model <- bnns(y ~ -1 + x1 + x2, data = df, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_act_fn = 2, iter = 1e2, warmup = 5e1, chains = 1)
 ```
 
 ### Clinical Trial Applications

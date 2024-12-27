@@ -12,12 +12,10 @@
 #' }
 #'
 #' @examples
-#' \dontrun{
 #' obs <- c(3.2, 4.1, 5.6)
 #' pred <- c(3.0, 4.3, 5.5)
 #' measure_cont(obs, pred)
 #' # Returns: list(rmse = 0.1732051, mae = 0.1666667)
-#' }
 #'
 #' @export
 measure_cont <- function(obs, pred) {
@@ -47,13 +45,11 @@ measure_cont <- function(obs, pred) {
 #' }
 #'
 #' @examples
-#' \dontrun{
 #' obs <- c(1, 0, 1, 1, 0)
 #' pred <- c(0.9, 0.4, 0.8, 0.7, 0.3)
 #' cut <- 0.5
 #' measure_bin(obs, pred, cut)
 #' # Returns: list(conf_mat = <confusion matrix>, accuracy = 1, ROC = <ROC>, AUC = 1)
-#' }
 #'
 #' @export
 measure_bin <- function(obs, pred, cut = 0.5) {
@@ -96,7 +92,6 @@ measure_bin <- function(obs, pred, cut = 0.5) {
 #' of model performance for multiclass classification.
 #'
 #' @examples
-#' \dontrun{
 #' library(pROC)
 #' obs <- factor(c("A", "B", "C"), levels = LETTERS[1:3])
 #' pred <- matrix(c(0.8, 0.1, 0.1,
@@ -105,7 +100,6 @@ measure_bin <- function(obs, pred, cut = 0.5) {
 #'                nrow = 3, byrow = TRUE)
 #' measure_cat(obs, pred)
 #' # Returns: list(log_loss = 1.012185, ROC = <ROC>, AUC = 0.75)
-#' }
 #'
 #' @export
 measure_cat <- function(obs, pred) {

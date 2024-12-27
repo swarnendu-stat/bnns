@@ -44,13 +44,11 @@ The categorical response (\code{y}) is assumed to take integer values from 1 to 
 where \code{K} is the total number of categories.
 }
 \examples{
-\dontrun{
 # Generate Stan code for a neural network with 3 layers
 num_layers <- 3
 nodes <- c(10, 8, 6)  # 10 nodes in the first layer, 8 in the second, 6 in the third
 stan_code <- generate_stan_code_cat(num_layers, nodes)
 cat(stan_code)
-}
 
 }
 \seealso{

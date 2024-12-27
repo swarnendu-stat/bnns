@@ -3,9 +3,7 @@
 #' @param x A numeric vector or matrix on which sigmoid transformation is going to be applied.........................
 #' @returns A numeric vector or matrix after sigmoid transformation.
 #' @examples
-#' \dontrun{
-#' sigmoid(matrix(1:4), nrow = 2)
-#' }
+#' sigmoid(matrix(1:4, nrow = 2))
 #' @export
 
 sigmoid <- function(x){
@@ -17,9 +15,7 @@ sigmoid <- function(x){
 #' @param x A numeric vector or matrix on which softplus transformation is going to be applied.........................
 #' @returns A numeric vector or matrix after softplus transformation.
 #' @examples
-#' \dontrun{
-#' softplus(matrix(1:4), nrow = 2)
-#' }
+#' softplus(matrix(1:4, nrow = 2))
 #' @export
 
 softplus <- function(x){
@@ -31,9 +27,7 @@ softplus <- function(x){
 #' @param x A numeric vector or matrix on which relu transformation is going to be applied.........................
 #' @returns A numeric vector or matrix after relu transformation.
 #' @examples
-#' \dontrun{
-#' relu(matrix(1:4), nrow = 2)
-#' }
+#' relu(matrix(1:4,, nrow = 2))
 #' @export
 
 relu <- function(x){
@@ -64,11 +58,9 @@ relu <- function(x){
 #' `(i, j)`, normalizing the values along the third dimension `(k)` for each slice.
 #'
 #' @examples
-#' \dontrun{
 #' # Example: Apply softmax to a 3D array
 #' x <- array(runif(24), dim = c(2, 3, 4))  # Random 3D array (2x3x4)
 #' softmax_result <- softmax_3d(x)
-#'}
 #'
 #' @export
 softmax_3d <- function(x){
