@@ -103,19 +103,164 @@ likelihood functions and transformations.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="co"># Generate Stan code for a continuous response model</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Generate Stan code for a continuous response model</span></span></span>
 <span class="r-in"><span><span class="va">stan_code</span> <span class="op">&lt;-</span> <span class="fu">generate_stan_code</span><span class="op">(</span>num_layers <span class="op">=</span> <span class="fl">2</span>, nodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">5</span><span class="op">)</span>, out_act_fn <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">stan_code</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> data {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; n;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; m;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; L;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; nodes[L];</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, m] X;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[n] y;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; act_fn[L];</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parameters {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[m, nodes[1]] w1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[nodes[1]] b1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[nodes[1], nodes[2]] w2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[nodes[2]] b2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[nodes[L]] w_out;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   real b_out;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   real&lt;lower=0&gt; sigma;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> transformed parameters {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[1]] z1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[1]] a1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[2]] z2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[2]] a2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[n] y_hat;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   z1 = X * w1 + rep_matrix(b1', n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   if (act_fn[1] == 1) a1 = tanh(z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[1] == 2) a1 = inv_logit(z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[1] == 3) a1 = log(1 + exp(z1));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else a1 = fmax(rep_matrix(0, n, nodes[1]), z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   z2 = a1 * w2 + rep_matrix(b2', n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   if (act_fn[2] == 1) a2 = tanh(z2);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[2] == 2) a2 = inv_logit(z2);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[2] == 3) a2 = log(1 + exp(z2));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else a2 = fmax(rep_matrix(0, n, nodes[2]), z2);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   y_hat = a2 * w_out + b_out;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> model {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w1) ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b1 ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w2) ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b2 ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   w_out ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b_out ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   sigma ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   y ~ normal(y_hat, sigma);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Generate Stan code for a binary response model</span></span></span>
 <span class="r-in"><span><span class="va">stan_code</span> <span class="op">&lt;-</span> <span class="fu">generate_stan_code</span><span class="op">(</span>num_layers <span class="op">=</span> <span class="fl">2</span>, nodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">5</span><span class="op">)</span>, out_act_fn <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">stan_code</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> data {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; n;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; m;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; L;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; nodes[L];</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, m] X;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   array[n] int&lt;lower=0, upper=1&gt; y;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; act_fn[L];</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parameters {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[m, nodes[1]] w1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[nodes[1]] b1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[nodes[1], nodes[2]] w2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[nodes[2]] b2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[nodes[L]] w_out;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   real b_out;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> transformed parameters {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[1]] z1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[1]] a1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[2]] z2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[2]] a2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[n] y_hat;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   z1 = X * w1 + rep_matrix(b1', n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   if (act_fn[1] == 1) a1 = tanh(z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[1] == 2) a1 = inv_logit(z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[1] == 3) a1 = log(1 + exp(z1));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else a1 = fmax(rep_matrix(0, n, nodes[1]), z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   z2 = a1 * w2 + rep_matrix(b2', n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   if (act_fn[2] == 1) a2 = tanh(z2);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[2] == 2) a2 = inv_logit(z2);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[2] == 3) a2 = log(1 + exp(z2));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else a2 = fmax(rep_matrix(0, n, nodes[2]), z2);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   y_hat = a2 * w_out + b_out;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> model {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w1) ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b1 ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w2) ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b2 ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   w_out ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b_out ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   y ~ bernoulli_logit(y_hat);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Generate Stan code for a categorical response model</span></span></span>
 <span class="r-in"><span><span class="va">stan_code</span> <span class="op">&lt;-</span> <span class="fu">generate_stan_code</span><span class="op">(</span>num_layers <span class="op">=</span> <span class="fl">2</span>, nodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">5</span><span class="op">)</span>, out_act_fn <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">stan_code</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> data {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; n;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; m;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; L;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; nodes[L];</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, m] X;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   array[n] int&lt;lower=1&gt; y;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; act_fn[L];</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=2&gt; K; // Number of categories</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parameters {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[m, nodes[1]] w1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[nodes[1]] b1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[nodes[1], nodes[2]] w2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[nodes[2]] b2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[nodes[L], K] w_out;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[K] b_out;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> transformed parameters {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[1]] z1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[1]] a1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[2]] z2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[2]] a2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, K] y_hat;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   z1 = X * w1 + rep_matrix(b1', n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   if (act_fn[1] == 1) a1 = tanh(z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[1] == 2) a1 = inv_logit(z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[1] == 3) a1 = log(1 + exp(z1));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else a1 = fmax(rep_matrix(0, n, nodes[1]), z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   z2 = a1 * w2 + rep_matrix(b2', n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   if (act_fn[2] == 1) a2 = tanh(z2);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[2] == 2) a2 = inv_logit(z2);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[2] == 3) a2 = log(1 + exp(z2));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else a2 = fmax(rep_matrix(0, n, nodes[2]), z2);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   y_hat = a2 * w_out + rep_matrix(b_out', n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> model {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w1) ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b1 ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w2) ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b2 ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w_out) ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b_out ~ normal(0, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   for (i in 1:n) y[i] ~ categorical_logit(y_hat[i]');</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

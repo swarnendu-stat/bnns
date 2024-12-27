@@ -66,7 +66,7 @@
 
 
 <dl><dt id="arg-formula">formula<a class="anchor" aria-label="anchor" href="#arg-formula"></a></dt>
-<dd><p>A symbolic description of the model to be fitted. The formula should specify the response variable and predictors (e.g., <code>y ~ x1 + x2</code>).</p></dd>
+<dd><p>A symbolic description of the model to be fitted. The formula should specify the response variable and predictors (e.g., <code>y ~ x1 + x2</code>). <code>y</code> must be continuous for regression (<code>out_act_fn = 1</code>), numeric 0/1 for binary classification (<code>out_act_fn = 2</code>), and factor with at least 3 levels for multi-classification (<code>out_act_fn = 3</code>).</p></dd>
 
 
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
@@ -139,12 +139,906 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="co"># Example usage with the default method:</span></span></span>
-<span class="r-in"><span><span class="va">train_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">10</span>, ncol <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">train_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">bnns</span><span class="op">(</span><span class="va">train_x</span>, <span class="va">train_y</span>, L <span class="op">=</span> <span class="fl">2</span>, nodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16</span>, <span class="fl">8</span><span class="op">)</span>, act_fn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Example usage with formula interface:</span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">bnns</span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span>, data <span class="op">=</span> <span class="va">data</span>, L <span class="op">=</span> <span class="fl">1</span>, nodes <span class="op">=</span> <span class="fl">2</span>, act_fn <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>iter <span class="op">=</span> <span class="fl">1e2</span>, warmup <span class="op">=</span> <span class="fl">5e1</span>, chains <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> TRANSLATING MODEL '' FROM Stan CODE TO C++ CODE NOW.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OS: x86_64, linux-gnu; rstan: 2.32.6; Rcpp: 1.0.13.1; inline: 0.3.20 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  &gt;&gt; setting environment variables: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PKG_LIBS =  '/home/runner/work/_temp/Library/rstan/lib//libStanServices.a' -L'/home/runner/work/_temp/Library/StanHeaders/lib/' -lStanHeaders -L'/home/runner/work/_temp/Library/RcppParallel/lib/' -ltbb </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PKG_CPPFLAGS =   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  &gt;&gt; Program source :</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1 : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2 : // includes from the plugin</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3 : // [[Rcpp::plugins(cpp14)]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4 : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5 : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    6 : // user includes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    7 : #include &lt;Rcpp.h&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    8 : using namespace Rcpp;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    9 : #ifndef MODELS_HPP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   10 : #define MODELS_HPP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   11 : #define STAN__SERVICES__COMMAND_HPP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   12 : #include &lt;rstan/rstaninc.hpp&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   13 : #ifndef USE_STANC3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   14 : #define USE_STANC3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   15 : #endif</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   16 : // Code generated by stanc v2.32.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   17 : #include &lt;stan/model/model_header.hpp&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   18 : namespace model1bee9b1e9c9__namespace {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   19 : using stan::model::model_base_crtp;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   20 : using namespace stan::math;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   21 : stan::math::profile_map profiles__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   22 : static constexpr std::array&lt;const char*, 43&gt; locations_array__ =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   23 :   {" (found before start of program)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   24 :   " (in 'anon_model', line 11, column 2 to column 22)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   25 :   " (in 'anon_model', line 12, column 2 to column 19)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   26 :   " (in 'anon_model', line 13, column 2 to column 22)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   27 :   " (in 'anon_model', line 14, column 2 to column 13)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   28 :   " (in 'anon_model', line 15, column 2 to column 22)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   29 :   " (in 'anon_model', line 18, column 2 to column 22)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   30 :   " (in 'anon_model', line 19, column 2 to column 22)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   31 :   " (in 'anon_model', line 20, column 2 to column 18)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   32 :   " (in 'anon_model', line 21, column 2 to column 35)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   33 :   " (in 'anon_model', line 25, column 7 to column 46)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   34 :   " (in 'anon_model', line 24, column 24 to column 46)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   35 :   " (in 'anon_model', line 24, column 7 to line 25, column 46)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   36 :   " (in 'anon_model', line 23, column 24 to column 43)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   37 :   " (in 'anon_model', line 23, column 7 to line 25, column 46)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   38 :   " (in 'anon_model', line 22, column 19 to column 33)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   39 :   " (in 'anon_model', line 22, column 2 to line 25, column 46)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   40 :   " (in 'anon_model', line 26, column 2 to column 29)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   41 :   " (in 'anon_model', line 29, column 2 to column 31)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   42 :   " (in 'anon_model', line 30, column 2 to column 20)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   43 :   " (in 'anon_model', line 31, column 2 to column 23)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   44 :   " (in 'anon_model', line 32, column 2 to column 23)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   45 :   " (in 'anon_model', line 33, column 2 to column 23)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   46 :   " (in 'anon_model', line 34, column 2 to column 27)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   47 :   " (in 'anon_model', line 2, column 2 to column 17)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   48 :   " (in 'anon_model', line 3, column 2 to column 17)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   49 :   " (in 'anon_model', line 4, column 2 to column 17)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   50 :   " (in 'anon_model', line 5, column 2 to column 21)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   51 :   " (in 'anon_model', line 6, column 9 to column 10)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   52 :   " (in 'anon_model', line 6, column 12 to column 13)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   53 :   " (in 'anon_model', line 6, column 2 to column 17)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   54 :   " (in 'anon_model', line 7, column 9 to column 10)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   55 :   " (in 'anon_model', line 7, column 2 to column 14)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   56 :   " (in 'anon_model', line 8, column 2 to column 31)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   57 :   " (in 'anon_model', line 11, column 9 to column 10)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   58 :   " (in 'anon_model', line 11, column 12 to column 17)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   59 :   " (in 'anon_model', line 12, column 9 to column 14)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   60 :   " (in 'anon_model', line 13, column 9 to column 14)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   61 :   " (in 'anon_model', line 18, column 9 to column 10)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   62 :   " (in 'anon_model', line 18, column 12 to column 17)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   63 :   " (in 'anon_model', line 19, column 9 to column 10)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   64 :   " (in 'anon_model', line 19, column 12 to column 17)",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   65 :   " (in 'anon_model', line 20, column 9 to column 10)"};</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   66 : class model1bee9b1e9c9_ final : public model_base_crtp&lt;model1bee9b1e9c9_&gt; {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   67 : private:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   68 :   int n;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   69 :   int m;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   70 :   int L;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   71 :   int nodes;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   72 :   Eigen::Matrix&lt;double,-1,-1&gt; X_data__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   73 :   Eigen::Matrix&lt;double,-1,1&gt; y_data__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   74 :   int act_fn;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   75 :   Eigen::Map&lt;Eigen::Matrix&lt;double,-1,-1&gt;&gt; X{nullptr, 0, 0};</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   76 :   Eigen::Map&lt;Eigen::Matrix&lt;double,-1,1&gt;&gt; y{nullptr, 0};</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   77 : public:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   78 :   ~model1bee9b1e9c9_() {}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   79 :   model1bee9b1e9c9_(stan::io::var_context&amp; context__, unsigned int</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   80 :                     random_seed__ = 0, std::ostream* pstream__ = nullptr)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   81 :       : model_base_crtp(0) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   82 :     int current_statement__ = 0;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   83 :     using local_scalar_t__ = double;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   84 :     boost::ecuyer1988 base_rng__ =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   85 :       stan::services::util::create_rng(random_seed__, 0);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   86 :     // suppress unused var warning</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   87 :     (void) base_rng__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   88 :     static constexpr const char* function__ =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   89 :       "model1bee9b1e9c9__namespace::model1bee9b1e9c9_";</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   90 :     // suppress unused var warning</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   91 :     (void) function__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   92 :     local_scalar_t__ DUMMY_VAR__(std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   93 :     // suppress unused var warning</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   94 :     (void) DUMMY_VAR__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   95 :     try {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   96 :       int pos__ = std::numeric_limits&lt;int&gt;::min();</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   97 :       pos__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   98 :       current_statement__ = 24;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   99 :       context__.validate_dims("data initialization", "n", "int",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  100 :         std::vector&lt;size_t&gt;{});</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  101 :       n = std::numeric_limits&lt;int&gt;::min();</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  102 :       current_statement__ = 24;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  103 :       n = context__.vals_i("n")[(1 - 1)];</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  104 :       current_statement__ = 24;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  105 :       stan::math::check_greater_or_equal(function__, "n", n, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  106 :       current_statement__ = 25;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  107 :       context__.validate_dims("data initialization", "m", "int",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  108 :         std::vector&lt;size_t&gt;{});</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  109 :       m = std::numeric_limits&lt;int&gt;::min();</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  110 :       current_statement__ = 25;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  111 :       m = context__.vals_i("m")[(1 - 1)];</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  112 :       current_statement__ = 25;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  113 :       stan::math::check_greater_or_equal(function__, "m", m, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  114 :       current_statement__ = 26;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  115 :       context__.validate_dims("data initialization", "L", "int",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  116 :         std::vector&lt;size_t&gt;{});</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  117 :       L = std::numeric_limits&lt;int&gt;::min();</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  118 :       current_statement__ = 26;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  119 :       L = context__.vals_i("L")[(1 - 1)];</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  120 :       current_statement__ = 26;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  121 :       stan::math::check_greater_or_equal(function__, "L", L, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  122 :       current_statement__ = 27;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  123 :       context__.validate_dims("data initialization", "nodes", "int",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  124 :         std::vector&lt;size_t&gt;{});</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  125 :       nodes = std::numeric_limits&lt;int&gt;::min();</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  126 :       current_statement__ = 27;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  127 :       nodes = context__.vals_i("nodes")[(1 - 1)];</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  128 :       current_statement__ = 27;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  129 :       stan::math::check_greater_or_equal(function__, "nodes", nodes, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  130 :       current_statement__ = 28;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  131 :       stan::math::validate_non_negative_index("X", "n", n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  132 :       current_statement__ = 29;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  133 :       stan::math::validate_non_negative_index("X", "m", m);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  134 :       current_statement__ = 30;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  135 :       context__.validate_dims("data initialization", "X", "double",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  136 :         std::vector&lt;size_t&gt;{static_cast&lt;size_t&gt;(n), static_cast&lt;size_t&gt;(m)});</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  137 :       X_data__ = Eigen::Matrix&lt;double,-1,-1&gt;::Constant(n, m,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  138 :                    std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  139 :       new (&amp;X) Eigen::Map&lt;Eigen::Matrix&lt;double,-1,-1&gt;&gt;(X_data__.data(), n, m);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  140 :       {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  141 :         std::vector&lt;local_scalar_t__&gt; X_flat__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  142 :         current_statement__ = 30;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  143 :         X_flat__ = context__.vals_r("X");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  144 :         current_statement__ = 30;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  145 :         pos__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  146 :         current_statement__ = 30;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  147 :         for (int sym1__ = 1; sym1__ &lt;= m; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  148 :           current_statement__ = 30;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  149 :           for (int sym2__ = 1; sym2__ &lt;= n; ++sym2__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  150 :             current_statement__ = 30;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  151 :             stan::model::assign(X, X_flat__[(pos__ - 1)],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  152 :               "assigning variable X", stan::model::index_uni(sym2__),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  153 :               stan::model::index_uni(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  154 :             current_statement__ = 30;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  155 :             pos__ = (pos__ + 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  156 :           }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  157 :         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  158 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  159 :       current_statement__ = 31;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  160 :       stan::math::validate_non_negative_index("y", "n", n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  161 :       current_statement__ = 32;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  162 :       context__.validate_dims("data initialization", "y", "double",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  163 :         std::vector&lt;size_t&gt;{static_cast&lt;size_t&gt;(n)});</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  164 :       y_data__ = Eigen::Matrix&lt;double,-1,1&gt;::Constant(n,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  165 :                    std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  166 :       new (&amp;y) Eigen::Map&lt;Eigen::Matrix&lt;double,-1,1&gt;&gt;(y_data__.data(), n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  167 :       {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  168 :         std::vector&lt;local_scalar_t__&gt; y_flat__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  169 :         current_statement__ = 32;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  170 :         y_flat__ = context__.vals_r("y");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  171 :         current_statement__ = 32;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  172 :         pos__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  173 :         current_statement__ = 32;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  174 :         for (int sym1__ = 1; sym1__ &lt;= n; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  175 :           current_statement__ = 32;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  176 :           stan::model::assign(y, y_flat__[(pos__ - 1)],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  177 :             "assigning variable y", stan::model::index_uni(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  178 :           current_statement__ = 32;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  179 :           pos__ = (pos__ + 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  180 :         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  181 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  182 :       current_statement__ = 33;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  183 :       context__.validate_dims("data initialization", "act_fn", "int",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  184 :         std::vector&lt;size_t&gt;{});</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  185 :       act_fn = std::numeric_limits&lt;int&gt;::min();</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  186 :       current_statement__ = 33;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  187 :       act_fn = context__.vals_i("act_fn")[(1 - 1)];</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  188 :       current_statement__ = 33;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  189 :       stan::math::check_greater_or_equal(function__, "act_fn", act_fn, 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  190 :       current_statement__ = 33;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  191 :       stan::math::check_less_or_equal(function__, "act_fn", act_fn, 3);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  192 :       current_statement__ = 34;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  193 :       stan::math::validate_non_negative_index("w1", "m", m);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  194 :       current_statement__ = 35;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  195 :       stan::math::validate_non_negative_index("w1", "nodes", nodes);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  196 :       current_statement__ = 36;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  197 :       stan::math::validate_non_negative_index("b1", "nodes", nodes);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  198 :       current_statement__ = 37;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  199 :       stan::math::validate_non_negative_index("w_out", "nodes", nodes);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  200 :       current_statement__ = 38;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  201 :       stan::math::validate_non_negative_index("z1", "n", n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  202 :       current_statement__ = 39;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  203 :       stan::math::validate_non_negative_index("z1", "nodes", nodes);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  204 :       current_statement__ = 40;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  205 :       stan::math::validate_non_negative_index("a1", "n", n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  206 :       current_statement__ = 41;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  207 :       stan::math::validate_non_negative_index("a1", "nodes", nodes);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  208 :       current_statement__ = 42;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  209 :       stan::math::validate_non_negative_index("y_hat", "n", n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  210 :     } catch (const std::exception&amp; e) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  211 :       stan::lang::rethrow_located(e, locations_array__[current_statement__]);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  212 :     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  213 :     num_params_r__ = (m * nodes) + nodes + nodes + 1 + 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  214 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  215 :   inline std::string model_name() const final {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  216 :     return "model1bee9b1e9c9_";</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  217 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  218 :   inline std::vector&lt;std::string&gt; model_compile_info() const noexcept {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  219 :     return std::vector&lt;std::string&gt;{"stanc_version = stanc3 v2.32.2",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  220 :              "stancflags = --"};</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  221 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  222 :   template &lt;bool propto__, bool jacobian__, typename VecR, typename VecI,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  223 :             stan::require_vector_like_t&lt;VecR&gt;* = nullptr,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  224 :             stan::require_vector_like_vt&lt;std::is_integral, VecI&gt;* = nullptr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  225 :   inline stan::scalar_type_t&lt;VecR&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  226 :   log_prob_impl(VecR&amp; params_r__, VecI&amp; params_i__, std::ostream*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  227 :                 pstream__ = nullptr) const {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  228 :     using T__ = stan::scalar_type_t&lt;VecR&gt;;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  229 :     using local_scalar_t__ = T__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  230 :     T__ lp__(0.0);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  231 :     stan::math::accumulator&lt;T__&gt; lp_accum__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  232 :     stan::io::deserializer&lt;local_scalar_t__&gt; in__(params_r__, params_i__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  233 :     int current_statement__ = 0;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  234 :     local_scalar_t__ DUMMY_VAR__(std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  235 :     // suppress unused var warning</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  236 :     (void) DUMMY_VAR__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  237 :     static constexpr const char* function__ =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  238 :       "model1bee9b1e9c9__namespace::log_prob";</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  239 :     // suppress unused var warning</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  240 :     (void) function__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  241 :     try {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  242 :       Eigen::Matrix&lt;local_scalar_t__,-1,-1&gt; w1 =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  243 :         Eigen::Matrix&lt;local_scalar_t__,-1,-1&gt;::Constant(m, nodes,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  244 :           DUMMY_VAR__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  245 :       current_statement__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  246 :       w1 = in__.template read&lt;Eigen::Matrix&lt;local_scalar_t__,-1,-1&gt;&gt;(m,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  247 :              nodes);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  248 :       Eigen::Matrix&lt;local_scalar_t__,-1,1&gt; b1 =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  249 :         Eigen::Matrix&lt;local_scalar_t__,-1,1&gt;::Constant(nodes, DUMMY_VAR__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  250 :       current_statement__ = 2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  251 :       b1 = in__.template read&lt;Eigen::Matrix&lt;local_scalar_t__,-1,1&gt;&gt;(nodes);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  252 :       Eigen::Matrix&lt;local_scalar_t__,-1,1&gt; w_out =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  253 :         Eigen::Matrix&lt;local_scalar_t__,-1,1&gt;::Constant(nodes, DUMMY_VAR__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  254 :       current_statement__ = 3;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  255 :       w_out = in__.template read&lt;Eigen::Matrix&lt;local_scalar_t__,-1,1&gt;&gt;(nodes);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  256 :       local_scalar_t__ b_out = DUMMY_VAR__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  257 :       current_statement__ = 4;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  258 :       b_out = in__.template read&lt;local_scalar_t__&gt;();</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  259 :       local_scalar_t__ sigma = DUMMY_VAR__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  260 :       current_statement__ = 5;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  261 :       sigma = in__.template read_constrain_lb&lt;local_scalar_t__,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  262 :                 jacobian__&gt;(0, lp__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  263 :       Eigen::Matrix&lt;local_scalar_t__,-1,-1&gt; z1 =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  264 :         Eigen::Matrix&lt;local_scalar_t__,-1,-1&gt;::Constant(n, nodes,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  265 :           DUMMY_VAR__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  266 :       Eigen::Matrix&lt;local_scalar_t__,-1,-1&gt; a1 =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  267 :         Eigen::Matrix&lt;local_scalar_t__,-1,-1&gt;::Constant(n, nodes,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  268 :           DUMMY_VAR__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  269 :       Eigen::Matrix&lt;local_scalar_t__,-1,1&gt; y_hat =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  270 :         Eigen::Matrix&lt;local_scalar_t__,-1,1&gt;::Constant(n, DUMMY_VAR__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  271 :       current_statement__ = 9;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  272 :       stan::model::assign(z1,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  273 :         stan::math::add(stan::math::multiply(X, w1),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  274 :           stan::math::rep_matrix(stan::math::transpose(b1), n)),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  275 :         "assigning variable z1");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  276 :       current_statement__ = 16;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  277 :       if (stan::math::logical_eq(act_fn, 1)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  278 :         current_statement__ = 15;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  279 :         stan::model::assign(a1, stan::math::tanh(z1), "assigning variable a1");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  280 :       } else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  281 :         current_statement__ = 14;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  282 :         if (stan::math::logical_eq(act_fn, 2)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  283 :           current_statement__ = 13;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  284 :           stan::model::assign(a1, stan::math::inv_logit(z1),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  285 :             "assigning variable a1");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  286 :         } else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  287 :           current_statement__ = 12;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  288 :           if (stan::math::logical_eq(act_fn, 3)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  289 :             current_statement__ = 11;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  290 :             stan::model::assign(a1,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  291 :               stan::math::log(stan::math::add(1, stan::math::exp(z1))),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  292 :               "assigning variable a1");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  293 :           } else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  294 :             current_statement__ = 10;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  295 :             stan::model::assign(a1,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  296 :               stan::math::fmax(stan::math::rep_matrix(0, n, nodes), z1),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  297 :               "assigning variable a1");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  298 :           }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  299 :         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  300 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  301 :       current_statement__ = 17;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  302 :       stan::model::assign(y_hat,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  303 :         stan::math::add(stan::math::multiply(a1, w_out), b_out),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  304 :         "assigning variable y_hat");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  305 :       {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  306 :         current_statement__ = 18;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  307 :         lp_accum__.add(stan::math::normal_lpdf&lt;propto__&gt;(</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  308 :                          stan::math::to_vector(w1), 0, 1));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  309 :         current_statement__ = 19;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  310 :         lp_accum__.add(stan::math::normal_lpdf&lt;propto__&gt;(b1, 0, 1));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  311 :         current_statement__ = 20;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  312 :         lp_accum__.add(stan::math::normal_lpdf&lt;propto__&gt;(w_out, 0, 1));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  313 :         current_statement__ = 21;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  314 :         lp_accum__.add(stan::math::normal_lpdf&lt;propto__&gt;(b_out, 0, 1));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  315 :         current_statement__ = 22;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  316 :         lp_accum__.add(stan::math::normal_lpdf&lt;propto__&gt;(sigma, 0, 1));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  317 :         current_statement__ = 23;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  318 :         lp_accum__.add(stan::math::normal_lpdf&lt;propto__&gt;(y, y_hat, sigma));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  319 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  320 :     } catch (const std::exception&amp; e) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  321 :       stan::lang::rethrow_located(e, locations_array__[current_statement__]);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  322 :     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  323 :     lp_accum__.add(lp__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  324 :     return lp_accum__.sum();</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  325 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  326 :   template &lt;typename RNG, typename VecR, typename VecI, typename VecVar,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  327 :             stan::require_vector_like_vt&lt;std::is_floating_point,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  328 :             VecR&gt;* = nullptr, stan::require_vector_like_vt&lt;std::is_integral,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  329 :             VecI&gt;* = nullptr, stan::require_vector_vt&lt;std::is_floating_point,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  330 :             VecVar&gt;* = nullptr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  331 :   inline void</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  332 :   write_array_impl(RNG&amp; base_rng__, VecR&amp; params_r__, VecI&amp; params_i__,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  333 :                    VecVar&amp; vars__, const bool</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  334 :                    emit_transformed_parameters__ = true, const bool</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  335 :                    emit_generated_quantities__ = true, std::ostream*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  336 :                    pstream__ = nullptr) const {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  337 :     using local_scalar_t__ = double;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  338 :     stan::io::deserializer&lt;local_scalar_t__&gt; in__(params_r__, params_i__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  339 :     stan::io::serializer&lt;local_scalar_t__&gt; out__(vars__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  340 :     static constexpr bool propto__ = true;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  341 :     // suppress unused var warning</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  342 :     (void) propto__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  343 :     double lp__ = 0.0;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  344 :     // suppress unused var warning</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  345 :     (void) lp__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  346 :     int current_statement__ = 0;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  347 :     stan::math::accumulator&lt;double&gt; lp_accum__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  348 :     local_scalar_t__ DUMMY_VAR__(std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  349 :     // suppress unused var warning</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  350 :     (void) DUMMY_VAR__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  351 :     constexpr bool jacobian__ = false;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  352 :     static constexpr const char* function__ =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  353 :       "model1bee9b1e9c9__namespace::write_array";</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  354 :     // suppress unused var warning</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  355 :     (void) function__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  356 :     try {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  357 :       Eigen::Matrix&lt;double,-1,-1&gt; w1 =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  358 :         Eigen::Matrix&lt;double,-1,-1&gt;::Constant(m, nodes,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  359 :           std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  360 :       current_statement__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  361 :       w1 = in__.template read&lt;Eigen::Matrix&lt;local_scalar_t__,-1,-1&gt;&gt;(m,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  362 :              nodes);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  363 :       Eigen::Matrix&lt;double,-1,1&gt; b1 =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  364 :         Eigen::Matrix&lt;double,-1,1&gt;::Constant(nodes,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  365 :           std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  366 :       current_statement__ = 2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  367 :       b1 = in__.template read&lt;Eigen::Matrix&lt;local_scalar_t__,-1,1&gt;&gt;(nodes);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  368 :       Eigen::Matrix&lt;double,-1,1&gt; w_out =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  369 :         Eigen::Matrix&lt;double,-1,1&gt;::Constant(nodes,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  370 :           std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  371 :       current_statement__ = 3;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  372 :       w_out = in__.template read&lt;Eigen::Matrix&lt;local_scalar_t__,-1,1&gt;&gt;(nodes);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  373 :       double b_out = std::numeric_limits&lt;double&gt;::quiet_NaN();</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  374 :       current_statement__ = 4;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  375 :       b_out = in__.template read&lt;local_scalar_t__&gt;();</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  376 :       double sigma = std::numeric_limits&lt;double&gt;::quiet_NaN();</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  377 :       current_statement__ = 5;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  378 :       sigma = in__.template read_constrain_lb&lt;local_scalar_t__,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  379 :                 jacobian__&gt;(0, lp__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  380 :       Eigen::Matrix&lt;double,-1,-1&gt; z1 =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  381 :         Eigen::Matrix&lt;double,-1,-1&gt;::Constant(n, nodes,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  382 :           std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  383 :       Eigen::Matrix&lt;double,-1,-1&gt; a1 =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  384 :         Eigen::Matrix&lt;double,-1,-1&gt;::Constant(n, nodes,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  385 :           std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  386 :       Eigen::Matrix&lt;double,-1,1&gt; y_hat =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  387 :         Eigen::Matrix&lt;double,-1,1&gt;::Constant(n,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  388 :           std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  389 :       out__.write(w1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  390 :       out__.write(b1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  391 :       out__.write(w_out);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  392 :       out__.write(b_out);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  393 :       out__.write(sigma);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  394 :       if (stan::math::logical_negation(</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  395 :             (stan::math::primitive_value(emit_transformed_parameters__) ||</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  396 :             stan::math::primitive_value(emit_generated_quantities__)))) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  397 :         return ;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  398 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  399 :       current_statement__ = 9;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  400 :       stan::model::assign(z1,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  401 :         stan::math::add(stan::math::multiply(X, w1),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  402 :           stan::math::rep_matrix(stan::math::transpose(b1), n)),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  403 :         "assigning variable z1");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  404 :       current_statement__ = 16;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  405 :       if (stan::math::logical_eq(act_fn, 1)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  406 :         current_statement__ = 15;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  407 :         stan::model::assign(a1, stan::math::tanh(z1), "assigning variable a1");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  408 :       } else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  409 :         current_statement__ = 14;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  410 :         if (stan::math::logical_eq(act_fn, 2)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  411 :           current_statement__ = 13;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  412 :           stan::model::assign(a1, stan::math::inv_logit(z1),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  413 :             "assigning variable a1");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  414 :         } else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  415 :           current_statement__ = 12;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  416 :           if (stan::math::logical_eq(act_fn, 3)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  417 :             current_statement__ = 11;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  418 :             stan::model::assign(a1,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  419 :               stan::math::log(stan::math::add(1, stan::math::exp(z1))),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  420 :               "assigning variable a1");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  421 :           } else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  422 :             current_statement__ = 10;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  423 :             stan::model::assign(a1,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  424 :               stan::math::fmax(stan::math::rep_matrix(0, n, nodes), z1),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  425 :               "assigning variable a1");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  426 :           }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  427 :         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  428 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  429 :       current_statement__ = 17;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  430 :       stan::model::assign(y_hat,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  431 :         stan::math::add(stan::math::multiply(a1, w_out), b_out),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  432 :         "assigning variable y_hat");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  433 :       if (emit_transformed_parameters__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  434 :         out__.write(z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  435 :         out__.write(a1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  436 :         out__.write(y_hat);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  437 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  438 :       if (stan::math::logical_negation(emit_generated_quantities__)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  439 :         return ;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  440 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  441 :     } catch (const std::exception&amp; e) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  442 :       stan::lang::rethrow_located(e, locations_array__[current_statement__]);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  443 :     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  444 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  445 :   template &lt;typename VecVar, typename VecI,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  446 :             stan::require_vector_t&lt;VecVar&gt;* = nullptr,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  447 :             stan::require_vector_like_vt&lt;std::is_integral, VecI&gt;* = nullptr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  448 :   inline void</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  449 :   unconstrain_array_impl(const VecVar&amp; params_r__, const VecI&amp; params_i__,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  450 :                          VecVar&amp; vars__, std::ostream* pstream__ = nullptr) const {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  451 :     using local_scalar_t__ = double;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  452 :     stan::io::deserializer&lt;local_scalar_t__&gt; in__(params_r__, params_i__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  453 :     stan::io::serializer&lt;local_scalar_t__&gt; out__(vars__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  454 :     int current_statement__ = 0;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  455 :     local_scalar_t__ DUMMY_VAR__(std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  456 :     // suppress unused var warning</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  457 :     (void) DUMMY_VAR__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  458 :     try {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  459 :       int pos__ = std::numeric_limits&lt;int&gt;::min();</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  460 :       pos__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  461 :       Eigen::Matrix&lt;local_scalar_t__,-1,-1&gt; w1 =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  462 :         Eigen::Matrix&lt;local_scalar_t__,-1,-1&gt;::Constant(m, nodes,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  463 :           DUMMY_VAR__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  464 :       current_statement__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  465 :       stan::model::assign(w1,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  466 :         in__.read&lt;Eigen::Matrix&lt;local_scalar_t__,-1,-1&gt;&gt;(m, nodes),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  467 :         "assigning variable w1");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  468 :       out__.write(w1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  469 :       Eigen::Matrix&lt;local_scalar_t__,-1,1&gt; b1 =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  470 :         Eigen::Matrix&lt;local_scalar_t__,-1,1&gt;::Constant(nodes, DUMMY_VAR__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  471 :       current_statement__ = 2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  472 :       stan::model::assign(b1,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  473 :         in__.read&lt;Eigen::Matrix&lt;local_scalar_t__,-1,1&gt;&gt;(nodes),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  474 :         "assigning variable b1");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  475 :       out__.write(b1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  476 :       Eigen::Matrix&lt;local_scalar_t__,-1,1&gt; w_out =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  477 :         Eigen::Matrix&lt;local_scalar_t__,-1,1&gt;::Constant(nodes, DUMMY_VAR__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  478 :       current_statement__ = 3;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  479 :       stan::model::assign(w_out,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  480 :         in__.read&lt;Eigen::Matrix&lt;local_scalar_t__,-1,1&gt;&gt;(nodes),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  481 :         "assigning variable w_out");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  482 :       out__.write(w_out);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  483 :       local_scalar_t__ b_out = DUMMY_VAR__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  484 :       current_statement__ = 4;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  485 :       b_out = in__.read&lt;local_scalar_t__&gt;();</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  486 :       out__.write(b_out);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  487 :       local_scalar_t__ sigma = DUMMY_VAR__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  488 :       current_statement__ = 5;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  489 :       sigma = in__.read&lt;local_scalar_t__&gt;();</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  490 :       out__.write_free_lb(0, sigma);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  491 :     } catch (const std::exception&amp; e) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  492 :       stan::lang::rethrow_located(e, locations_array__[current_statement__]);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  493 :     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  494 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  495 :   template &lt;typename VecVar, stan::require_vector_t&lt;VecVar&gt;* = nullptr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  496 :   inline void</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  497 :   transform_inits_impl(const stan::io::var_context&amp; context__, VecVar&amp;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  498 :                        vars__, std::ostream* pstream__ = nullptr) const {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  499 :     using local_scalar_t__ = double;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  500 :     stan::io::serializer&lt;local_scalar_t__&gt; out__(vars__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  501 :     int current_statement__ = 0;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  502 :     local_scalar_t__ DUMMY_VAR__(std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  503 :     // suppress unused var warning</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  504 :     (void) DUMMY_VAR__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  505 :     try {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  506 :       current_statement__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  507 :       context__.validate_dims("parameter initialization", "w1", "double",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  508 :         std::vector&lt;size_t&gt;{static_cast&lt;size_t&gt;(m),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  509 :           static_cast&lt;size_t&gt;(nodes)});</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  510 :       current_statement__ = 2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  511 :       context__.validate_dims("parameter initialization", "b1", "double",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  512 :         std::vector&lt;size_t&gt;{static_cast&lt;size_t&gt;(nodes)});</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  513 :       current_statement__ = 3;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  514 :       context__.validate_dims("parameter initialization", "w_out", "double",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  515 :         std::vector&lt;size_t&gt;{static_cast&lt;size_t&gt;(nodes)});</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  516 :       current_statement__ = 4;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  517 :       context__.validate_dims("parameter initialization", "b_out", "double",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  518 :         std::vector&lt;size_t&gt;{});</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  519 :       current_statement__ = 5;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  520 :       context__.validate_dims("parameter initialization", "sigma", "double",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  521 :         std::vector&lt;size_t&gt;{});</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  522 :       int pos__ = std::numeric_limits&lt;int&gt;::min();</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  523 :       pos__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  524 :       Eigen::Matrix&lt;local_scalar_t__,-1,-1&gt; w1 =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  525 :         Eigen::Matrix&lt;local_scalar_t__,-1,-1&gt;::Constant(m, nodes,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  526 :           DUMMY_VAR__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  527 :       {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  528 :         std::vector&lt;local_scalar_t__&gt; w1_flat__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  529 :         current_statement__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  530 :         w1_flat__ = context__.vals_r("w1");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  531 :         current_statement__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  532 :         pos__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  533 :         current_statement__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  534 :         for (int sym1__ = 1; sym1__ &lt;= nodes; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  535 :           current_statement__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  536 :           for (int sym2__ = 1; sym2__ &lt;= m; ++sym2__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  537 :             current_statement__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  538 :             stan::model::assign(w1, w1_flat__[(pos__ - 1)],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  539 :               "assigning variable w1", stan::model::index_uni(sym2__),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  540 :               stan::model::index_uni(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  541 :             current_statement__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  542 :             pos__ = (pos__ + 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  543 :           }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  544 :         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  545 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  546 :       out__.write(w1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  547 :       Eigen::Matrix&lt;local_scalar_t__,-1,1&gt; b1 =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  548 :         Eigen::Matrix&lt;local_scalar_t__,-1,1&gt;::Constant(nodes, DUMMY_VAR__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  549 :       {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  550 :         std::vector&lt;local_scalar_t__&gt; b1_flat__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  551 :         current_statement__ = 2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  552 :         b1_flat__ = context__.vals_r("b1");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  553 :         current_statement__ = 2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  554 :         pos__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  555 :         current_statement__ = 2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  556 :         for (int sym1__ = 1; sym1__ &lt;= nodes; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  557 :           current_statement__ = 2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  558 :           stan::model::assign(b1, b1_flat__[(pos__ - 1)],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  559 :             "assigning variable b1", stan::model::index_uni(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  560 :           current_statement__ = 2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  561 :           pos__ = (pos__ + 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  562 :         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  563 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  564 :       out__.write(b1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  565 :       Eigen::Matrix&lt;local_scalar_t__,-1,1&gt; w_out =</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  566 :         Eigen::Matrix&lt;local_scalar_t__,-1,1&gt;::Constant(nodes, DUMMY_VAR__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  567 :       {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  568 :         std::vector&lt;local_scalar_t__&gt; w_out_flat__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  569 :         current_statement__ = 3;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  570 :         w_out_flat__ = context__.vals_r("w_out");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  571 :         current_statement__ = 3;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  572 :         pos__ = 1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  573 :         current_statement__ = 3;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  574 :         for (int sym1__ = 1; sym1__ &lt;= nodes; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  575 :           current_statement__ = 3;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  576 :           stan::model::assign(w_out, w_out_flat__[(pos__ - 1)],</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  577 :             "assigning variable w_out", stan::model::index_uni(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  578 :           current_statement__ = 3;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  579 :           pos__ = (pos__ + 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  580 :         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  581 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  582 :       out__.write(w_out);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  583 :       local_scalar_t__ b_out = DUMMY_VAR__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  584 :       current_statement__ = 4;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  585 :       b_out = context__.vals_r("b_out")[(1 - 1)];</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  586 :       out__.write(b_out);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  587 :       local_scalar_t__ sigma = DUMMY_VAR__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  588 :       current_statement__ = 5;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  589 :       sigma = context__.vals_r("sigma")[(1 - 1)];</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  590 :       out__.write_free_lb(0, sigma);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  591 :     } catch (const std::exception&amp; e) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  592 :       stan::lang::rethrow_located(e, locations_array__[current_statement__]);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  593 :     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  594 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  595 :   inline void</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  596 :   get_param_names(std::vector&lt;std::string&gt;&amp; names__, const bool</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  597 :                   emit_transformed_parameters__ = true, const bool</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  598 :                   emit_generated_quantities__ = true) const {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  599 :     names__ = std::vector&lt;std::string&gt;{"w1", "b1", "w_out", "b_out", "sigma"};</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  600 :     if (emit_transformed_parameters__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  601 :       std::vector&lt;std::string&gt; temp{"z1", "a1", "y_hat"};</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  602 :       names__.reserve(names__.size() + temp.size());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  603 :       names__.insert(names__.end(), temp.begin(), temp.end());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  604 :     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  605 :     if (emit_generated_quantities__) {}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  606 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  607 :   inline void</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  608 :   get_dims(std::vector&lt;std::vector&lt;size_t&gt;&gt;&amp; dimss__, const bool</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  609 :            emit_transformed_parameters__ = true, const bool</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  610 :            emit_generated_quantities__ = true) const {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  611 :     dimss__ = std::vector&lt;std::vector&lt;size_t&gt;&gt;{std::vector&lt;size_t&gt;{static_cast&lt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  612 :                                                                     size_t&gt;(m),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  613 :                                                  static_cast&lt;size_t&gt;(nodes)},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  614 :                 std::vector&lt;size_t&gt;{static_cast&lt;size_t&gt;(nodes)},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  615 :                 std::vector&lt;size_t&gt;{static_cast&lt;size_t&gt;(nodes)},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  616 :                 std::vector&lt;size_t&gt;{}, std::vector&lt;size_t&gt;{}};</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  617 :     if (emit_transformed_parameters__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  618 :       std::vector&lt;std::vector&lt;size_t&gt;&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  619 :         temp{std::vector&lt;size_t&gt;{static_cast&lt;size_t&gt;(n),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  620 :                static_cast&lt;size_t&gt;(nodes)},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  621 :              std::vector&lt;size_t&gt;{static_cast&lt;size_t&gt;(n),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  622 :                static_cast&lt;size_t&gt;(nodes)},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  623 :              std::vector&lt;size_t&gt;{static_cast&lt;size_t&gt;(n)}};</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  624 :       dimss__.reserve(dimss__.size() + temp.size());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  625 :       dimss__.insert(dimss__.end(), temp.begin(), temp.end());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  626 :     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  627 :     if (emit_generated_quantities__) {}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  628 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  629 :   inline void</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  630 :   constrained_param_names(std::vector&lt;std::string&gt;&amp; param_names__, bool</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  631 :                           emit_transformed_parameters__ = true, bool</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  632 :                           emit_generated_quantities__ = true) const final {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  633 :     for (int sym1__ = 1; sym1__ &lt;= nodes; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  634 :       for (int sym2__ = 1; sym2__ &lt;= m; ++sym2__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  635 :         param_names__.emplace_back(std::string() + "w1" + '.' +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  636 :           std::to_string(sym2__) + '.' + std::to_string(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  637 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  638 :     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  639 :     for (int sym1__ = 1; sym1__ &lt;= nodes; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  640 :       param_names__.emplace_back(std::string() + "b1" + '.' +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  641 :         std::to_string(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  642 :     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  643 :     for (int sym1__ = 1; sym1__ &lt;= nodes; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  644 :       param_names__.emplace_back(std::string() + "w_out" + '.' +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  645 :         std::to_string(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  646 :     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  647 :     param_names__.emplace_back(std::string() + "b_out");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  648 :     param_names__.emplace_back(std::string() + "sigma");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  649 :     if (emit_transformed_parameters__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  650 :       for (int sym1__ = 1; sym1__ &lt;= nodes; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  651 :         for (int sym2__ = 1; sym2__ &lt;= n; ++sym2__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  652 :           param_names__.emplace_back(std::string() + "z1" + '.' +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  653 :             std::to_string(sym2__) + '.' + std::to_string(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  654 :         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  655 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  656 :       for (int sym1__ = 1; sym1__ &lt;= nodes; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  657 :         for (int sym2__ = 1; sym2__ &lt;= n; ++sym2__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  658 :           param_names__.emplace_back(std::string() + "a1" + '.' +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  659 :             std::to_string(sym2__) + '.' + std::to_string(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  660 :         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  661 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  662 :       for (int sym1__ = 1; sym1__ &lt;= n; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  663 :         param_names__.emplace_back(std::string() + "y_hat" + '.' +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  664 :           std::to_string(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  665 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  666 :     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  667 :     if (emit_generated_quantities__) {}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  668 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  669 :   inline void</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  670 :   unconstrained_param_names(std::vector&lt;std::string&gt;&amp; param_names__, bool</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  671 :                             emit_transformed_parameters__ = true, bool</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  672 :                             emit_generated_quantities__ = true) const final {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  673 :     for (int sym1__ = 1; sym1__ &lt;= nodes; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  674 :       for (int sym2__ = 1; sym2__ &lt;= m; ++sym2__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  675 :         param_names__.emplace_back(std::string() + "w1" + '.' +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  676 :           std::to_string(sym2__) + '.' + std::to_string(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  677 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  678 :     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  679 :     for (int sym1__ = 1; sym1__ &lt;= nodes; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  680 :       param_names__.emplace_back(std::string() + "b1" + '.' +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  681 :         std::to_string(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  682 :     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  683 :     for (int sym1__ = 1; sym1__ &lt;= nodes; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  684 :       param_names__.emplace_back(std::string() + "w_out" + '.' +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  685 :         std::to_string(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  686 :     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  687 :     param_names__.emplace_back(std::string() + "b_out");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  688 :     param_names__.emplace_back(std::string() + "sigma");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  689 :     if (emit_transformed_parameters__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  690 :       for (int sym1__ = 1; sym1__ &lt;= nodes; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  691 :         for (int sym2__ = 1; sym2__ &lt;= n; ++sym2__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  692 :           param_names__.emplace_back(std::string() + "z1" + '.' +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  693 :             std::to_string(sym2__) + '.' + std::to_string(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  694 :         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  695 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  696 :       for (int sym1__ = 1; sym1__ &lt;= nodes; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  697 :         for (int sym2__ = 1; sym2__ &lt;= n; ++sym2__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  698 :           param_names__.emplace_back(std::string() + "a1" + '.' +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  699 :             std::to_string(sym2__) + '.' + std::to_string(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  700 :         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  701 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  702 :       for (int sym1__ = 1; sym1__ &lt;= n; ++sym1__) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  703 :         param_names__.emplace_back(std::string() + "y_hat" + '.' +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  704 :           std::to_string(sym1__));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  705 :       }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  706 :     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  707 :     if (emit_generated_quantities__) {}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  708 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  709 :   inline std::string get_constrained_sizedtypes() const {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  710 :     return std::string("[{\"name\":\"w1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(m) + ",\"cols\":" + std::to_string(nodes) + "},\"block\":\"parameters\"},{\"name\":\"b1\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(nodes) + "},\"block\":\"parameters\"},{\"name\":\"w_out\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(nodes) + "},\"block\":\"parameters\"},{\"name\":\"b_out\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"z1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(nodes) + "},\"block\":\"transformed_parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(nodes) + "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n) + "},\"block\":\"transformed_parameters\"}]");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  711 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  712 :   inline std::string get_unconstrained_sizedtypes() const {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  713 :     return std::string("[{\"name\":\"w1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(m) + ",\"cols\":" + std::to_string(nodes) + "},\"block\":\"parameters\"},{\"name\":\"b1\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(nodes) + "},\"block\":\"parameters\"},{\"name\":\"w_out\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(nodes) + "},\"block\":\"parameters\"},{\"name\":\"b_out\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"z1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(nodes) + "},\"block\":\"transformed_parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(nodes) + "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n) + "},\"block\":\"transformed_parameters\"}]");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  714 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  715 :   // Begin method overload boilerplate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  716 :   template &lt;typename RNG&gt; inline void</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  717 :   write_array(RNG&amp; base_rng, Eigen::Matrix&lt;double,-1,1&gt;&amp; params_r,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  718 :               Eigen::Matrix&lt;double,-1,1&gt;&amp; vars, const bool</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  719 :               emit_transformed_parameters = true, const bool</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  720 :               emit_generated_quantities = true, std::ostream*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  721 :               pstream = nullptr) const {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  722 :     const size_t num_params__ = (((((m * nodes) + nodes) + nodes) + 1) + 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  723 :     const size_t num_transformed = emit_transformed_parameters * ((((n *</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  724 :       nodes) + (n * nodes)) + n));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  725 :     const size_t num_gen_quantities = emit_generated_quantities * (0);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  726 :     const size_t num_to_write = num_params__ + num_transformed +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  727 :       num_gen_quantities;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  728 :     std::vector&lt;int&gt; params_i;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  729 :     vars = Eigen::Matrix&lt;double,-1,1&gt;::Constant(num_to_write,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  730 :              std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  731 :     write_array_impl(base_rng, params_r, params_i, vars,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  732 :       emit_transformed_parameters, emit_generated_quantities, pstream);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  733 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  734 :   template &lt;typename RNG&gt; inline void</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  735 :   write_array(RNG&amp; base_rng, std::vector&lt;double&gt;&amp; params_r, std::vector&lt;int&gt;&amp;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  736 :               params_i, std::vector&lt;double&gt;&amp; vars, bool</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  737 :               emit_transformed_parameters = true, bool</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  738 :               emit_generated_quantities = true, std::ostream*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  739 :               pstream = nullptr) const {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  740 :     const size_t num_params__ = (((((m * nodes) + nodes) + nodes) + 1) + 1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  741 :     const size_t num_transformed = emit_transformed_parameters * ((((n *</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  742 :       nodes) + (n * nodes)) + n));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  743 :     const size_t num_gen_quantities = emit_generated_quantities * (0);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  744 :     const size_t num_to_write = num_params__ + num_transformed +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  745 :       num_gen_quantities;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  746 :     vars = std::vector&lt;double&gt;(num_to_write,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  747 :              std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  748 :     write_array_impl(base_rng, params_r, params_i, vars,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  749 :       emit_transformed_parameters, emit_generated_quantities, pstream);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  750 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  751 :   template &lt;bool propto__, bool jacobian__, typename T_&gt; inline T_</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  752 :   log_prob(Eigen::Matrix&lt;T_,-1,1&gt;&amp; params_r, std::ostream* pstream = nullptr) const {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  753 :     Eigen::Matrix&lt;int,-1,1&gt; params_i;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  754 :     return log_prob_impl&lt;propto__, jacobian__&gt;(params_r, params_i, pstream);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  755 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  756 :   template &lt;bool propto__, bool jacobian__, typename T_&gt; inline T_</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  757 :   log_prob(std::vector&lt;T_&gt;&amp; params_r, std::vector&lt;int&gt;&amp; params_i,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  758 :            std::ostream* pstream = nullptr) const {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  759 :     return log_prob_impl&lt;propto__, jacobian__&gt;(params_r, params_i, pstream);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  760 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  761 :   inline void</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  762 :   transform_inits(const stan::io::var_context&amp; context,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  763 :                   Eigen::Matrix&lt;double,-1,1&gt;&amp; params_r, std::ostream*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  764 :                   pstream = nullptr) const final {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  765 :     std::vector&lt;double&gt; params_r_vec(params_r.size());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  766 :     std::vector&lt;int&gt; params_i;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  767 :     transform_inits(context, params_i, params_r_vec, pstream);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  768 :     params_r = Eigen::Map&lt;Eigen::Matrix&lt;double,-1,1&gt;&gt;(params_r_vec.data(),</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  769 :                  params_r_vec.size());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  770 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  771 :   inline void</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  772 :   transform_inits(const stan::io::var_context&amp; context, std::vector&lt;int&gt;&amp;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  773 :                   params_i, std::vector&lt;double&gt;&amp; vars, std::ostream*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  774 :                   pstream__ = nullptr) const {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  775 :     vars.resize(num_params_r__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  776 :     transform_inits_impl(context, vars, pstream__);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  777 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  778 :   inline void</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  779 :   unconstrain_array(const std::vector&lt;double&gt;&amp; params_constrained,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  780 :                     std::vector&lt;double&gt;&amp; params_unconstrained, std::ostream*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  781 :                     pstream = nullptr) const {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  782 :     const std::vector&lt;int&gt; params_i;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  783 :     params_unconstrained = std::vector&lt;double&gt;(num_params_r__,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  784 :                              std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  785 :     unconstrain_array_impl(params_constrained, params_i,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  786 :       params_unconstrained, pstream);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  787 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  788 :   inline void</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  789 :   unconstrain_array(const Eigen::Matrix&lt;double,-1,1&gt;&amp; params_constrained,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  790 :                     Eigen::Matrix&lt;double,-1,1&gt;&amp; params_unconstrained,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  791 :                     std::ostream* pstream = nullptr) const {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  792 :     const std::vector&lt;int&gt; params_i;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  793 :     params_unconstrained = Eigen::Matrix&lt;double,-1,1&gt;::Constant(num_params_r__,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  794 :                              std::numeric_limits&lt;double&gt;::quiet_NaN());</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  795 :     unconstrain_array_impl(params_constrained, params_i,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  796 :       params_unconstrained, pstream);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  797 :   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  798 : };</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  799 : }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  800 : using stan_model = model1bee9b1e9c9__namespace::model1bee9b1e9c9_;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  801 : #ifndef USING_R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  802 : // Boilerplate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  803 : stan::model::model_base&amp;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  804 : new_model(stan::io::var_context&amp; data_context, unsigned int seed,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  805 :           std::ostream* msg_stream) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  806 :   stan_model* m = new stan_model(data_context, seed, msg_stream);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  807 :   return *m;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  808 : }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  809 : stan::math::profile_map&amp; get_stan_profile_data() {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  810 :   return model1bee9b1e9c9__namespace::profiles__;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  811 : }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  812 : #endif</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  813 : #endif</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  814 : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  815 : RCPP_MODULE(stan_fit4model1bee9b1e9c9__mod) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  816 :   class_&lt;rstan::stan_fit&lt;stan_model, boost::random::ecuyer1988&gt; &gt;(</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  817 :       "stan_fit4model1bee9b1e9c9_")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  818 : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  819 :       .constructor&lt;SEXP, SEXP, SEXP&gt;()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  820 : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  821 :       .method(</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  822 :           "call_sampler",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  823 :           &amp;rstan::stan_fit&lt;stan_model, boost::random::ecuyer1988&gt;::call_sampler)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  824 :       .method(</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  825 :           "param_names",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  826 :           &amp;rstan::stan_fit&lt;stan_model, boost::random::ecuyer1988&gt;::param_names)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  827 :       .method("param_names_oi",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  828 :               &amp;rstan::stan_fit&lt;stan_model,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  829 :                                boost::random::ecuyer1988&gt;::param_names_oi)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  830 :       .method("param_fnames_oi",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  831 :               &amp;rstan::stan_fit&lt;stan_model,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  832 :                                boost::random::ecuyer1988&gt;::param_fnames_oi)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  833 :       .method(</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  834 :           "param_dims",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  835 :           &amp;rstan::stan_fit&lt;stan_model, boost::random::ecuyer1988&gt;::param_dims)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  836 :       .method("param_dims_oi",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  837 :               &amp;rstan::stan_fit&lt;stan_model,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  838 :                                boost::random::ecuyer1988&gt;::param_dims_oi)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  839 :       .method("update_param_oi",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  840 :               &amp;rstan::stan_fit&lt;stan_model,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  841 :                                boost::random::ecuyer1988&gt;::update_param_oi)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  842 :       .method("param_oi_tidx",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  843 :               &amp;rstan::stan_fit&lt;stan_model,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  844 :                                boost::random::ecuyer1988&gt;::param_oi_tidx)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  845 :       .method("grad_log_prob",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  846 :               &amp;rstan::stan_fit&lt;stan_model,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  847 :                                boost::random::ecuyer1988&gt;::grad_log_prob)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  848 :       .method("log_prob",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  849 :               &amp;rstan::stan_fit&lt;stan_model, boost::random::ecuyer1988&gt;::log_prob)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  850 :       .method("unconstrain_pars",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  851 :               &amp;rstan::stan_fit&lt;stan_model,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  852 :                                boost::random::ecuyer1988&gt;::unconstrain_pars)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  853 :       .method("constrain_pars",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  854 :               &amp;rstan::stan_fit&lt;stan_model,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  855 :                                boost::random::ecuyer1988&gt;::constrain_pars)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  856 :       .method(</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  857 :           "num_pars_unconstrained",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  858 :           &amp;rstan::stan_fit&lt;stan_model,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  859 :                            boost::random::ecuyer1988&gt;::num_pars_unconstrained)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  860 :       .method(</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  861 :           "unconstrained_param_names",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  862 :           &amp;rstan::stan_fit&lt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  863 :               stan_model, boost::random::ecuyer1988&gt;::unconstrained_param_names)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  864 :       .method(</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  865 :           "constrained_param_names",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  866 :           &amp;rstan::stan_fit&lt;stan_model,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  867 :                            boost::random::ecuyer1988&gt;::constrained_param_names)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  868 :       .method("standalone_gqs",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  869 :               &amp;rstan::stan_fit&lt;stan_model,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  870 :                                boost::random::ecuyer1988&gt;::standalone_gqs);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  871 : }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  872 : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  873 : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  874 : // declarations</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  875 : extern "C" {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  876 : SEXP file1bee2bff79e5( ) ;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  877 : }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  878 : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  879 : // definition</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  880 : SEXP file1bee2bff79e5() {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  881 :  return Rcpp::wrap("anon_model");</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  882 : }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CHECKING DATA AND PREPROCESSING FOR MODEL 'anon_model' NOW.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> COMPILING MODEL 'anon_model' NOW.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> STARTING SAMPLER FOR MODEL 'anon_model' NOW.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># See the documentation for bnns.default for more details on the default implementation.</span></span></span>
 <span class="r-in"><span></span></span>
