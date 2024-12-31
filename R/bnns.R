@@ -25,11 +25,16 @@
 #' @param chains An integer specifying the number of Markov chains. Default is 2.
 #' @param cores An integer specifying the number of CPU cores to use for parallel sampling. Default is 2.
 #' @param seed An integer specifying the random seed for reproducibility. Default is 123.
-#' @param ... Additional arguments passed to specific methods for fitting Bayesian Neural Networks.
+#' @param ... Currently not in use.
 #'
 #' @return The result of the method dispatched by the class of the input data. Typically, this would be an object of class \code{"bnns"} containing the fitted model and associated information.
 #'
 #' @details The function serves as a generic interface to different methods of fitting Bayesian Neural Networks. The specific method dispatched depends on the class of the input arguments, allowing for flexibility in the types of inputs supported.
+#'
+#' @references
+#' 1. Bishop, C.M., 1995. Neural networks for pattern recognition. Oxford university press.
+#' 2. Carpenter, B., Gelman, A., Hoffman, M.D., Lee, D., Goodrich, B., Betancourt, M., Brubaker, M.A., Guo, J., Li, P. and Riddell, A., 2017. Stan: A probabilistic programming language. Journal of statistical software, 76.
+#' 3. Neal, R.M., 2012. Bayesian learning for neural networks (Vol. 118). Springer Science & Business Media.
 #'
 #' @examples
 #' # Example usage with formula interface:
@@ -77,7 +82,7 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 #' @param chains An integer specifying the number of Markov chains. Default is 2.
 #' @param cores An integer specifying the number of CPU cores to use for parallel sampling. Default is 2.
 #' @param seed An integer specifying the random seed for reproducibility. Default is 123.
-#' @param ... Additional arguments passed to the Stan sampler.
+#' @param ... Currently not in use.
 #'
 #' @return An object of class \code{"bnns"} containing the following components:
 #' \describe{
@@ -187,7 +192,7 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 #' @param chains An integer specifying the number of Markov chains. Default is 2.
 #' @param cores An integer specifying the number of CPU cores to use for parallel sampling. Default is 2.
 #' @param seed An integer specifying the random seed for reproducibility. Default is 123.
-#' @param ... Additional arguments passed to helper function bnns_train.
+#' @param ... Currently not in use.
 #'
 #' @return An object of class \code{"bnns"} containing the fitted model and associated information, including:
 #'   \itemize{

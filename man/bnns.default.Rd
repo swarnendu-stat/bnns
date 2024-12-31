@@ -56,7 +56,7 @@
 
 \item{seed}{An integer specifying the random seed for reproducibility. Default is 123.}
 
-\item{...}{Additional arguments passed to helper function bnns_train.}
+\item{...}{Currently not in use.}
 }
 \value{
 An object of class \code{"bnns"} containing the fitted model and associated information, including:

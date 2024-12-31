@@ -56,7 +56,7 @@ bnns_train(
 
 \item{seed}{An integer specifying the random seed for reproducibility. Default is 123.}
 
-\item{...}{Additional arguments passed to the Stan sampler.}
+\item{...}{Currently not in use.}
 }
 \value{
 An object of class \code{"bnns"} containing the following components:

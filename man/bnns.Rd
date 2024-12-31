@@ -56,7 +56,7 @@ bnns(
 
 \item{seed}{An integer specifying the random seed for reproducibility. Default is 123.}
 
-\item{...}{Additional arguments passed to specific methods for fitting Bayesian Neural Networks.}
+\item{...}{Currently not in use.}
 }
 \value{
 The result of the method dispatched by the class of the input data. Typically, this would be an object of class \code{"bnns"} containing the fitted model and associated information.
@@ -75,6 +75,13 @@ iter = 1e2, warmup = 5e1, chains = 1)
 
 # See the documentation for bnns.default for more details on the default implementation.
 
+}
+\references{
+\enumerate{
+\item Bishop, C.M., 1995. Neural networks for pattern recognition. Oxford university press.
+\item Carpenter, B., Gelman, A., Hoffman, M.D., Lee, D., Goodrich, B., Betancourt, M., Brubaker, M.A., Guo, J., Li, P. and Riddell, A., 2017. Stan: A probabilistic programming language. Journal of statistical software, 76.
+\item Neal, R.M., 2012. Bayesian learning for neural networks (Vol. 118). Springer Science & Business Media.
+}
 }
 \seealso{
 \code{\link{bnns.default}}
