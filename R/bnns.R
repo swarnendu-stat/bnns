@@ -25,6 +25,43 @@
 #' @param chains An integer specifying the number of Markov chains. Default is 2.
 #' @param cores An integer specifying the number of CPU cores to use for parallel sampling. Default is 2.
 #' @param seed An integer specifying the random seed for reproducibility. Default is 123.
+#' @param prior_weights A list specifying the prior distribution for the weights in the neural network.
+#'   The list must include two components:
+#'   \itemize{
+#'     \item \code{dist}: A character string specifying the distribution type. Supported values are
+#'       \code{"normal"}, \code{"uniform"}, and \code{"cauchy"}.
+#'     \item \code{params}: A named list specifying the parameters for the chosen distribution:
+#'       \itemize{
+#'         \item For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
+#'         \item For \code{"uniform"}: Provide \code{lower} (lower bound) and \code{upper} (upper bound).
+#'         \item For \code{"cauchy"}: Provide \code{location} (location parameter) and \code{scale} (scale parameter).
+#'       }
+#'   }
+#'   If \code{prior_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
+#'   For example:
+#'   \itemize{
+#'     \item \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
+#'     \item \code{list(dist = "uniform", params = list(lower = -1, upper = 1))}
+#'     \item \code{list(dist = "cauchy", params = list(location = 0, scale = 2.5))}
+#'   }
+#' @param prior_sigma A list specifying the prior distribution for the \code{sigma} parameter in regression
+#'   models (\code{out_act_fn = 1}). This allows for setting priors on the standard deviation of the residuals.
+#'   The list must include two components:
+#'   \itemize{
+#'     \item \code{dist}: A character string specifying the distribution type. Supported values are
+#'       \code{"half-normal"} and \code{"inverse-gamma"}.
+#'     \item \code{params}: A named list specifying the parameters for the chosen distribution:
+#'       \itemize{
+#'         \item For \code{"half-normal"}: Provide \code{sd} (standard deviation of the half-normal distribution).
+#'         \item For \code{"inverse-gamma"}: Provide \code{shape} (shape parameter) and \code{scale} (scale parameter).
+#'       }
+#'   }
+#'   If \code{prior_sigma} is \code{NULL}, the default prior is a \code{half-normal(0, 1)} distribution.
+#'   For example:
+#'   \itemize{
+#'     \item \code{list(dist = "half_normal", params = list(mean = 0, sd = 1))}
+#'     \item \code{list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))}
+#'   }
 #' @param ... Currently not in use.
 #'
 #' @return The result of the method dispatched by the class of the input data. Typically, this would be an object of class \code{"bnns"} containing the fitted model and associated information.
@@ -39,8 +76,10 @@
 #' @examples
 #' # Example usage with formula interface:
 #' data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
-#' model <- bnns(y ~ -1 + x1 + x2, data = data, L = 1, nodes = 2, act_fn = 1,
-#' iter = 1e2, warmup = 5e1, chains = 1)
+#' model <- bnns(y ~ -1 + x1 + x2,
+#'   data = data, L = 1, nodes = 2, act_fn = 1,
+#'   iter = 1e2, warmup = 5e1, chains = 1
+#' )
 #'
 #' # See the documentation for bnns.default for more details on the default implementation.
 #'
@@ -50,7 +89,7 @@
 
 bnns <- function(formula, data = list(), L = 1, nodes = 16,
                  act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
-                 thin = 1, chains = 2, cores = 2, seed = 123, ...){
+                 thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL, prior_sigma = NULL, ...) {
   UseMethod("bnns")
 }
 
@@ -82,6 +121,43 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 #' @param chains An integer specifying the number of Markov chains. Default is 2.
 #' @param cores An integer specifying the number of CPU cores to use for parallel sampling. Default is 2.
 #' @param seed An integer specifying the random seed for reproducibility. Default is 123.
+#' @param prior_weights A list specifying the prior distribution for the weights in the neural network.
+#'   The list must include two components:
+#'   \itemize{
+#'     \item \code{dist}: A character string specifying the distribution type. Supported values are
+#'       \code{"normal"}, \code{"uniform"}, and \code{"cauchy"}.
+#'     \item \code{params}: A named list specifying the parameters for the chosen distribution:
+#'       \itemize{
+#'         \item For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
+#'         \item For \code{"uniform"}: Provide \code{lower} (lower bound) and \code{upper} (upper bound).
+#'         \item For \code{"cauchy"}: Provide \code{location} (location parameter) and \code{scale} (scale parameter).
+#'       }
+#'   }
+#'   If \code{prior_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
+#'   For example:
+#'   \itemize{
+#'     \item \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
+#'     \item \code{list(dist = "uniform", params = list(lower = -1, upper = 1))}
+#'     \item \code{list(dist = "cauchy", params = list(location = 0, scale = 2.5))}
+#'   }
+#' @param prior_sigma A list specifying the prior distribution for the \code{sigma} parameter in regression
+#'   models (\code{out_act_fn = 1}). This allows for setting priors on the standard deviation of the residuals.
+#'   The list must include two components:
+#'   \itemize{
+#'     \item \code{dist}: A character string specifying the distribution type. Supported values are
+#'       \code{"half-normal"} and \code{"inverse-gamma"}.
+#'     \item \code{params}: A named list specifying the parameters for the chosen distribution:
+#'       \itemize{
+#'         \item For \code{"half-normal"}: Provide \code{sd} (standard deviation of the half-normal distribution).
+#'         \item For \code{"inverse-gamma"}: Provide \code{shape} (shape parameter) and \code{scale} (scale parameter).
+#'       }
+#'   }
+#'   If \code{prior_sigma} is \code{NULL}, the default prior is a \code{half-normal(0, 1)} distribution.
+#'   For example:
+#'   \itemize{
+#'     \item \code{list(dist = "half_normal", params = list(mean = 0, sd = 1))}
+#'     \item \code{list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))}
+#'   }
 #' @param ... Currently not in use.
 #'
 #' @return An object of class \code{"bnns"} containing the following components:
@@ -97,8 +173,10 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 #' # Example usage:
 #' train_x <- matrix(runif(20), nrow = 10, ncol = 2)
 #' train_y <- rnorm(10)
-#' model <- bnns:::bnns_train(train_x, train_y, L = 1, nodes = 2, act_fn = 2,
-#' iter = 1e2, warmup = 5e1, chains = 1)
+#' model <- bnns:::bnns_train(train_x, train_y,
+#'   L = 1, nodes = 2, act_fn = 2,
+#'   iter = 1e2, warmup = 5e1, chains = 1
+#' )
 #'
 #' # Access Stan model fit
 #' model$fit
@@ -107,57 +185,149 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 #' @keywords internal
 
 bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
-                         act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
-                         thin = 1, chains = 2, cores = 2, seed = 123, ...){
+                       act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
+                       thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL, prior_sigma = NULL, ...) {
   stopifnot("Argument train_x is missing" = !missing(train_x))
   stopifnot("Argument train_y is missing" = !missing(train_y))
 
-  if(out_act_fn == 3){
+  # Default priors: Normal(0, 1)
+  if (is.null(prior_weights)) {
+    prior_weights <- list(
+      dist = "normal",
+      params = list(mean = 0, sd = 1)
+    )
+  }
+
+  # Validate the prior specification
+  if (!is.list(prior_weights) || !("dist" %in% names(prior_weights)) || !("params" %in% names(prior_weights))) {
+    stop("'prior_weights' must be a list with elements 'dist' and 'params'.")
+  }
+
+  supported_distributions <- c("normal", "uniform", "cauchy")
+  if (!(prior_weights$dist %in% supported_distributions)) {
+    stop(paste(
+      "Unsupported distribution:", prior_weights$dist,
+      ". Supported distributions are:", paste(supported_distributions, collapse = ", ")
+    ))
+  }
+
+  # Validate parameters for the chosen distribution
+  validate_prior <- function(dist, params) {
+    switch(dist,
+           normal = {
+             if (!all(c("mean", "sd") %in% names(params))) {
+               stop("For 'normal' distribution, 'params' must contain 'mean' and 'sd'.")
+             }
+           },
+           uniform = {
+             if (!all(c("lower", "upper") %in% names(params))) {
+               stop("For 'uniform' distribution, 'params' must contain 'lower' and 'upper'.")
+             }
+           },
+           cauchy = {
+             if (!all(c("location", "scale") %in% names(params))) {
+               stop("For 'cauchy' distribution, 'params' must contain 'location' and 'scale'.")
+             }
+           },
+           half_normal = {
+             if (!all(c("mean", "sd") %in% names(params))) {
+               stop("For 'half_normal' distribution, 'params' must contain 'mean' and 'sd'.")
+             }
+           },
+           inv_gamma = {
+             if (!all(c("alpha", "beta") %in% names(params))) {
+               stop("For 'inv_gamma' distribution, 'params' must contain 'alpha' and 'beta'.")
+             }
+           }
+    )
+  }
+
+  validate_prior(prior_weights$dist, prior_weights$params)
+
+  # Replace PRIOR_SPECIFICATION with the appropriate Stan syntax
+  prior_specification <- switch(prior_weights$dist,
+                                normal = sprintf("normal(%f, %f)", prior_weights$params$mean, prior_weights$params$sd),
+                                uniform = sprintf("uniform(%f, %f)", prior_weights$params$lower, prior_weights$params$upper),
+                                cauchy = sprintf("cauchy(%f, %f)", prior_weights$params$location, prior_weights$params$scale)
+  )
+
+  # Check prior_sigma (only relevant for regression models)
+  if (out_act_fn == 1) {
+    if (!is.null(prior_sigma)) {
+      if (!all(c("dist", "params") %in% names(prior_sigma))) {
+        stop("'prior_sigma' must contain 'dist' and 'params' elements.")
+      }
+      if (!prior_sigma$dist %in% c("half_normal", "inv_gamma")) {
+        stop("Supported prior distributions for sigma are 'half_normal' and 'inv_gamma'.")
+      }
+    } else {
+      # Default prior for sigma
+      prior_sigma <- list(dist = "half_normal", params = list(mean = 0, sd = 1))
+    }
+  }
+
+  validate_prior(prior_sigma$dist, prior_sigma$params)
+
+  # Replace PRIOR_SIGMA with the appropriate Stan syntax
+  prior_sigma <- switch(prior_sigma$dist,
+                        half_normal = sprintf("normal(%f, %f)", prior_sigma$params$mean, prior_sigma$params$sd),
+                        inv_gamma = sprintf("inv_gamma(%f, %f)", prior_sigma$params$alpha, prior_sigma$params$beta)
+  )
+
+  if (out_act_fn == 3) {
     stopifnot("train_y must be a factor" = is.factor(train_y))
     stopifnot("train_y must have at least 3 levels" = length(levels(train_y)) >= 3)
     stan_data <- list(
-      n = nrow(train_x),                    # Number of observations
-      m = ncol(train_x),                    # Number of features
+      n = nrow(train_x), # Number of observations
+      m = ncol(train_x), # Number of features
       L = L,
-      nodes = nodes,                                # Number of layers
-      X = train_x,                          # Input matrix
-      y = as.numeric(train_y),                          # Output vector
+      nodes = nodes, # Number of layers
+      X = train_x, # Input matrix
+      y = as.numeric(train_y), # Output vector
       K = length(unique(train_y)),
-      act_fn = act_fn,         # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
-      out_act_fn = out_act_fn            # Activation function for the output layer (1 = linear, 2 = sigmoid, 3 = softmax)
+      act_fn = act_fn, # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
+      out_act_fn = out_act_fn # Activation function for the output layer (1 = linear, 2 = sigmoid, 3 = softmax)
     )
-  }else if(out_act_fn == 2){
+  } else if (out_act_fn == 2) {
     stopifnot("train_y must have only 0/1 values" = all(train_y %in% c(0, 1)))
     stan_data <- list(
-      n = nrow(train_x),                    # Number of observations
-      m = ncol(train_x),                    # Number of features
+      n = nrow(train_x), # Number of observations
+      m = ncol(train_x), # Number of features
       L = L,
-      nodes = nodes,                                # Number of layers
-      X = train_x,                          # Input matrix
-      y = train_y,                          # Output vector
-      act_fn = act_fn,         # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
-      out_act_fn = out_act_fn            # Activation function for the output layer (1 = linear, 2 = sigmoid, 3 = softmax)
+      nodes = nodes, # Number of layers
+      X = train_x, # Input matrix
+      y = train_y, # Output vector
+      act_fn = act_fn, # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
+      out_act_fn = out_act_fn # Activation function for the output layer (1 = linear, 2 = sigmoid, 3 = softmax)
     )
-  }else{
+  } else {
     stan_data <- list(
-      n = nrow(train_x),                    # Number of observations
-      m = ncol(train_x),                    # Number of features
+      n = nrow(train_x), # Number of observations
+      m = ncol(train_x), # Number of features
       L = L,
-      nodes = nodes,                                # Number of layers
-      X = train_x,                          # Input matrix
-      y = train_y,                          # Output vector
-      act_fn = act_fn,         # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
-      out_act_fn = out_act_fn            # Activation function for the output layer (1 = linear, 2 = sigmoid, 3 = softmax)
+      nodes = nodes, # Number of layers
+      X = train_x, # Input matrix
+      y = train_y, # Output vector
+      act_fn = act_fn, # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
+      out_act_fn = out_act_fn # Activation function for the output layer (1 = linear, 2 = sigmoid, 3 = softmax)
     )
   }
 
   est <- list()
   pars <- c(paste0("w", 1:L), paste0("b", 1:L), "w_out", "b_out")
-  if(out_act_fn == 1){ pars <- c(pars, "sigma") }
-  est$fit <-  suppressWarnings(rstan::stan(model_code = generate_stan_code(num_layers = L, nodes = nodes, out_act_fn = out_act_fn), data = stan_data, include = TRUE,
-                                           pars = pars,
-                                           iter = iter, warmup = warmup, thin = thin, chains = chains, cores = cores,
-                                           init = 0, seed = seed, verbose = TRUE, refresh = 0))
+  if (out_act_fn == 1) {
+    pars <- c(pars, "sigma")
+  }
+
+  stan_model <- gsub("PRIOR_SPECIFICATION", prior_specification, generate_stan_code(num_layers = L, nodes = nodes, out_act_fn = out_act_fn)) |>
+    gsub(x = _, pattern = "PRIOR_SIGMA", replacement = prior_sigma)
+
+  est$fit <- suppressWarnings(rstan::stan(
+    model_code = stan_model, data = stan_data, include = TRUE,
+    pars = pars,
+    iter = iter, warmup = warmup, thin = thin, chains = chains, cores = cores,
+    init = 0, seed = seed, verbose = TRUE, refresh = 0
+  ))
 
   est$call <- match.call()
   est$data <- stan_data
@@ -192,6 +362,43 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 #' @param chains An integer specifying the number of Markov chains. Default is 2.
 #' @param cores An integer specifying the number of CPU cores to use for parallel sampling. Default is 2.
 #' @param seed An integer specifying the random seed for reproducibility. Default is 123.
+#' @param prior_weights A list specifying the prior distribution for the weights in the neural network.
+#'   The list must include two components:
+#'   \itemize{
+#'     \item \code{dist}: A character string specifying the distribution type. Supported values are
+#'       \code{"normal"}, \code{"uniform"}, and \code{"cauchy"}.
+#'     \item \code{params}: A named list specifying the parameters for the chosen distribution:
+#'       \itemize{
+#'         \item For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
+#'         \item For \code{"uniform"}: Provide \code{lower} (lower bound) and \code{upper} (upper bound).
+#'         \item For \code{"cauchy"}: Provide \code{location} (location parameter) and \code{scale} (scale parameter).
+#'       }
+#'   }
+#'   If \code{prior_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
+#'   For example:
+#'   \itemize{
+#'     \item \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
+#'     \item \code{list(dist = "uniform", params = list(lower = -1, upper = 1))}
+#'     \item \code{list(dist = "cauchy", params = list(location = 0, scale = 2.5))}
+#'   }
+#' @param prior_sigma A list specifying the prior distribution for the \code{sigma} parameter in regression
+#'   models (\code{out_act_fn = 1}). This allows for setting priors on the standard deviation of the residuals.
+#'   The list must include two components:
+#'   \itemize{
+#'     \item \code{dist}: A character string specifying the distribution type. Supported values are
+#'       \code{"half-normal"} and \code{"inverse-gamma"}.
+#'     \item \code{params}: A named list specifying the parameters for the chosen distribution:
+#'       \itemize{
+#'         \item For \code{"half-normal"}: Provide \code{sd} (standard deviation of the half-normal distribution).
+#'         \item For \code{"inverse-gamma"}: Provide \code{shape} (shape parameter) and \code{scale} (scale parameter).
+#'       }
+#'   }
+#'   If \code{prior_sigma} is \code{NULL}, the default prior is a \code{half-normal(0, 1)} distribution.
+#'   For example:
+#'   \itemize{
+#'     \item \code{list(dist = "half_normal", params = list(mean = 0, sd = 1))}
+#'     \item \code{list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))}
+#'   }
 #' @param ... Currently not in use.
 #'
 #' @return An object of class \code{"bnns"} containing the fitted model and associated information, including:
@@ -207,25 +414,29 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 #' @examples
 #' # Example usage with formula interface:
 #' data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
-#' model <- bnns(y ~ -1 + x1 + x2, data = data, L = 1, nodes = 2, act_fn = 3,
-#' iter = 1e2, warmup = 5e1, chains = 1)
+#' model <- bnns(y ~ -1 + x1 + x2,
+#'   data = data, L = 1, nodes = 2, act_fn = 3,
+#'   iter = 1e2, warmup = 5e1, chains = 1
+#' )
 #'
 #' @export
 
-bnns.default <- function(formula, data=list(), L = 1, nodes = 16,
+bnns.default <- function(formula, data = list(), L = 1, nodes = 16,
                          act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
-                         thin = 1, chains = 2, cores = 2, seed = 123, ...) {
+                         thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL, prior_sigma = NULL, ...) {
   if (missing(formula) || missing(data)) {
     stop("Both 'formula' and 'data' must be provided.")
   }
 
-  mf <- stats::model.frame(formula=formula, data=data)
-  train_x <- stats::model.matrix(attr(mf, "terms"), data=mf)
+  mf <- stats::model.frame(formula = formula, data = data)
+  train_x <- stats::model.matrix(attr(mf, "terms"), data = mf)
   train_y <- stats::model.response(mf)
-  est <- bnns_train(train_x = train_x, train_y = train_y, L = L, nodes = nodes,
-                      act_fn = act_fn, out_act_fn = out_act_fn, iter = iter,
-                      warmup = warmup, thin = thin, chains = chains,
-                      cores = cores, seed = seed, ...)
+  est <- bnns_train(
+    train_x = train_x, train_y = train_y, L = L, nodes = nodes,
+    act_fn = act_fn, out_act_fn = out_act_fn, iter = iter,
+    warmup = warmup, thin = thin, chains = chains,
+    cores = cores, seed = seed, prior_weights = prior_weights, prior_sigma = prior_sigma, ...
+  )
   est$call <- match.call()
   est$formula <- formula
   return(est)

@@ -19,13 +19,15 @@
 #'
 #' @export
 measure_cont <- function(obs, pred) {
-  if(!is.null(dim(pred))){
-    if(length(dim(pred)) == 2){
+  if (!is.null(dim(pred))) {
+    if (length(dim(pred)) == 2) {
       pred <- rowMeans(pred)
     }
   }
-  return(list(rmse = sqrt(mean((obs - pred)^2)),
-              mae = mean(abs(obs - pred))))
+  return(list(
+    rmse = sqrt(mean((obs - pred)^2)),
+    mae = mean(abs(obs - pred))
+  ))
 }
 
 #' Measure Performance for Binary Classification Models
@@ -53,18 +55,20 @@ measure_cont <- function(obs, pred) {
 #'
 #' @export
 measure_bin <- function(obs, pred, cut = 0.5) {
-  if(!is.null(dim(pred))){
-    if(length(dim(pred)) == 2){
+  if (!is.null(dim(pred))) {
+    if (length(dim(pred)) == 2) {
       pred <- rowMeans(pred)
     }
   }
   pred_label <- ifelse(pred >= cut, 1, 0)
   conf_mat <- table(obs, pred_label)
   ROC <- pROC::roc(response = obs, predictor = pred)
-  return(list(conf_mat = conf_mat,
-              accuracy = sum(diag(conf_mat)) / sum(conf_mat),
-              ROC = ROC,
-              AUC = as.numeric(ROC$auc)))
+  return(list(
+    conf_mat = conf_mat,
+    accuracy = sum(diag(conf_mat)) / sum(conf_mat),
+    ROC = ROC,
+    AUC = as.numeric(ROC$auc)
+  ))
 }
 
 #' Measure Performance for Multi-Class Classification Models
@@ -94,24 +98,28 @@ measure_bin <- function(obs, pred, cut = 0.5) {
 #' @examples
 #' library(pROC)
 #' obs <- factor(c("A", "B", "C"), levels = LETTERS[1:3])
-#' pred <- matrix(c(0.8, 0.1, 0.1,
-#'                  0.2, 0.6, 0.2,
-#'                  0.7, 0.2, 0.1),
-#'                nrow = 3, byrow = TRUE)
+#' pred <- matrix(
+#'   c(
+#'     0.8, 0.1, 0.1,
+#'     0.2, 0.6, 0.2,
+#'     0.7, 0.2, 0.1
+#'   ),
+#'   nrow = 3, byrow = TRUE
+#' )
 #' measure_cat(obs, pred)
 #' # Returns: list(log_loss = 1.012185, ROC = <ROC>, AUC = 0.75)
 #'
 #' @export
 measure_cat <- function(obs, pred) {
   stopifnot("obs must be factor" = is.factor(obs))
-  if(length(dim(pred)) == 3){
+  if (length(dim(pred)) == 3) {
     pred <- t(apply(pred, 1, colMeans))
   }
   ROC <- pROC::multiclass.roc(obs, data.frame(pred) |> `colnames<-`(levels(obs)))
   obs <- as.numeric(obs)
   log_loss <- 0
   for (i in seq_along(obs)) {
-    for (j in 1:ncol(pred)) {
+    for (j in seq_len(ncol(pred))) {
       log_loss <- log_loss + ifelse(obs[i] == j, 1, 0) * log(pred[i, j])
     }
   }

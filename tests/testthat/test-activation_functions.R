@@ -1,12 +1,12 @@
 test_that("tanh works", {
   x <- matrix(1:4, nrow = 2)
-  y <- (exp(x) - exp(-x))/(exp(x) + exp(-x))
+  y <- (exp(x) - exp(-x)) / (exp(x) + exp(-x))
   expect_equal(tanh(matrix(1:4, nrow = 2)), y)
 })
 
 test_that("sigmoid works", {
   x <- matrix(1:4, nrow = 2)
-  y <- 1/(1 + exp(-x))
+  y <- 1 / (1 + exp(-x))
   expect_equal(sigmoid(matrix(1:4, nrow = 2)), y)
 })
 
@@ -31,9 +31,9 @@ test_that("relu works for matrix", {
 test_that("softmax works", {
   x <- array(1:64, dim = rep(4, 3))
   y <- x
-  for(i in 1:dim(x)[1]){
-    for(j in 1:dim(x)[2]){
-      y[i, j, ] <- exp(x[i, j, ])/sum(exp(x[i, j, ]))
+  for (i in seq_len(dim(x)[1])) {
+    for (j in seq_len(dim(x)[2])) {
+      y[i, j, ] <- exp(x[i, j, ]) / sum(exp(x[i, j, ]))
     }
   }
   expect_equal(softmax_3d(x), y)

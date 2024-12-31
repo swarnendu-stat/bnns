@@ -6,8 +6,8 @@
 #' sigmoid(matrix(1:4, nrow = 2))
 #' @export
 
-sigmoid <- function(x){
-  1/(1 + exp(-x))
+sigmoid <- function(x) {
+  1 / (1 + exp(-x))
 }
 
 #' softplus transformation
@@ -18,7 +18,7 @@ sigmoid <- function(x){
 #' softplus(matrix(1:4, nrow = 2))
 #' @export
 
-softplus <- function(x){
+softplus <- function(x) {
   log(1 + exp(x))
 }
 
@@ -27,13 +27,13 @@ softplus <- function(x){
 #' @param x A numeric vector or matrix on which relu transformation is going to be applied.........................
 #' @returns A numeric vector or matrix after relu transformation.
 #' @examples
-#' relu(matrix(1:4,, nrow = 2))
+#' relu(matrix(1:4, , nrow = 2))
 #' @export
 
-relu <- function(x){
-  if(is.null(dim(x))){
+relu <- function(x) {
+  if (is.null(dim(x))) {
     return(pmax(0, x))
-  }else{
+  } else {
     return(matrix(pmax(0, x), nrow = nrow(x), ncol = ncol(x)))
   }
 }
@@ -59,15 +59,15 @@ relu <- function(x){
 #'
 #' @examples
 #' # Example: Apply softmax to a 3D array
-#' x <- array(runif(24), dim = c(2, 3, 4))  # Random 3D array (2x3x4)
+#' x <- array(runif(24), dim = c(2, 3, 4)) # Random 3D array (2x3x4)
 #' softmax_result <- softmax_3d(x)
 #'
 #' @export
-softmax_3d <- function(x){
+softmax_3d <- function(x) {
   out <- x
-  for(i in 1:dim(x)[1]){
-    for(j in 1:dim(x)[2]){
-      out[i, j, ] <- exp(x[i, j, ])/sum(exp(x[i, j, ]))
+  for (i in seq_len(dim(x)[1])) {
+    for (j in seq_len(dim(x)[2])) {
+      out[i, j, ] <- exp(x[i, j, ]) / sum(exp(x[i, j, ]))
     }
   }
   return(out)

@@ -28,7 +28,7 @@ The function processes the input array slice-by-slice for the first two dimensio
 }
 \examples{
 # Example: Apply softmax to a 3D array
-x <- array(runif(24), dim = c(2, 3, 4))  # Random 3D array (2x3x4)
+x <- array(runif(24), dim = c(2, 3, 4)) # Random 3D array (2x3x4)
 softmax_result <- softmax_3d(x)
 
 }

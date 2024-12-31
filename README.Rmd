@@ -63,8 +63,10 @@ To fit a Bayesian Neural Network:
 ```{r message=FALSE, warning=FALSE}
 library(bnns)
 
-model <- bnns(y ~ -1 + x1 + x2, data = df, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
-              iter = 1e2, warmup = 5e1, chains = 1, seed = 123)
+model <- bnns(y ~ -1 + x1 + x2,
+              data = df, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
+              iter = 1e2, warmup = 5e1, chains = 1, seed = 123
+)
 ```
 
 ### 3. Model Summary
@@ -94,9 +96,20 @@ abline(0, 1, col = "red")
 
 ## Applications
 
-### Regression Example
+### Regression Example (with custom priors)
 
 Use `bnns` for regression analysis to model continuous outcomes, such as predicting patient biomarkers in clinical trials.
+
+```{r message=FALSE, warning=FALSE}
+library(bnns)
+
+model <- bnns(y ~ -1 + x1 + x2,
+              data = df, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
+              iter = 1e2, warmup = 5e1, chains = 1, seed = 123,
+              prior_weights = list(dist = "uniform", params = list(lower = -1, upper = 1)),
+              prior_sigma = list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))
+)
+```
 
 ### Classification Example
 

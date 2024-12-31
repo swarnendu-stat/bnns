@@ -17,10 +17,14 @@ test_that("works for binary case", {
 
 test_that("works for categorical case", {
   obs <- factor(c("A", "B", "C"), levels = LETTERS[1:3])
-  pred <- matrix(c(0.8, 0.1, 0.1,
-                   0.2, 0.6, 0.2,
-                   0.7, 0.2, 0.1),
-                 nrow = 3, byrow = TRUE)
+  pred <- matrix(
+    c(
+      0.8, 0.1, 0.1,
+      0.2, 0.6, 0.2,
+      0.7, 0.2, 0.1
+    ),
+    nrow = 3, byrow = TRUE
+  )
   measure <- measure_cat(obs, pred)
   expect_equal(measure$log_loss, 1.01218476)
   expect_equal(measure$AUC, 0.75)

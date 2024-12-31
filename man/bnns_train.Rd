@@ -17,6 +17,8 @@ bnns_train(
   chains = 2,
   cores = 2,
   seed = 123,
+  prior_weights = NULL,
+  prior_sigma = NULL,
   ...
 )
 }
@@ -56,6 +58,45 @@ bnns_train(
 
 \item{seed}{An integer specifying the random seed for reproducibility. Default is 123.}
 
+\item{prior_weights}{A list specifying the prior distribution for the weights in the neural network.
+The list must include two components:
+\itemize{
+\item \code{dist}: A character string specifying the distribution type. Supported values are
+\code{"normal"}, \code{"uniform"}, and \code{"cauchy"}.
+\item \code{params}: A named list specifying the parameters for the chosen distribution:
+\itemize{
+\item For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
+\item For \code{"uniform"}: Provide \code{lower} (lower bound) and \code{upper} (upper bound).
+\item For \code{"cauchy"}: Provide \code{location} (location parameter) and \code{scale} (scale parameter).
+}
+}
+If \code{prior_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
+For example:
+\itemize{
+\item \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
+\item \code{list(dist = "uniform", params = list(lower = -1, upper = 1))}
+\item \code{list(dist = "cauchy", params = list(location = 0, scale = 2.5))}
+}}
+
+\item{prior_sigma}{A list specifying the prior distribution for the \code{sigma} parameter in regression
+models (\code{out_act_fn = 1}). This allows for setting priors on the standard deviation of the residuals.
+The list must include two components:
+\itemize{
+\item \code{dist}: A character string specifying the distribution type. Supported values are
+\code{"half-normal"} and \code{"inverse-gamma"}.
+\item \code{params}: A named list specifying the parameters for the chosen distribution:
+\itemize{
+\item For \code{"half-normal"}: Provide \code{sd} (standard deviation of the half-normal distribution).
+\item For \code{"inverse-gamma"}: Provide \code{shape} (shape parameter) and \code{scale} (scale parameter).
+}
+}
+If \code{prior_sigma} is \code{NULL}, the default prior is a \code{half-normal(0, 1)} distribution.
+For example:
+\itemize{
+\item \code{list(dist = "half_normal", params = list(mean = 0, sd = 1))}
+\item \code{list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))}
+}}
+
 \item{...}{Currently not in use.}
 }
 \value{
@@ -77,8 +118,10 @@ The function uses the \code{generate_stan_code} function to dynamically generate
 # Example usage:
 train_x <- matrix(runif(20), nrow = 10, ncol = 2)
 train_y <- rnorm(10)
-model <- bnns:::bnns_train(train_x, train_y, L = 1, nodes = 2, act_fn = 2,
-iter = 1e2, warmup = 5e1, chains = 1)
+model <- bnns:::bnns_train(train_x, train_y,
+  L = 1, nodes = 2, act_fn = 2,
+  iter = 1e2, warmup = 5e1, chains = 1
+)
 
 # Access Stan model fit
 model$fit

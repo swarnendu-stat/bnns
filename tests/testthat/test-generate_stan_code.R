@@ -3,31 +3,31 @@ test_that("generates code for continuous response correctly", {
   stan_code <- generate_stan_code(num_layers = 2, nodes = c(10, 5), out_act_fn = 1)
 
   # Tests
-  expect_type(stan_code, "character")  # Stan code should be a character string
-  expect_match(stan_code, "data \\{", fixed = FALSE)  # Check data block exists
-  expect_match(stan_code, "y ~ normal", fixed = FALSE)  # Check binary response model
-  expect_match(stan_code, "matrix\\[n, nodes\\[1\\]\\] z1", fixed = FALSE)  # Check intermediate layers
+  expect_type(stan_code, "character") # Stan code should be a character string
+  expect_match(stan_code, "data \\{", fixed = FALSE) # Check data block exists
+  expect_match(stan_code, "y ~ normal", fixed = FALSE) # Check binary response model
+  expect_match(stan_code, "matrix\\[n, nodes\\[1\\]\\] z1", fixed = FALSE) # Check intermediate layers
 })
 
 test_that("generates code for binary response correctly", {
   stan_code <- generate_stan_code(num_layers = 2, nodes = c(10, 5), out_act_fn = 2)
 
   # Tests
-  expect_type(stan_code, "character")  # Stan code should be a character string
-  expect_match(stan_code, "data \\{", fixed = FALSE)  # Check data block exists
-  expect_match(stan_code, "y ~ bernoulli_logit", fixed = FALSE)  # Check binary response model
-  expect_match(stan_code, "matrix\\[n, nodes\\[1\\]\\] z1", fixed = FALSE)  # Check intermediate layers
+  expect_type(stan_code, "character") # Stan code should be a character string
+  expect_match(stan_code, "data \\{", fixed = FALSE) # Check data block exists
+  expect_match(stan_code, "y ~ bernoulli_logit", fixed = FALSE) # Check binary response model
+  expect_match(stan_code, "matrix\\[n, nodes\\[1\\]\\] z1", fixed = FALSE) # Check intermediate layers
 })
 
 test_that("generates code for categorical response correctly", {
   stan_code <- generate_stan_code(num_layers = 2, nodes = c(10, 5), out_act_fn = 3)
 
   # Tests
-  expect_type(stan_code, "character")  # Stan code should be a character string
-  expect_match(stan_code, "data \\{", fixed = FALSE)  # Check data block exists
-  expect_no_match(stan_code, "y ~ categorical_logit", fixed = FALSE)  # Check binary response model
-  expect_match(stan_code, "y\\[i\\] ~ categorical_logit", fixed = FALSE)  # Check binary response model
-  expect_match(stan_code, "matrix\\[n, nodes\\[1\\]\\] z1", fixed = FALSE)  # Check intermediate layers
+  expect_type(stan_code, "character") # Stan code should be a character string
+  expect_match(stan_code, "data \\{", fixed = FALSE) # Check data block exists
+  expect_no_match(stan_code, "y ~ categorical_logit", fixed = FALSE) # Check binary response model
+  expect_match(stan_code, "y\\[i\\] ~ categorical_logit", fixed = FALSE) # Check binary response model
+  expect_match(stan_code, "matrix\\[n, nodes\\[1\\]\\] z1", fixed = FALSE) # Check intermediate layers
 })
 
 

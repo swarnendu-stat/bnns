@@ -49,14 +49,14 @@
 #' @export
 
 
-generate_stan_code <- function(num_layers, nodes, out_act_fn = 1){
-  if(out_act_fn == 1){
+generate_stan_code <- function(num_layers, nodes, out_act_fn = 1) {
+  if (out_act_fn == 1) {
     return(generate_stan_code_cont(num_layers = num_layers, nodes = nodes))
-  }else if(out_act_fn == 2){
+  } else if (out_act_fn == 2) {
     return(generate_stan_code_bin(num_layers = num_layers, nodes = nodes))
-  }else if(out_act_fn == 3){
+  } else if (out_act_fn == 3) {
     return(generate_stan_code_cat(num_layers = num_layers, nodes = nodes))
-  }else{
+  } else {
     stop("This output activation layer is not currently supported")
   }
 }
@@ -109,7 +109,7 @@ generate_stan_code_cont <- function(num_layers, nodes) {
     stop("Ensure 'nodes' length matches 'num_layers' and all values are positive")
   }
 
-  if(num_layers == 1){
+  if (num_layers == 1) {
     return("data {
   int<lower=1> n;
   int<lower=1> m;
@@ -143,16 +143,15 @@ transformed parameters {
 }
 
 model {
-  to_vector(w1) ~ normal(0, 1);
-  b1 ~ normal(0, 1);
-  w_out ~ normal(0, 1);
-  b_out ~ normal(0, 1);
-  sigma ~ normal(0, 1);
+  to_vector(w1) ~ PRIOR_SPECIFICATION;
+  b1 ~ PRIOR_SPECIFICATION;
+  w_out ~ PRIOR_SPECIFICATION;
+  b_out ~ PRIOR_SPECIFICATION;
+  sigma ~ PRIOR_SIGMA;
   y ~ normal(y_hat, sigma);
 }
 ")
-  }else{
-
+  } else {
     # Initialize sections
     sections <- list()
 
@@ -171,9 +170,11 @@ data {
     # Parameters block
     params <- c("parameters {", "  matrix[m, nodes[1]] w1;", "  vector[nodes[1]] b1;")
     for (l in seq(2, num_layers)) {
-      params <- c(params,
-                  paste0("  matrix[nodes[", l-1, "], nodes[", l, "]] w", l, ";"),
-                  paste0("  vector[nodes[", l, "]] b", l, ";"))
+      params <- c(
+        params,
+        paste0("  matrix[nodes[", l - 1, "], nodes[", l, "]] w", l, ";"),
+        paste0("  vector[nodes[", l, "]] b", l, ";")
+      )
     }
     params <- c(params, "  vector[nodes[L]] w_out;", "  real b_out;", "  real<lower=0> sigma;", "}")
     sections$params <- paste(params, collapse = "\n")
@@ -182,35 +183,43 @@ data {
     transformed <- c("transformed parameters {", "  matrix[n, nodes[1]] z1;", "  matrix[n, nodes[1]] a1;")
 
     for (l in seq(2, num_layers)) {
-      transformed <- c(transformed,
-                       paste0("  matrix[n, nodes[", l, "]] z", l, ";"),
-                       paste0("  matrix[n, nodes[", l, "]] a", l, ";"))
+      transformed <- c(
+        transformed,
+        paste0("  matrix[n, nodes[", l, "]] z", l, ";"),
+        paste0("  matrix[n, nodes[", l, "]] a", l, ";")
+      )
     }
 
     transformed <- c(transformed, "  vector[n] y_hat;", "  z1 = X * w1 + rep_matrix(b1', n);")
     for (l in seq(1, num_layers)) {
-      transformed <- c(transformed,
-                       paste0("  if (act_fn[", l, "] == 1) a", l, " = tanh(z", l, ");"),
-                       paste0("  else if (act_fn[", l, "] == 2) a", l, " = inv_logit(z", l, ");"),
-                       paste0("  else if (act_fn[", l, "] == 3) a", l, " = log(1 + exp(z", l, "));"),
-                       paste0("  else a", l, " = fmax(rep_matrix(0, n, nodes[", l, "]), z", l, ");"))
+      transformed <- c(
+        transformed,
+        paste0("  if (act_fn[", l, "] == 1) a", l, " = tanh(z", l, ");"),
+        paste0("  else if (act_fn[", l, "] == 2) a", l, " = inv_logit(z", l, ");"),
+        paste0("  else if (act_fn[", l, "] == 3) a", l, " = log(1 + exp(z", l, "));"),
+        paste0("  else a", l, " = fmax(rep_matrix(0, n, nodes[", l, "]), z", l, ");")
+      )
       if (l < num_layers) {
-        transformed <- c(transformed,
-                         paste0("  z", l+1, " = a", l, " * w", l+1, " + rep_matrix(b", l+1, "', n);"))
+        transformed <- c(
+          transformed,
+          paste0("  z", l + 1, " = a", l, " * w", l + 1, " + rep_matrix(b", l + 1, "', n);")
+        )
       }
     }
     transformed <- c(transformed, paste0("  y_hat = a", num_layers, " * w_out + b_out;"), "}")
     sections$transformed <- paste(transformed, collapse = "\n")
 
     # Model block
-    model <- c("model {", "  to_vector(w1) ~ normal(0, 1);", "  b1 ~ normal(0, 1);")
+    model <- c("model {", "  to_vector(w1) ~ PRIOR_SPECIFICATION;", "  b1 ~ PRIOR_SPECIFICATION;")
     for (l in seq(2, num_layers)) {
-      model <- c(model,
-                 paste0("  to_vector(w", l, ") ~ normal(0, 1);"),
-                 paste0("  b", l, " ~ normal(0, 1);"))
+      model <- c(
+        model,
+        paste0("  to_vector(w", l, ") ~ PRIOR_SPECIFICATION;"),
+        paste0("  b", l, " ~ PRIOR_SPECIFICATION;")
+      )
     }
 
-    model <- c(model, "  w_out ~ normal(0, 1);", "  b_out ~ normal(0, 1);", "  sigma ~ normal(0, 1);", "  y ~ normal(y_hat, sigma);", "}")
+    model <- c(model, "  w_out ~ PRIOR_SPECIFICATION;", "  b_out ~ PRIOR_SPECIFICATION;", "  sigma ~ PRIOR_SIGMA;", "  y ~ normal(y_hat, sigma);", "}")
     sections$model <- paste(model, collapse = "\n")
 
     # Combine all sections
@@ -269,7 +278,7 @@ generate_stan_code_bin <- function(num_layers, nodes) {
     stop("Ensure 'nodes' length matches 'num_layers' and all values are positive")
   }
 
-  if(num_layers == 1){
+  if (num_layers == 1) {
     return("data {
   int<lower=1> n;
   int<lower=1> m;
@@ -302,15 +311,14 @@ transformed parameters {
 }
 
 model {
-  to_vector(w1) ~ normal(0, 1);
-  b1 ~ normal(0, 1);
-  w_out ~ normal(0, 1);
-  b_out ~ normal(0, 1);
+  to_vector(w1) ~ PRIOR_SPECIFICATION;
+  b1 ~ PRIOR_SPECIFICATION;
+  w_out ~ PRIOR_SPECIFICATION;
+  b_out ~ PRIOR_SPECIFICATION;
   y ~ bernoulli_logit(y_hat);
 }
 ")
-  }else{
-
+  } else {
     # Initialize sections
     sections <- list()
 
@@ -329,9 +337,11 @@ data {
     # Parameters block
     params <- c("parameters {", "  matrix[m, nodes[1]] w1;", "  vector[nodes[1]] b1;")
     for (l in seq(2, num_layers)) {
-      params <- c(params,
-                  paste0("  matrix[nodes[", l-1, "], nodes[", l, "]] w", l, ";"),
-                  paste0("  vector[nodes[", l, "]] b", l, ";"))
+      params <- c(
+        params,
+        paste0("  matrix[nodes[", l - 1, "], nodes[", l, "]] w", l, ";"),
+        paste0("  vector[nodes[", l, "]] b", l, ";")
+      )
     }
     params <- c(params, "  vector[nodes[L]] w_out;", "  real b_out;", "}")
     sections$params <- paste(params, collapse = "\n")
@@ -340,35 +350,43 @@ data {
     transformed <- c("transformed parameters {", "  matrix[n, nodes[1]] z1;", "  matrix[n, nodes[1]] a1;")
 
     for (l in seq(2, num_layers)) {
-      transformed <- c(transformed,
-                       paste0("  matrix[n, nodes[", l, "]] z", l, ";"),
-                       paste0("  matrix[n, nodes[", l, "]] a", l, ";"))
+      transformed <- c(
+        transformed,
+        paste0("  matrix[n, nodes[", l, "]] z", l, ";"),
+        paste0("  matrix[n, nodes[", l, "]] a", l, ";")
+      )
     }
 
     transformed <- c(transformed, "  vector[n] y_hat;", "  z1 = X * w1 + rep_matrix(b1', n);")
     for (l in seq(1, num_layers)) {
-      transformed <- c(transformed,
-                       paste0("  if (act_fn[", l, "] == 1) a", l, " = tanh(z", l, ");"),
-                       paste0("  else if (act_fn[", l, "] == 2) a", l, " = inv_logit(z", l, ");"),
-                       paste0("  else if (act_fn[", l, "] == 3) a", l, " = log(1 + exp(z", l, "));"),
-                       paste0("  else a", l, " = fmax(rep_matrix(0, n, nodes[", l, "]), z", l, ");"))
+      transformed <- c(
+        transformed,
+        paste0("  if (act_fn[", l, "] == 1) a", l, " = tanh(z", l, ");"),
+        paste0("  else if (act_fn[", l, "] == 2) a", l, " = inv_logit(z", l, ");"),
+        paste0("  else if (act_fn[", l, "] == 3) a", l, " = log(1 + exp(z", l, "));"),
+        paste0("  else a", l, " = fmax(rep_matrix(0, n, nodes[", l, "]), z", l, ");")
+      )
       if (l < num_layers) {
-        transformed <- c(transformed,
-                         paste0("  z", l+1, " = a", l, " * w", l+1, " + rep_matrix(b", l+1, "', n);"))
+        transformed <- c(
+          transformed,
+          paste0("  z", l + 1, " = a", l, " * w", l + 1, " + rep_matrix(b", l + 1, "', n);")
+        )
       }
     }
     transformed <- c(transformed, paste0("  y_hat = a", num_layers, " * w_out + b_out;"), "}")
     sections$transformed <- paste(transformed, collapse = "\n")
 
     # Model block
-    model <- c("model {", "  to_vector(w1) ~ normal(0, 1);", "  b1 ~ normal(0, 1);")
+    model <- c("model {", "  to_vector(w1) ~ PRIOR_SPECIFICATION;", "  b1 ~ PRIOR_SPECIFICATION;")
     for (l in seq(2, num_layers)) {
-      model <- c(model,
-                 paste0("  to_vector(w", l, ") ~ normal(0, 1);"),
-                 paste0("  b", l, " ~ normal(0, 1);"))
+      model <- c(
+        model,
+        paste0("  to_vector(w", l, ") ~ PRIOR_SPECIFICATION;"),
+        paste0("  b", l, " ~ PRIOR_SPECIFICATION;")
+      )
     }
 
-    model <- c(model, "  w_out ~ normal(0, 1);", "  b_out ~ normal(0, 1);", "  y ~ bernoulli_logit(y_hat);", "}")
+    model <- c(model, "  w_out ~ PRIOR_SPECIFICATION;", "  b_out ~ PRIOR_SPECIFICATION;", "  y ~ bernoulli_logit(y_hat);", "}")
     sections$model <- paste(model, collapse = "\n")
 
     # Combine all sections
@@ -411,7 +429,7 @@ data {
 #' @examples
 #' # Generate Stan code for a neural network with 3 layers
 #' num_layers <- 3
-#' nodes <- c(10, 8, 6)  # 10 nodes in the first layer, 8 in the second, 6 in the third
+#' nodes <- c(10, 8, 6) # 10 nodes in the first layer, 8 in the second, 6 in the third
 #' stan_code <- generate_stan_code_cat(num_layers, nodes)
 #' cat(stan_code)
 #'
@@ -424,7 +442,7 @@ generate_stan_code_cat <- function(num_layers, nodes) {
     stop("Ensure 'nodes' length matches 'num_layers' and all values are positive")
   }
 
-  if(num_layers == 1){
+  if (num_layers == 1) {
     return("data {
   int<lower=1> n;
   int<lower=1> m;
@@ -458,15 +476,14 @@ transformed parameters {
 }
 
 model {
-  to_vector(w1) ~ normal(0, 1);
-  b1 ~ normal(0, 1);
-  to_vector(w_out) ~ normal(0, 1);
-  b_out ~ normal(0, 1);
+  to_vector(w1) ~ PRIOR_SPECIFICATION;
+  b1 ~ PRIOR_SPECIFICATION;
+  to_vector(w_out) ~ PRIOR_SPECIFICATION;
+  b_out ~ PRIOR_SPECIFICATION;
   for (i in 1:n) y[i] ~ categorical_logit(y_hat[i]');
 }
 ")
-  }else{
-
+  } else {
     # Initialize sections
     sections <- list()
 
@@ -486,9 +503,11 @@ data {
     # Parameters block
     params <- c("parameters {", "  matrix[m, nodes[1]] w1;", "  vector[nodes[1]] b1;")
     for (l in seq(2, num_layers)) {
-      params <- c(params,
-                  paste0("  matrix[nodes[", l-1, "], nodes[", l, "]] w", l, ";"),
-                  paste0("  vector[nodes[", l, "]] b", l, ";"))
+      params <- c(
+        params,
+        paste0("  matrix[nodes[", l - 1, "], nodes[", l, "]] w", l, ";"),
+        paste0("  vector[nodes[", l, "]] b", l, ";")
+      )
     }
     params <- c(params, "  matrix[nodes[L], K] w_out;", "  vector[K] b_out;", "}")
     sections$params <- paste(params, collapse = "\n")
@@ -497,36 +516,46 @@ data {
     transformed <- c("transformed parameters {", "  matrix[n, nodes[1]] z1;", "  matrix[n, nodes[1]] a1;")
 
     for (l in seq(2, num_layers)) {
-      transformed <- c(transformed,
-                       paste0("  matrix[n, nodes[", l, "]] z", l, ";"),
-                       paste0("  matrix[n, nodes[", l, "]] a", l, ";"))
+      transformed <- c(
+        transformed,
+        paste0("  matrix[n, nodes[", l, "]] z", l, ";"),
+        paste0("  matrix[n, nodes[", l, "]] a", l, ";")
+      )
     }
 
     transformed <- c(transformed, "  matrix[n, K] y_hat;", "  z1 = X * w1 + rep_matrix(b1', n);")
     for (l in seq(1, num_layers)) {
-      transformed <- c(transformed,
-                       paste0("  if (act_fn[", l, "] == 1) a", l, " = tanh(z", l, ");"),
-                       paste0("  else if (act_fn[", l, "] == 2) a", l, " = inv_logit(z", l, ");"),
-                       paste0("  else if (act_fn[", l, "] == 3) a", l, " = log(1 + exp(z", l, "));"),
-                       paste0("  else a", l, " = fmax(rep_matrix(0, n, nodes[", l, "]), z", l, ");"))
+      transformed <- c(
+        transformed,
+        paste0("  if (act_fn[", l, "] == 1) a", l, " = tanh(z", l, ");"),
+        paste0("  else if (act_fn[", l, "] == 2) a", l, " = inv_logit(z", l, ");"),
+        paste0("  else if (act_fn[", l, "] == 3) a", l, " = log(1 + exp(z", l, "));"),
+        paste0("  else a", l, " = fmax(rep_matrix(0, n, nodes[", l, "]), z", l, ");")
+      )
       if (l < num_layers) {
-        transformed <- c(transformed,
-                         paste0("  z", l+1, " = a", l, " * w", l+1, " + rep_matrix(b", l+1, "', n);"))
+        transformed <- c(
+          transformed,
+          paste0("  z", l + 1, " = a", l, " * w", l + 1, " + rep_matrix(b", l + 1, "', n);")
+        )
       }
     }
     transformed <- c(transformed, paste0("  y_hat = a", num_layers, " * w_out + rep_matrix(b_out', n);"), "}")
     sections$transformed <- paste(transformed, collapse = "\n")
 
     # Model block
-    model <- c("model {", "  to_vector(w1) ~ normal(0, 1);", "  b1 ~ normal(0, 1);")
+    model <- c("model {", "  to_vector(w1) ~ PRIOR_SPECIFICATION;", "  b1 ~ PRIOR_SPECIFICATION;")
     for (l in seq(2, num_layers)) {
-      model <- c(model,
-                 paste0("  to_vector(w", l, ") ~ normal(0, 1);"),
-                 paste0("  b", l, " ~ normal(0, 1);"))
+      model <- c(
+        model,
+        paste0("  to_vector(w", l, ") ~ PRIOR_SPECIFICATION;"),
+        paste0("  b", l, " ~ PRIOR_SPECIFICATION;")
+      )
     }
 
-    model <- c(model, "  to_vector(w_out) ~ normal(0, 1);", "  b_out ~ normal(0, 1);",
-               "  for (i in 1:n) y[i] ~ categorical_logit(y_hat[i]');", "}")
+    model <- c(
+      model, "  to_vector(w_out) ~ PRIOR_SPECIFICATION;", "  b_out ~ PRIOR_SPECIFICATION;",
+      "  for (i in 1:n) y[i] ~ categorical_logit(y_hat[i]');", "}"
+    )
     sections$model <- paste(model, collapse = "\n")
 
     # Combine all sections

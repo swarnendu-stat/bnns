@@ -35,8 +35,10 @@
 #' @examples
 #' # Fit a Bayesian Neural Network
 #' data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
-#' model <- bnns(y ~ -1 + x1 + x2, data = data, L = 1, nodes = 2, act_fn = 2,
-#' iter = 1e2, warmup = 5e1, chains = 1)
+#' model <- bnns(y ~ -1 + x1 + x2,
+#'   data = data, L = 1, nodes = 2, act_fn = 2,
+#'   iter = 1e2, warmup = 5e1, chains = 1
+#' )
 #'
 #' # Get a summary of the model
 #' summary(model)
@@ -45,7 +47,7 @@
 #'
 #' @export
 
-summary.bnns <- function(object, ...){
+summary.bnns <- function(object, ...) {
   cat("Call:\n")
   print(object$call)
 
@@ -60,7 +62,9 @@ summary.bnns <- function(object, ...){
   cat("Output activation function:", object$data$out_act_fn, "\n")
 
   pars <- c("w_out", "b_out")
-  if(object$data$out_act_fn == 1){ pars <- c(pars, "sigma") }
+  if (object$data$out_act_fn == 1) {
+    pars <- c(pars, "sigma")
+  }
   cat("\nPosterior Summary (Key Parameters):\n")
   stan_sum <- rstan::summary(object$fit, pars = pars)$summary
   print(stan_sum)
@@ -72,16 +76,16 @@ summary.bnns <- function(object, ...){
   cat("Chains:", object$fit@sim$chains, "\n")
 
   cat("\nPredictive Performance:\n")
-  if(object$data$out_act_fn == 1){
+  if (object$data$out_act_fn == 1) {
     measure <- measure_cont(obs = object$data$y, pred = predict.bnns(object))
     cat("RMSE (training):", measure$rmse, "\n")
     cat("MAE (training):", measure$mae, "\n")
-  }else if(object$data$out_act_fn == 2){
+  } else if (object$data$out_act_fn == 2) {
     measure <- measure_bin(obs = object$data$y, pred = predict.bnns(object))
     cat("Confusion matrix (training with 0.5 cutoff):", measure$conf_mat, "\n")
     cat("Accuracy (training with 0.5 cutoff):", measure$accuracy, "\n")
     cat(measure$AUC, "\n")
-  }else if(object$data$out_act_fn == 3){
+  } else if (object$data$out_act_fn == 3) {
     measure <- measure_cat(obs = factor(object$data$y), pred = predict.bnns(object))
     cat("Log-loss (training):", measure$log_loss, "\n")
     cat("AUC (training):", measure$AUC, "\n")
@@ -89,16 +93,18 @@ summary.bnns <- function(object, ...){
 
   cat("\nNotes:\n")
   cat("Check convergence diagnostics for parameters with high R-hat values.\n")
-  return(invisible(list("Number of observations" = object$data$n,
-              "Number of features" = object$data$m,
-              "Number of hidden layers" = object$data$L,
-              "Nodes per layer" = paste(object$data$nodes, collapse = " , "),
-              "Activation functions" = paste(object$data$act_fn, collapse = " , "),
-              "Output activation function" = object$data$out_act_fn,
-              "Stanfit Summary" = stan_sum,
-              "Iterations" = object$fit@sim$iter,
-              "Warmup" = object$fit@sim$warmup,
-              "Thinning" = object$fit@sim$thin,
-              "Chains" = object$fit@sim$chains,
-              "Performance" = measure)))
+  return(invisible(list(
+    "Number of observations" = object$data$n,
+    "Number of features" = object$data$m,
+    "Number of hidden layers" = object$data$L,
+    "Nodes per layer" = paste(object$data$nodes, collapse = " , "),
+    "Activation functions" = paste(object$data$act_fn, collapse = " , "),
+    "Output activation function" = object$data$out_act_fn,
+    "Stanfit Summary" = stan_sum,
+    "Iterations" = object$fit@sim$iter,
+    "Warmup" = object$fit@sim$warmup,
+    "Thinning" = object$fit@sim$thin,
+    "Chains" = object$fit@sim$chains,
+    "Performance" = measure
+  )))
 }

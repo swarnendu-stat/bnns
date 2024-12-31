@@ -39,9 +39,9 @@ set.seed(123)
 
 # Simulate predictor variables (e.g., patient covariates)
 n_subjects <- 100
-Age <- runif(n_subjects, 18, 50)                  # Age in years
-Dose <- runif(n_subjects, 10, 100)                # Dose levels
-Severity <- runif(n_subjects, 1, 10)              # Baseline severity (arbitrary scale)
+Age <- runif(n_subjects, 18, 50) # Age in years
+Dose <- runif(n_subjects, 10, 100) # Dose levels
+Severity <- runif(n_subjects, 1, 10) # Baseline severity (arbitrary scale)
 
 # Define true probabilities using a nonlinear function
 beta_0 <- 1
@@ -51,8 +51,8 @@ beta_3 <- -0.02
 beta_4 <- 0.005
 
 logit_p <- beta_0 + beta_1 * Dose + beta_2 * log(Severity) +
-           beta_3 * Age^2 + beta_4 * (Age * Dose)
-p_success <- 1 / (1 + exp(-logit_p))     # Sigmoid transformation
+  beta_3 * Age^2 + beta_4 * (Age * Dose)
+p_success <- 1 / (1 + exp(-logit_p)) # Sigmoid transformation
 
 # Simulate binary outcomes
 Success <- rbinom(n_subjects, size = 1, prob = p_success)
@@ -76,13 +76,13 @@ Fit a BNN to the simulated data. We use a binary classification model with a log
 model <- bnns(
   formula = Success ~ -1 + .,
   data = training_data,
-  L = 2,                # Number of hidden layers
-  nodes = c(16, 8),     # Nodes per layer
-  act_fn = c(2, 2),     # Activation functions for hidden layers
-  out_act_fn = 2,       # Output activation: logistic sigmoid
-  iter = 2e2,    # Bayesian sampling iterations
-  warmup = 1e2,         # Warmup iterations
-  chains = 1            # Number of MCMC chains
+  L = 2, # Number of hidden layers
+  nodes = c(16, 8), # Nodes per layer
+  act_fn = c(2, 2), # Activation functions for hidden layers
+  out_act_fn = 2, # Output activation: logistic sigmoid
+  iter = 2e2, # Bayesian sampling iterations
+  warmup = 1e2, # Warmup iterations
+  chains = 1 # Number of MCMC chains
 )
 ```
 
@@ -97,7 +97,7 @@ The posterior distribution of predictions allows us to compute not just point es
 ```{r}
 # Generate posterior predictions for the test set
 posterior_preds <- predict(model, subset(test_data, select = -Success))
-head(posterior_preds)  # Each row corresponds to a subject, and columns are MCMC samples
+head(posterior_preds) # Each row corresponds to a subject, and columns are MCMC samples
 ```
 
 Each entry in `posterior_preds` represents the predicted probability of success from a single posterior sample.
@@ -143,7 +143,7 @@ posterior_prob_high_success
 library(ggplot2)
 
 # Plot posterior probabilities of success for individual subjects
-ggplot(data.frame(Subject = 1:nrow(test_data), Prob = posterior_probs_success), aes(x = Subject, y = Prob)) +
+ggplot(data.frame(Subject = seq_len(nrow(test_data)), Prob = posterior_probs_success), aes(x = Subject, y = Prob)) +
   geom_bar(stat = "identity", fill = "blue") +
   geom_hline(yintercept = success_threshold, color = "red", linetype = "dashed") +
   labs(

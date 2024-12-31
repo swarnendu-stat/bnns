@@ -35,10 +35,14 @@ of model performance for multiclass classification.
 \examples{
 library(pROC)
 obs <- factor(c("A", "B", "C"), levels = LETTERS[1:3])
-pred <- matrix(c(0.8, 0.1, 0.1,
-                 0.2, 0.6, 0.2,
-                 0.7, 0.2, 0.1),
-               nrow = 3, byrow = TRUE)
+pred <- matrix(
+  c(
+    0.8, 0.1, 0.1,
+    0.2, 0.6, 0.2,
+    0.7, 0.2, 0.1
+  ),
+  nrow = 3, byrow = TRUE
+)
 measure_cat(obs, pred)
 # Returns: list(log_loss = 1.012185, ROC = <ROC>, AUC = 0.75)
 
