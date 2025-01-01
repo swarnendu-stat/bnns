@@ -7,7 +7,7 @@
 softplus(x)
 }
 \arguments{
-\item{x}{A numeric vector or matrix on which softplus transformation is going to be applied.........................}
+\item{x}{A numeric vector or matrix on which softplus transformation is going to be applied.}
 }
 \value{
 A numeric vector or matrix after softplus transformation.

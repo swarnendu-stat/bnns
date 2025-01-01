@@ -67,7 +67,7 @@ The list must include two components:
 \itemize{
 \item For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
 \item For \code{"uniform"}: Provide \code{lower} (lower bound) and \code{upper} (upper bound).
-\item For \code{"cauchy"}: Provide \code{location} (location parameter) and \code{scale} (scale parameter).
+\item For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
 }
 }
 If \code{prior_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
@@ -75,7 +75,7 @@ For example:
 \itemize{
 \item \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
 \item \code{list(dist = "uniform", params = list(lower = -1, upper = 1))}
-\item \code{list(dist = "cauchy", params = list(location = 0, scale = 2.5))}
+\item \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
 }}
 
 \item{prior_sigma}{A list specifying the prior distribution for the \code{sigma} parameter in regression

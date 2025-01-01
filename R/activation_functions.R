@@ -1,6 +1,6 @@
 #' sigmoid transformation
 #'
-#' @param x A numeric vector or matrix on which sigmoid transformation is going to be applied.........................
+#' @param x A numeric vector or matrix on which sigmoid transformation is going to be applied.
 #' @returns A numeric vector or matrix after sigmoid transformation.
 #' @examples
 #' sigmoid(matrix(1:4, nrow = 2))
@@ -12,7 +12,7 @@ sigmoid <- function(x) {
 
 #' softplus transformation
 #'
-#' @param x A numeric vector or matrix on which softplus transformation is going to be applied.........................
+#' @param x A numeric vector or matrix on which softplus transformation is going to be applied.
 #' @returns A numeric vector or matrix after softplus transformation.
 #' @examples
 #' softplus(matrix(1:4, nrow = 2))
@@ -24,7 +24,7 @@ softplus <- function(x) {
 
 #' relu transformation
 #'
-#' @param x A numeric vector or matrix on which relu transformation is going to be applied.........................
+#' @param x A numeric vector or matrix on which relu transformation is going to be applied.
 #' @returns A numeric vector or matrix after relu transformation.
 #' @examples
 #' relu(matrix(1:4, , nrow = 2))

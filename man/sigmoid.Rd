@@ -7,7 +7,7 @@
 sigmoid(x)
 }
 \arguments{
-\item{x}{A numeric vector or matrix on which sigmoid transformation is going to be applied.........................}
+\item{x}{A numeric vector or matrix on which sigmoid transformation is going to be applied.}
 }
 \value{
 A numeric vector or matrix after sigmoid transformation.

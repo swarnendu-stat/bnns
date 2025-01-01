@@ -33,16 +33,16 @@
 #'     \item \code{params}: A named list specifying the parameters for the chosen distribution:
 #'       \itemize{
 #'         \item For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
-#'         \item For \code{"uniform"}: Provide \code{lower} (lower bound) and \code{upper} (upper bound).
-#'         \item For \code{"cauchy"}: Provide \code{location} (location parameter) and \code{scale} (scale parameter).
+#'         \item For \code{"uniform"}: Provide \code{alpha} (lower bound) and \code{beta} (upper bound).
+#'         \item For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
 #'       }
 #'   }
 #'   If \code{prior_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
 #'   For example:
 #'   \itemize{
 #'     \item \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
-#'     \item \code{list(dist = "uniform", params = list(lower = -1, upper = 1))}
-#'     \item \code{list(dist = "cauchy", params = list(location = 0, scale = 2.5))}
+#'     \item \code{list(dist = "uniform", params = list(alpha = -1, beta = 1))}
+#'     \item \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
 #'   }
 #' @param prior_sigma A list specifying the prior distribution for the \code{sigma} parameter in regression
 #'   models (\code{out_act_fn = 1}). This allows for setting priors on the standard deviation of the residuals.
@@ -129,16 +129,16 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 #'     \item \code{params}: A named list specifying the parameters for the chosen distribution:
 #'       \itemize{
 #'         \item For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
-#'         \item For \code{"uniform"}: Provide \code{lower} (lower bound) and \code{upper} (upper bound).
-#'         \item For \code{"cauchy"}: Provide \code{location} (location parameter) and \code{scale} (scale parameter).
+#'         \item For \code{"uniform"}: Provide \code{alpha} (lower bound) and \code{beta} (upper bound).
+#'         \item For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
 #'       }
 #'   }
 #'   If \code{prior_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
 #'   For example:
 #'   \itemize{
 #'     \item \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
-#'     \item \code{list(dist = "uniform", params = list(lower = -1, upper = 1))}
-#'     \item \code{list(dist = "cauchy", params = list(location = 0, scale = 2.5))}
+#'     \item \code{list(dist = "uniform", params = list(alpha = -1, beta = 1))}
+#'     \item \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
 #'   }
 #' @param prior_sigma A list specifying the prior distribution for the \code{sigma} parameter in regression
 #'   models (\code{out_act_fn = 1}). This allows for setting priors on the standard deviation of the residuals.
@@ -214,31 +214,31 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
   # Validate parameters for the chosen distribution
   validate_prior <- function(dist, params) {
     switch(dist,
-           normal = {
-             if (!all(c("mean", "sd") %in% names(params))) {
-               stop("For 'normal' distribution, 'params' must contain 'mean' and 'sd'.")
-             }
-           },
-           uniform = {
-             if (!all(c("lower", "upper") %in% names(params))) {
-               stop("For 'uniform' distribution, 'params' must contain 'lower' and 'upper'.")
-             }
-           },
-           cauchy = {
-             if (!all(c("location", "scale") %in% names(params))) {
-               stop("For 'cauchy' distribution, 'params' must contain 'location' and 'scale'.")
-             }
-           },
-           half_normal = {
-             if (!all(c("mean", "sd") %in% names(params))) {
-               stop("For 'half_normal' distribution, 'params' must contain 'mean' and 'sd'.")
-             }
-           },
-           inv_gamma = {
-             if (!all(c("alpha", "beta") %in% names(params))) {
-               stop("For 'inv_gamma' distribution, 'params' must contain 'alpha' and 'beta'.")
-             }
-           }
+      normal = {
+        if (!all(c("mean", "sd") %in% names(params))) {
+          stop("For 'normal' distribution, 'params' must contain 'mean' and 'sd'.")
+        }
+      },
+      uniform = {
+        if (!all(c("alpha", "beta") %in% names(params))) {
+          stop("For 'uniform' distribution, 'params' must contain 'alpha' and 'beta'.")
+        }
+      },
+      cauchy = {
+        if (!all(c("mu", "sigma") %in% names(params))) {
+          stop("For 'cauchy' distribution, 'params' must contain 'mu' and 'sigma'.")
+        }
+      },
+      half_normal = {
+        if (!all(c("mean", "sd") %in% names(params))) {
+          stop("For 'half_normal' distribution, 'params' must contain 'mean' and 'sd'.")
+        }
+      },
+      inv_gamma = {
+        if (!all(c("alpha", "beta") %in% names(params))) {
+          stop("For 'inv_gamma' distribution, 'params' must contain 'alpha' and 'beta'.")
+        }
+      }
     )
   }
 
@@ -246,32 +246,9 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 
   # Replace PRIOR_SPECIFICATION with the appropriate Stan syntax
   prior_specification <- switch(prior_weights$dist,
-                                normal = sprintf("normal(%f, %f)", prior_weights$params$mean, prior_weights$params$sd),
-                                uniform = sprintf("uniform(%f, %f)", prior_weights$params$lower, prior_weights$params$upper),
-                                cauchy = sprintf("cauchy(%f, %f)", prior_weights$params$location, prior_weights$params$scale)
-  )
-
-  # Check prior_sigma (only relevant for regression models)
-  if (out_act_fn == 1) {
-    if (!is.null(prior_sigma)) {
-      if (!all(c("dist", "params") %in% names(prior_sigma))) {
-        stop("'prior_sigma' must contain 'dist' and 'params' elements.")
-      }
-      if (!prior_sigma$dist %in% c("half_normal", "inv_gamma")) {
-        stop("Supported prior distributions for sigma are 'half_normal' and 'inv_gamma'.")
-      }
-    } else {
-      # Default prior for sigma
-      prior_sigma <- list(dist = "half_normal", params = list(mean = 0, sd = 1))
-    }
-  }
-
-  validate_prior(prior_sigma$dist, prior_sigma$params)
-
-  # Replace PRIOR_SIGMA with the appropriate Stan syntax
-  prior_sigma <- switch(prior_sigma$dist,
-                        half_normal = sprintf("normal(%f, %f)", prior_sigma$params$mean, prior_sigma$params$sd),
-                        inv_gamma = sprintf("inv_gamma(%f, %f)", prior_sigma$params$alpha, prior_sigma$params$beta)
+    normal = sprintf("normal(%f, %f)", prior_weights$params$mean, prior_weights$params$sd),
+    uniform = sprintf("uniform(%f, %f)", prior_weights$params$alpha, prior_weights$params$beta),
+    cauchy = sprintf("cauchy(%f, %f)", prior_weights$params$mu, prior_weights$params$sigma)
   )
 
   if (out_act_fn == 3) {
@@ -319,8 +296,32 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
     pars <- c(pars, "sigma")
   }
 
-  stan_model <- gsub("PRIOR_SPECIFICATION", prior_specification, generate_stan_code(num_layers = L, nodes = nodes, out_act_fn = out_act_fn)) |>
-    gsub(x = _, pattern = "PRIOR_SIGMA", replacement = prior_sigma)
+  stan_model <- gsub("PRIOR_SPECIFICATION", prior_specification, generate_stan_code(num_layers = L, nodes = nodes, out_act_fn = out_act_fn))
+
+  # Check prior_sigma (only relevant for regression models)
+  if (out_act_fn == 1) {
+    if (!is.null(prior_sigma)) {
+      if (!all(c("dist", "params") %in% names(prior_sigma))) {
+        stop("'prior_sigma' must contain 'dist' and 'params' elements.")
+      }
+      if (!prior_sigma$dist %in% c("half_normal", "inv_gamma")) {
+        stop("Supported prior distributions for sigma are 'half_normal' and 'inv_gamma'.")
+      }
+    } else {
+      # Default prior for sigma
+      prior_sigma <- list(dist = "half_normal", params = list(mean = 0, sd = 1))
+    }
+
+    validate_prior(prior_sigma$dist, prior_sigma$params)
+
+    # Replace PRIOR_SIGMA with the appropriate Stan syntax
+    prior_sigma <- switch(prior_sigma$dist,
+      half_normal = sprintf("normal(%f, %f)", prior_sigma$params$mean, prior_sigma$params$sd),
+      inv_gamma = sprintf("inv_gamma(%f, %f)", prior_sigma$params$alpha, prior_sigma$params$beta)
+    )
+
+    stan_model <- gsub(x = stan_model, pattern = "PRIOR_SIGMA", replacement = prior_sigma)
+  }
 
   est$fit <- suppressWarnings(rstan::stan(
     model_code = stan_model, data = stan_data, include = TRUE,
@@ -370,16 +371,16 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 #'     \item \code{params}: A named list specifying the parameters for the chosen distribution:
 #'       \itemize{
 #'         \item For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
-#'         \item For \code{"uniform"}: Provide \code{lower} (lower bound) and \code{upper} (upper bound).
-#'         \item For \code{"cauchy"}: Provide \code{location} (location parameter) and \code{scale} (scale parameter).
+#'         \item For \code{"uniform"}: Provide \code{alpha} (lower bound) and \code{beta} (upper bound).
+#'         \item For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
 #'       }
 #'   }
 #'   If \code{prior_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
 #'   For example:
 #'   \itemize{
 #'     \item \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
-#'     \item \code{list(dist = "uniform", params = list(lower = -1, upper = 1))}
-#'     \item \code{list(dist = "cauchy", params = list(location = 0, scale = 2.5))}
+#'     \item \code{list(dist = "uniform", params = list(alpha = -1, beta = 1))}
+#'     \item \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
 #'   }
 #' @param prior_sigma A list specifying the prior distribution for the \code{sigma} parameter in regression
 #'   models (\code{out_act_fn = 1}). This allows for setting priors on the standard deviation of the residuals.

@@ -7,7 +7,7 @@
 relu(x)
 }
 \arguments{
-\item{x}{A numeric vector or matrix on which relu transformation is going to be applied.........................}
+\item{x}{A numeric vector or matrix on which relu transformation is going to be applied.}
 }
 \value{
 A numeric vector or matrix after relu transformation.

@@ -1,5 +1,5 @@
 ---
-title: "Getting Started with the bnns Package"
+title: "bnns"
 author: "Swarnendu Chatterjee"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -27,6 +27,7 @@ This vignette covers:
 4. Summarizing the model
 5. Making predictions
 6. Model evaluation
+7. Customizing prior
 
 ## 1. Installation
 
@@ -187,9 +188,33 @@ metrics_cat <- measure_cat(obs = test_y_cat, pred = pred_cat)
 print(metrics_cat)
 ```
 
+## 7. Customized Prior
+
+Customized priors can be used for weights as well as the `sigma` parameter (for regression).  Here we show an example use of a `Cauchy` prior for weights in multi-classification case.
+
+```{r}
+model_cat_cauchy <- bnns(
+  y_cat ~ -1 + x1 + x2,
+  data = df,
+  L = 3,
+  nodes = c(32, 16, 8),
+  act_fn = c(3, 2, 2),
+  out_act_fn = 3, # Output activation: 3 = Softmax
+  iter = 2e2,
+  warmup = 1e2,
+  chains = 1,
+  prior_weights = list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))
+)
+
+# Evaluate predictions
+metrics_cat_cauchy <- measure_cat(obs = test_y_cat, pred = predict(model_cat_cauchy, test_x))
+print(metrics_cat_cauchy)
+```
+
 ## 8. Notes on Bayesian Neural Networks
 
-- Bayesian inference allows for uncertainty quantification in predictions.
+- Bayesian inference allows for use of prior knowledge about the weights.
+- It allows for uncertainty quantification in predictions.
 - Always check convergence diagnostics such as R-hat values.
 - Use informative priors when possible to stabilize the model.
 
