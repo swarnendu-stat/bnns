@@ -13,6 +13,7 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Bayesian Neural Network with Stan">
 <meta name="description" content="Provides a flexible formula-based interface for building and training Bayesian Neural Networks (BNNs) using Stan. Enables users to model complex relationships while quantifying uncertainty through posterior distributions. Suitable for applications in domains such as clinical trials, finance, and other areas requiring interpretable Bayesian predictions.">
 <meta property="og:description" content="Provides a flexible formula-based interface for building and training Bayesian Neural Networks (BNNs) using Stan. Enables users to model complex relationships while quantifying uncertainty through posterior distributions. Suitable for applications in domains such as clinical trials, finance, and other areas requiring interpretable Bayesian predictions.">
+<meta property="og:image" content="https://swarnendu-stat.github.io/bnns/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -54,8 +55,11 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="bnns-bayesian-neural-networks-for-regression-and-classification">bnns: Bayesian Neural Networks for Regression and Classification<a class="anchor" aria-label="anchor" href="#bnns-bayesian-neural-networks-for-regression-and-classification"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="bnns-bayesian-neural-networks-for-regression-and-classification">bnns: Bayesian Neural Networks for Regression and Classification<a class="anchor" aria-label="anchor" href="#bnns-bayesian-neural-networks-for-regression-and-classification"></a>
+</h1>
+</div>
+<p><a href="https://swarnendu-stat.github.io/bnns/"><img src="reference/figures/logo.png" align="right" height="139" alt="bnns website"></a></p>
 <!-- badges: start -->
 
 <p>The <code>bnns</code> package provides tools to fit Bayesian Neural Networks (BNNs) for regression and classification problems. It is designed to be flexible, supporting various network architectures, activation functions, and output types, making it suitable for both simple and complex data analysis tasks.</p>
@@ -86,13 +90,13 @@
 <span><span class="co">#&gt; Downloading GitHub repo swarnendu-stat/bnns@HEAD</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── R CMD build ─────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; * checking for file ‘/tmp/Rtmpfvs9Fx/remotes35315562d52c/swarnendu-stat-bnns-3801647/DESCRIPTION’ ... OK</span></span>
+<span><span class="co">#&gt; * checking for file ‘/tmp/RtmpBqeKhD/remotes366521debc36/swarnendu-stat-bnns-c1b906d/DESCRIPTION’ ... OK</span></span>
 <span><span class="co">#&gt; * preparing ‘bnns’:</span></span>
 <span><span class="co">#&gt; * checking DESCRIPTION meta-information ... OK</span></span>
 <span><span class="co">#&gt; * checking for LF line-endings in source and make files and shell scripts</span></span>
 <span><span class="co">#&gt; * checking for empty or unneeded directories</span></span>
 <span><span class="co">#&gt; * building ‘bnns_0.0.0.9000.tar.gz’</span></span>
-<span><span class="co">#&gt; Installing package into '/tmp/RtmpGeYzYu/temp_libpath2f0e7b6f34a7'</span></span>
+<span><span class="co">#&gt; Installing package into '/tmp/Rtmpezcmqo/temp_libpathb437cdfdbe9'</span></span>
 <span><span class="co">#&gt; (as 'lib' is unspecified)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -119,19 +123,7 @@
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; TRANSLATING MODEL '' FROM Stan CODE TO C++ CODE NOW.</span></span>
-<span><span class="co">#&gt; OS: x86_64, linux-gnu; rstan: 2.32.6; Rcpp: 1.0.13.1; inline: 0.3.20</span></span>
-<span><span class="co">#&gt; Running /usr/lib/R/bin/R CMD SHLIB foo.c</span></span>
-<span><span class="co">#&gt; using C compiler: ‘gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0’</span></span>
-<span><span class="co">#&gt; gcc -I"/usr/share/R/include" -DNDEBUG   -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/unsupported"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/BH/include" -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/src/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppParallel/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1       -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c foo.c -o foo.o</span></span>
-<span><span class="co">#&gt; In file included from /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/Eigen/Core:19,</span></span>
-<span><span class="co">#&gt;                  from /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/Eigen/Dense:1,</span></span>
-<span><span class="co">#&gt;                  from /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:22,</span></span>
-<span><span class="co">#&gt;                  from &lt;command-line&gt;:</span></span>
-<span><span class="co">#&gt; /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/Eigen/src/Core/util/Macros.h:679:10: fatal error: cmath: No such file or directory</span></span>
-<span><span class="co">#&gt;   679 | #include &lt;cmath&gt;</span></span>
-<span><span class="co">#&gt;       |          ^~~~~~~</span></span>
-<span><span class="co">#&gt; compilation terminated.</span></span>
-<span><span class="co">#&gt; make: *** [/usr/lib/R/etc/Makeconf:195: foo.o] Error 1</span></span>
+<span><span class="co">#&gt; OS: x86_64, linux-gnu; rstan: 2.32.6; Rcpp: 1.0.13.1; inline: 0.3.20 </span></span>
 <span><span class="co">#&gt;  &gt;&gt; setting environment variables: </span></span>
 <span><span class="co">#&gt; PKG_LIBS =  '/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/rstan/lib//libStanServices.a' -L'/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/lib/' -lStanHeaders -L'/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppParallel/lib/' -ltbb </span></span>
 <span><span class="co">#&gt; PKG_CPPFLAGS =   -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/unsupported"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/BH/include" -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/src/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppParallel/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1 </span></span>
@@ -154,7 +146,7 @@
 <span><span class="co">#&gt;   15 : #endif</span></span>
 <span><span class="co">#&gt;   16 : // Code generated by stanc v2.32.2</span></span>
 <span><span class="co">#&gt;   17 : #include &lt;stan/model/model_header.hpp&gt;</span></span>
-<span><span class="co">#&gt;   18 : namespace model353158a657ea__namespace {</span></span>
+<span><span class="co">#&gt;   18 : namespace model366565dff4f1__namespace {</span></span>
 <span><span class="co">#&gt;   19 : using stan::model::model_base_crtp;</span></span>
 <span><span class="co">#&gt;   20 : using namespace stan::math;</span></span>
 <span><span class="co">#&gt;   21 : stan::math::profile_map profiles__;</span></span>
@@ -225,7 +217,7 @@
 <span><span class="co">#&gt;   86 :   " (in 'anon_model', line 23, column 9 to column 10)",</span></span>
 <span><span class="co">#&gt;   87 :   " (in 'anon_model', line 23, column 12 to column 20)",</span></span>
 <span><span class="co">#&gt;   88 :   " (in 'anon_model', line 24, column 9 to column 10)"};</span></span>
-<span><span class="co">#&gt;   89 : class model353158a657ea_ final : public model_base_crtp&lt;model353158a657ea_&gt; {</span></span>
+<span><span class="co">#&gt;   89 : class model366565dff4f1_ final : public model_base_crtp&lt;model366565dff4f1_&gt; {</span></span>
 <span><span class="co">#&gt;   90 : private:</span></span>
 <span><span class="co">#&gt;   91 :   int n;</span></span>
 <span><span class="co">#&gt;   92 :   int m;</span></span>
@@ -247,8 +239,8 @@
 <span><span class="co">#&gt;  108 :   Eigen::Map&lt;Eigen::Matrix&lt;double,-1,-1&gt;&gt; X{nullptr, 0, 0};</span></span>
 <span><span class="co">#&gt;  109 :   Eigen::Map&lt;Eigen::Matrix&lt;double,-1,1&gt;&gt; y{nullptr, 0};</span></span>
 <span><span class="co">#&gt;  110 : public:</span></span>
-<span><span class="co">#&gt;  111 :   ~model353158a657ea_() {}</span></span>
-<span><span class="co">#&gt;  112 :   model353158a657ea_(stan::io::var_context&amp; context__, unsigned int</span></span>
+<span><span class="co">#&gt;  111 :   ~model366565dff4f1_() {}</span></span>
+<span><span class="co">#&gt;  112 :   model366565dff4f1_(stan::io::var_context&amp; context__, unsigned int</span></span>
 <span><span class="co">#&gt;  113 :                      random_seed__ = 0, std::ostream* pstream__ = nullptr)</span></span>
 <span><span class="co">#&gt;  114 :       : model_base_crtp(0) {</span></span>
 <span><span class="co">#&gt;  115 :     int current_statement__ = 0;</span></span>
@@ -258,7 +250,7 @@
 <span><span class="co">#&gt;  119 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  120 :     (void) base_rng__;</span></span>
 <span><span class="co">#&gt;  121 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  122 :       "model353158a657ea__namespace::model353158a657ea_";</span></span>
+<span><span class="co">#&gt;  122 :       "model366565dff4f1__namespace::model366565dff4f1_";</span></span>
 <span><span class="co">#&gt;  123 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  124 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  125 :     local_scalar_t__ DUMMY_VAR__(std::numeric_limits&lt;double&gt;::quiet_NaN());</span></span>
@@ -453,7 +445,7 @@
 <span><span class="co">#&gt;  314 :       b2_1dim__ + w_out_1dim__ + 1 + 1;</span></span>
 <span><span class="co">#&gt;  315 :   }</span></span>
 <span><span class="co">#&gt;  316 :   inline std::string model_name() const final {</span></span>
-<span><span class="co">#&gt;  317 :     return "model353158a657ea_";</span></span>
+<span><span class="co">#&gt;  317 :     return "model366565dff4f1_";</span></span>
 <span><span class="co">#&gt;  318 :   }</span></span>
 <span><span class="co">#&gt;  319 :   inline std::vector&lt;std::string&gt; model_compile_info() const noexcept {</span></span>
 <span><span class="co">#&gt;  320 :     return std::vector&lt;std::string&gt;{"stanc_version = stanc3 v2.32.2",</span></span>
@@ -475,7 +467,7 @@
 <span><span class="co">#&gt;  336 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  337 :     (void) DUMMY_VAR__;</span></span>
 <span><span class="co">#&gt;  338 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  339 :       "model353158a657ea__namespace::log_prob";</span></span>
+<span><span class="co">#&gt;  339 :       "model366565dff4f1__namespace::log_prob";</span></span>
 <span><span class="co">#&gt;  340 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  341 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  342 :     try {</span></span>
@@ -668,7 +660,7 @@
 <span><span class="co">#&gt;  529 :     (void) DUMMY_VAR__;</span></span>
 <span><span class="co">#&gt;  530 :     constexpr bool jacobian__ = false;</span></span>
 <span><span class="co">#&gt;  531 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  532 :       "model353158a657ea__namespace::write_array";</span></span>
+<span><span class="co">#&gt;  532 :       "model366565dff4f1__namespace::write_array";</span></span>
 <span><span class="co">#&gt;  533 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  534 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  535 :     try {</span></span>
@@ -1311,7 +1303,7 @@
 <span><span class="co">#&gt; 1172 :   }</span></span>
 <span><span class="co">#&gt; 1173 : };</span></span>
 <span><span class="co">#&gt; 1174 : }</span></span>
-<span><span class="co">#&gt; 1175 : using stan_model = model353158a657ea__namespace::model353158a657ea_;</span></span>
+<span><span class="co">#&gt; 1175 : using stan_model = model366565dff4f1__namespace::model366565dff4f1_;</span></span>
 <span><span class="co">#&gt; 1176 : #ifndef USING_R</span></span>
 <span><span class="co">#&gt; 1177 : // Boilerplate</span></span>
 <span><span class="co">#&gt; 1178 : stan::model::model_base&amp;</span></span>
@@ -1321,14 +1313,14 @@
 <span><span class="co">#&gt; 1182 :   return *m;</span></span>
 <span><span class="co">#&gt; 1183 : }</span></span>
 <span><span class="co">#&gt; 1184 : stan::math::profile_map&amp; get_stan_profile_data() {</span></span>
-<span><span class="co">#&gt; 1185 :   return model353158a657ea__namespace::profiles__;</span></span>
+<span><span class="co">#&gt; 1185 :   return model366565dff4f1__namespace::profiles__;</span></span>
 <span><span class="co">#&gt; 1186 : }</span></span>
 <span><span class="co">#&gt; 1187 : #endif</span></span>
 <span><span class="co">#&gt; 1188 : #endif</span></span>
 <span><span class="co">#&gt; 1189 : </span></span>
-<span><span class="co">#&gt; 1190 : RCPP_MODULE(stan_fit4model353158a657ea__mod) {</span></span>
+<span><span class="co">#&gt; 1190 : RCPP_MODULE(stan_fit4model366565dff4f1__mod) {</span></span>
 <span><span class="co">#&gt; 1191 :   class_&lt;rstan::stan_fit&lt;stan_model, boost::random::ecuyer1988&gt; &gt;(</span></span>
-<span><span class="co">#&gt; 1192 :       "stan_fit4model353158a657ea_")</span></span>
+<span><span class="co">#&gt; 1192 :       "stan_fit4model366565dff4f1_")</span></span>
 <span><span class="co">#&gt; 1193 : </span></span>
 <span><span class="co">#&gt; 1194 :       .constructor&lt;SEXP, SEXP, SEXP&gt;()</span></span>
 <span><span class="co">#&gt; 1195 : </span></span>
@@ -1387,11 +1379,11 @@
 <span><span class="co">#&gt; 1248 : </span></span>
 <span><span class="co">#&gt; 1249 : // declarations</span></span>
 <span><span class="co">#&gt; 1250 : extern "C" {</span></span>
-<span><span class="co">#&gt; 1251 : SEXP file35312587c1e6( ) ;</span></span>
+<span><span class="co">#&gt; 1251 : SEXP file366590a1003( ) ;</span></span>
 <span><span class="co">#&gt; 1252 : }</span></span>
 <span><span class="co">#&gt; 1253 : </span></span>
 <span><span class="co">#&gt; 1254 : // definition</span></span>
-<span><span class="co">#&gt; 1255 : SEXP file35312587c1e6() {</span></span>
+<span><span class="co">#&gt; 1255 : SEXP file366590a1003() {</span></span>
 <span><span class="co">#&gt; 1256 :  return Rcpp::wrap("anon_model");</span></span>
 <span><span class="co">#&gt; 1257 : }</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1492,19 +1484,7 @@
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; TRANSLATING MODEL '' FROM Stan CODE TO C++ CODE NOW.</span></span>
-<span><span class="co">#&gt; OS: x86_64, linux-gnu; rstan: 2.32.6; Rcpp: 1.0.13.1; inline: 0.3.20</span></span>
-<span><span class="co">#&gt; Running /usr/lib/R/bin/R CMD SHLIB foo.c</span></span>
-<span><span class="co">#&gt; using C compiler: ‘gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0’</span></span>
-<span><span class="co">#&gt; gcc -I"/usr/share/R/include" -DNDEBUG   -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/unsupported"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/BH/include" -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/src/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppParallel/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1       -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c foo.c -o foo.o</span></span>
-<span><span class="co">#&gt; In file included from /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/Eigen/Core:19,</span></span>
-<span><span class="co">#&gt;                  from /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/Eigen/Dense:1,</span></span>
-<span><span class="co">#&gt;                  from /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:22,</span></span>
-<span><span class="co">#&gt;                  from &lt;command-line&gt;:</span></span>
-<span><span class="co">#&gt; /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/Eigen/src/Core/util/Macros.h:679:10: fatal error: cmath: No such file or directory</span></span>
-<span><span class="co">#&gt;   679 | #include &lt;cmath&gt;</span></span>
-<span><span class="co">#&gt;       |          ^~~~~~~</span></span>
-<span><span class="co">#&gt; compilation terminated.</span></span>
-<span><span class="co">#&gt; make: *** [/usr/lib/R/etc/Makeconf:195: foo.o] Error 1</span></span>
+<span><span class="co">#&gt; OS: x86_64, linux-gnu; rstan: 2.32.6; Rcpp: 1.0.13.1; inline: 0.3.20 </span></span>
 <span><span class="co">#&gt;  &gt;&gt; setting environment variables: </span></span>
 <span><span class="co">#&gt; PKG_LIBS =  '/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/rstan/lib//libStanServices.a' -L'/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/lib/' -lStanHeaders -L'/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppParallel/lib/' -ltbb </span></span>
 <span><span class="co">#&gt; PKG_CPPFLAGS =   -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/unsupported"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/BH/include" -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/src/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppParallel/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1 </span></span>
@@ -1527,7 +1507,7 @@
 <span><span class="co">#&gt;   15 : #endif</span></span>
 <span><span class="co">#&gt;   16 : // Code generated by stanc v2.32.2</span></span>
 <span><span class="co">#&gt;   17 : #include &lt;stan/model/model_header.hpp&gt;</span></span>
-<span><span class="co">#&gt;   18 : namespace model35313ddafbda__namespace {</span></span>
+<span><span class="co">#&gt;   18 : namespace model366534d1cd7b__namespace {</span></span>
 <span><span class="co">#&gt;   19 : using stan::model::model_base_crtp;</span></span>
 <span><span class="co">#&gt;   20 : using namespace stan::math;</span></span>
 <span><span class="co">#&gt;   21 : stan::math::profile_map profiles__;</span></span>
@@ -1598,7 +1578,7 @@
 <span><span class="co">#&gt;   86 :   " (in 'anon_model', line 23, column 9 to column 10)",</span></span>
 <span><span class="co">#&gt;   87 :   " (in 'anon_model', line 23, column 12 to column 20)",</span></span>
 <span><span class="co">#&gt;   88 :   " (in 'anon_model', line 24, column 9 to column 10)"};</span></span>
-<span><span class="co">#&gt;   89 : class model35313ddafbda_ final : public model_base_crtp&lt;model35313ddafbda_&gt; {</span></span>
+<span><span class="co">#&gt;   89 : class model366534d1cd7b_ final : public model_base_crtp&lt;model366534d1cd7b_&gt; {</span></span>
 <span><span class="co">#&gt;   90 : private:</span></span>
 <span><span class="co">#&gt;   91 :   int n;</span></span>
 <span><span class="co">#&gt;   92 :   int m;</span></span>
@@ -1620,8 +1600,8 @@
 <span><span class="co">#&gt;  108 :   Eigen::Map&lt;Eigen::Matrix&lt;double,-1,-1&gt;&gt; X{nullptr, 0, 0};</span></span>
 <span><span class="co">#&gt;  109 :   Eigen::Map&lt;Eigen::Matrix&lt;double,-1,1&gt;&gt; y{nullptr, 0};</span></span>
 <span><span class="co">#&gt;  110 : public:</span></span>
-<span><span class="co">#&gt;  111 :   ~model35313ddafbda_() {}</span></span>
-<span><span class="co">#&gt;  112 :   model35313ddafbda_(stan::io::var_context&amp; context__, unsigned int</span></span>
+<span><span class="co">#&gt;  111 :   ~model366534d1cd7b_() {}</span></span>
+<span><span class="co">#&gt;  112 :   model366534d1cd7b_(stan::io::var_context&amp; context__, unsigned int</span></span>
 <span><span class="co">#&gt;  113 :                      random_seed__ = 0, std::ostream* pstream__ = nullptr)</span></span>
 <span><span class="co">#&gt;  114 :       : model_base_crtp(0) {</span></span>
 <span><span class="co">#&gt;  115 :     int current_statement__ = 0;</span></span>
@@ -1631,7 +1611,7 @@
 <span><span class="co">#&gt;  119 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  120 :     (void) base_rng__;</span></span>
 <span><span class="co">#&gt;  121 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  122 :       "model35313ddafbda__namespace::model35313ddafbda_";</span></span>
+<span><span class="co">#&gt;  122 :       "model366534d1cd7b__namespace::model366534d1cd7b_";</span></span>
 <span><span class="co">#&gt;  123 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  124 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  125 :     local_scalar_t__ DUMMY_VAR__(std::numeric_limits&lt;double&gt;::quiet_NaN());</span></span>
@@ -1826,7 +1806,7 @@
 <span><span class="co">#&gt;  314 :       b2_1dim__ + w_out_1dim__ + 1 + 1;</span></span>
 <span><span class="co">#&gt;  315 :   }</span></span>
 <span><span class="co">#&gt;  316 :   inline std::string model_name() const final {</span></span>
-<span><span class="co">#&gt;  317 :     return "model35313ddafbda_";</span></span>
+<span><span class="co">#&gt;  317 :     return "model366534d1cd7b_";</span></span>
 <span><span class="co">#&gt;  318 :   }</span></span>
 <span><span class="co">#&gt;  319 :   inline std::vector&lt;std::string&gt; model_compile_info() const noexcept {</span></span>
 <span><span class="co">#&gt;  320 :     return std::vector&lt;std::string&gt;{"stanc_version = stanc3 v2.32.2",</span></span>
@@ -1848,7 +1828,7 @@
 <span><span class="co">#&gt;  336 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  337 :     (void) DUMMY_VAR__;</span></span>
 <span><span class="co">#&gt;  338 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  339 :       "model35313ddafbda__namespace::log_prob";</span></span>
+<span><span class="co">#&gt;  339 :       "model366534d1cd7b__namespace::log_prob";</span></span>
 <span><span class="co">#&gt;  340 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  341 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  342 :     try {</span></span>
@@ -2041,7 +2021,7 @@
 <span><span class="co">#&gt;  529 :     (void) DUMMY_VAR__;</span></span>
 <span><span class="co">#&gt;  530 :     constexpr bool jacobian__ = false;</span></span>
 <span><span class="co">#&gt;  531 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  532 :       "model35313ddafbda__namespace::write_array";</span></span>
+<span><span class="co">#&gt;  532 :       "model366534d1cd7b__namespace::write_array";</span></span>
 <span><span class="co">#&gt;  533 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  534 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  535 :     try {</span></span>
@@ -2684,7 +2664,7 @@
 <span><span class="co">#&gt; 1172 :   }</span></span>
 <span><span class="co">#&gt; 1173 : };</span></span>
 <span><span class="co">#&gt; 1174 : }</span></span>
-<span><span class="co">#&gt; 1175 : using stan_model = model35313ddafbda__namespace::model35313ddafbda_;</span></span>
+<span><span class="co">#&gt; 1175 : using stan_model = model366534d1cd7b__namespace::model366534d1cd7b_;</span></span>
 <span><span class="co">#&gt; 1176 : #ifndef USING_R</span></span>
 <span><span class="co">#&gt; 1177 : // Boilerplate</span></span>
 <span><span class="co">#&gt; 1178 : stan::model::model_base&amp;</span></span>
@@ -2694,14 +2674,14 @@
 <span><span class="co">#&gt; 1182 :   return *m;</span></span>
 <span><span class="co">#&gt; 1183 : }</span></span>
 <span><span class="co">#&gt; 1184 : stan::math::profile_map&amp; get_stan_profile_data() {</span></span>
-<span><span class="co">#&gt; 1185 :   return model35313ddafbda__namespace::profiles__;</span></span>
+<span><span class="co">#&gt; 1185 :   return model366534d1cd7b__namespace::profiles__;</span></span>
 <span><span class="co">#&gt; 1186 : }</span></span>
 <span><span class="co">#&gt; 1187 : #endif</span></span>
 <span><span class="co">#&gt; 1188 : #endif</span></span>
 <span><span class="co">#&gt; 1189 : </span></span>
-<span><span class="co">#&gt; 1190 : RCPP_MODULE(stan_fit4model35313ddafbda__mod) {</span></span>
+<span><span class="co">#&gt; 1190 : RCPP_MODULE(stan_fit4model366534d1cd7b__mod) {</span></span>
 <span><span class="co">#&gt; 1191 :   class_&lt;rstan::stan_fit&lt;stan_model, boost::random::ecuyer1988&gt; &gt;(</span></span>
-<span><span class="co">#&gt; 1192 :       "stan_fit4model35313ddafbda_")</span></span>
+<span><span class="co">#&gt; 1192 :       "stan_fit4model366534d1cd7b_")</span></span>
 <span><span class="co">#&gt; 1193 : </span></span>
 <span><span class="co">#&gt; 1194 :       .constructor&lt;SEXP, SEXP, SEXP&gt;()</span></span>
 <span><span class="co">#&gt; 1195 : </span></span>
@@ -2760,11 +2740,11 @@
 <span><span class="co">#&gt; 1248 : </span></span>
 <span><span class="co">#&gt; 1249 : // declarations</span></span>
 <span><span class="co">#&gt; 1250 : extern "C" {</span></span>
-<span><span class="co">#&gt; 1251 : SEXP file35314104fca8( ) ;</span></span>
+<span><span class="co">#&gt; 1251 : SEXP file36657890a125( ) ;</span></span>
 <span><span class="co">#&gt; 1252 : }</span></span>
 <span><span class="co">#&gt; 1253 : </span></span>
 <span><span class="co">#&gt; 1254 : // definition</span></span>
-<span><span class="co">#&gt; 1255 : SEXP file35314104fca8() {</span></span>
+<span><span class="co">#&gt; 1255 : SEXP file36657890a125() {</span></span>
 <span><span class="co">#&gt; 1256 :  return Rcpp::wrap("anon_model");</span></span>
 <span><span class="co">#&gt; 1257 : }</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -2786,19 +2766,7 @@
 <span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span>, data <span class="op">=</span> <span class="va">df</span>, L <span class="op">=</span> <span class="fl">2</span>, nodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16</span>, <span class="fl">8</span><span class="op">)</span>, act_fn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span>, out_act_fn <span class="op">=</span> <span class="fl">2</span>, iter <span class="op">=</span> <span class="fl">1e2</span>, warmup <span class="op">=</span> <span class="fl">5e1</span>, chains <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; TRANSLATING MODEL '' FROM Stan CODE TO C++ CODE NOW.</span></span>
-<span><span class="co">#&gt; OS: x86_64, linux-gnu; rstan: 2.32.6; Rcpp: 1.0.13.1; inline: 0.3.20</span></span>
-<span><span class="co">#&gt; Running /usr/lib/R/bin/R CMD SHLIB foo.c</span></span>
-<span><span class="co">#&gt; using C compiler: ‘gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0’</span></span>
-<span><span class="co">#&gt; gcc -I"/usr/share/R/include" -DNDEBUG   -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/unsupported"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/BH/include" -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/src/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppParallel/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1       -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c foo.c -o foo.o</span></span>
-<span><span class="co">#&gt; In file included from /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/Eigen/Core:19,</span></span>
-<span><span class="co">#&gt;                  from /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/Eigen/Dense:1,</span></span>
-<span><span class="co">#&gt;                  from /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:22,</span></span>
-<span><span class="co">#&gt;                  from &lt;command-line&gt;:</span></span>
-<span><span class="co">#&gt; /home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/Eigen/src/Core/util/Macros.h:679:10: fatal error: cmath: No such file or directory</span></span>
-<span><span class="co">#&gt;   679 | #include &lt;cmath&gt;</span></span>
-<span><span class="co">#&gt;       |          ^~~~~~~</span></span>
-<span><span class="co">#&gt; compilation terminated.</span></span>
-<span><span class="co">#&gt; make: *** [/usr/lib/R/etc/Makeconf:195: foo.o] Error 1</span></span>
+<span><span class="co">#&gt; OS: x86_64, linux-gnu; rstan: 2.32.6; Rcpp: 1.0.13.1; inline: 0.3.20 </span></span>
 <span><span class="co">#&gt;  &gt;&gt; setting environment variables: </span></span>
 <span><span class="co">#&gt; PKG_LIBS =  '/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/rstan/lib//libStanServices.a' -L'/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/lib/' -lStanHeaders -L'/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppParallel/lib/' -ltbb </span></span>
 <span><span class="co">#&gt; PKG_CPPFLAGS =   -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppEigen/include/unsupported"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/BH/include" -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/src/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/RcppParallel/include/"  -I"/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/antpc/R/x86_64-pc-linux-gnu-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1 </span></span>
@@ -2821,7 +2789,7 @@
 <span><span class="co">#&gt;   15 : #endif</span></span>
 <span><span class="co">#&gt;   16 : // Code generated by stanc v2.32.2</span></span>
 <span><span class="co">#&gt;   17 : #include &lt;stan/model/model_header.hpp&gt;</span></span>
-<span><span class="co">#&gt;   18 : namespace model35314641fc9f__namespace {</span></span>
+<span><span class="co">#&gt;   18 : namespace model366545f86ded__namespace {</span></span>
 <span><span class="co">#&gt;   19 : using stan::model::model_base_crtp;</span></span>
 <span><span class="co">#&gt;   20 : using namespace stan::math;</span></span>
 <span><span class="co">#&gt;   21 : stan::math::profile_map profiles__;</span></span>
@@ -2890,7 +2858,7 @@
 <span><span class="co">#&gt;   84 :   " (in 'anon_model', line 22, column 9 to column 10)",</span></span>
 <span><span class="co">#&gt;   85 :   " (in 'anon_model', line 22, column 12 to column 20)",</span></span>
 <span><span class="co">#&gt;   86 :   " (in 'anon_model', line 23, column 9 to column 10)"};</span></span>
-<span><span class="co">#&gt;   87 : class model35314641fc9f_ final : public model_base_crtp&lt;model35314641fc9f_&gt; {</span></span>
+<span><span class="co">#&gt;   87 : class model366545f86ded_ final : public model_base_crtp&lt;model366545f86ded_&gt; {</span></span>
 <span><span class="co">#&gt;   88 : private:</span></span>
 <span><span class="co">#&gt;   89 :   int n;</span></span>
 <span><span class="co">#&gt;   90 :   int m;</span></span>
@@ -2911,8 +2879,8 @@
 <span><span class="co">#&gt;  105 :   int a2_2dim__;</span></span>
 <span><span class="co">#&gt;  106 :   Eigen::Map&lt;Eigen::Matrix&lt;double,-1,-1&gt;&gt; X{nullptr, 0, 0};</span></span>
 <span><span class="co">#&gt;  107 : public:</span></span>
-<span><span class="co">#&gt;  108 :   ~model35314641fc9f_() {}</span></span>
-<span><span class="co">#&gt;  109 :   model35314641fc9f_(stan::io::var_context&amp; context__, unsigned int</span></span>
+<span><span class="co">#&gt;  108 :   ~model366545f86ded_() {}</span></span>
+<span><span class="co">#&gt;  109 :   model366545f86ded_(stan::io::var_context&amp; context__, unsigned int</span></span>
 <span><span class="co">#&gt;  110 :                      random_seed__ = 0, std::ostream* pstream__ = nullptr)</span></span>
 <span><span class="co">#&gt;  111 :       : model_base_crtp(0) {</span></span>
 <span><span class="co">#&gt;  112 :     int current_statement__ = 0;</span></span>
@@ -2922,7 +2890,7 @@
 <span><span class="co">#&gt;  116 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  117 :     (void) base_rng__;</span></span>
 <span><span class="co">#&gt;  118 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  119 :       "model35314641fc9f__namespace::model35314641fc9f_";</span></span>
+<span><span class="co">#&gt;  119 :       "model366545f86ded__namespace::model366545f86ded_";</span></span>
 <span><span class="co">#&gt;  120 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  121 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  122 :     local_scalar_t__ DUMMY_VAR__(std::numeric_limits&lt;double&gt;::quiet_NaN());</span></span>
@@ -3106,7 +3074,7 @@
 <span><span class="co">#&gt;  300 :       b2_1dim__ + w_out_1dim__ + 1;</span></span>
 <span><span class="co">#&gt;  301 :   }</span></span>
 <span><span class="co">#&gt;  302 :   inline std::string model_name() const final {</span></span>
-<span><span class="co">#&gt;  303 :     return "model35314641fc9f_";</span></span>
+<span><span class="co">#&gt;  303 :     return "model366545f86ded_";</span></span>
 <span><span class="co">#&gt;  304 :   }</span></span>
 <span><span class="co">#&gt;  305 :   inline std::vector&lt;std::string&gt; model_compile_info() const noexcept {</span></span>
 <span><span class="co">#&gt;  306 :     return std::vector&lt;std::string&gt;{"stanc_version = stanc3 v2.32.2",</span></span>
@@ -3128,7 +3096,7 @@
 <span><span class="co">#&gt;  322 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  323 :     (void) DUMMY_VAR__;</span></span>
 <span><span class="co">#&gt;  324 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  325 :       "model35314641fc9f__namespace::log_prob";</span></span>
+<span><span class="co">#&gt;  325 :       "model366545f86ded__namespace::log_prob";</span></span>
 <span><span class="co">#&gt;  326 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  327 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  328 :     try {</span></span>
@@ -3314,7 +3282,7 @@
 <span><span class="co">#&gt;  508 :     (void) DUMMY_VAR__;</span></span>
 <span><span class="co">#&gt;  509 :     constexpr bool jacobian__ = false;</span></span>
 <span><span class="co">#&gt;  510 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  511 :       "model35314641fc9f__namespace::write_array";</span></span>
+<span><span class="co">#&gt;  511 :       "model366545f86ded__namespace::write_array";</span></span>
 <span><span class="co">#&gt;  512 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  513 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  514 :     try {</span></span>
@@ -3939,7 +3907,7 @@
 <span><span class="co">#&gt; 1133 :   }</span></span>
 <span><span class="co">#&gt; 1134 : };</span></span>
 <span><span class="co">#&gt; 1135 : }</span></span>
-<span><span class="co">#&gt; 1136 : using stan_model = model35314641fc9f__namespace::model35314641fc9f_;</span></span>
+<span><span class="co">#&gt; 1136 : using stan_model = model366545f86ded__namespace::model366545f86ded_;</span></span>
 <span><span class="co">#&gt; 1137 : #ifndef USING_R</span></span>
 <span><span class="co">#&gt; 1138 : // Boilerplate</span></span>
 <span><span class="co">#&gt; 1139 : stan::model::model_base&amp;</span></span>
@@ -3949,14 +3917,14 @@
 <span><span class="co">#&gt; 1143 :   return *m;</span></span>
 <span><span class="co">#&gt; 1144 : }</span></span>
 <span><span class="co">#&gt; 1145 : stan::math::profile_map&amp; get_stan_profile_data() {</span></span>
-<span><span class="co">#&gt; 1146 :   return model35314641fc9f__namespace::profiles__;</span></span>
+<span><span class="co">#&gt; 1146 :   return model366545f86ded__namespace::profiles__;</span></span>
 <span><span class="co">#&gt; 1147 : }</span></span>
 <span><span class="co">#&gt; 1148 : #endif</span></span>
 <span><span class="co">#&gt; 1149 : #endif</span></span>
 <span><span class="co">#&gt; 1150 : </span></span>
-<span><span class="co">#&gt; 1151 : RCPP_MODULE(stan_fit4model35314641fc9f__mod) {</span></span>
+<span><span class="co">#&gt; 1151 : RCPP_MODULE(stan_fit4model366545f86ded__mod) {</span></span>
 <span><span class="co">#&gt; 1152 :   class_&lt;rstan::stan_fit&lt;stan_model, boost::random::ecuyer1988&gt; &gt;(</span></span>
-<span><span class="co">#&gt; 1153 :       "stan_fit4model35314641fc9f_")</span></span>
+<span><span class="co">#&gt; 1153 :       "stan_fit4model366545f86ded_")</span></span>
 <span><span class="co">#&gt; 1154 : </span></span>
 <span><span class="co">#&gt; 1155 :       .constructor&lt;SEXP, SEXP, SEXP&gt;()</span></span>
 <span><span class="co">#&gt; 1156 : </span></span>
@@ -4015,11 +3983,11 @@
 <span><span class="co">#&gt; 1209 : </span></span>
 <span><span class="co">#&gt; 1210 : // declarations</span></span>
 <span><span class="co">#&gt; 1211 : extern "C" {</span></span>
-<span><span class="co">#&gt; 1212 : SEXP file3531125bc953( ) ;</span></span>
+<span><span class="co">#&gt; 1212 : SEXP file36655e3c7633( ) ;</span></span>
 <span><span class="co">#&gt; 1213 : }</span></span>
 <span><span class="co">#&gt; 1214 : </span></span>
 <span><span class="co">#&gt; 1215 : // definition</span></span>
-<span><span class="co">#&gt; 1216 : SEXP file3531125bc953() {</span></span>
+<span><span class="co">#&gt; 1216 : SEXP file36655e3c7633() {</span></span>
 <span><span class="co">#&gt; 1217 :  return Rcpp::wrap("anon_model");</span></span>
 <span><span class="co">#&gt; 1218 : }</span></span>
 <span><span class="co">#&gt; </span></span>
