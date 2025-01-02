@@ -35,7 +35,7 @@ complex data analysis tasks.
 To install the `bnns` package from CRAN, use the following:
 
 ``` r
-# install.packages("bnns")
+install.packages("bnns")
 ```
 
 ## Installation (development version)
@@ -50,18 +50,6 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 
 # Install bnns
 devtools::install_github("swarnendu-stat/bnns")
-#> Using GitHub PAT from the git credential store.
-#> Downloading GitHub repo swarnendu-stat/bnns@HEAD
-#> 
-#> ── R CMD build ─────────────────────────────────────────────────────────────────
-#> * checking for file ‘/tmp/Rtmp72ouVc/remotes423e532d8878/swarnendu-stat-bnns-a75ca26/DESCRIPTION’ ... OK
-#> * preparing ‘bnns’:
-#> * checking DESCRIPTION meta-information ... OK
-#> * checking for LF line-endings in source and make files and shell scripts
-#> * checking for empty or unneeded directories
-#> * building ‘bnns_0.0.0.9000.tar.gz’
-#> Installing package into '/tmp/RtmpzIYroh/temp_libpath11573c8d4159'
-#> (as 'lib' is unspecified)
 ```
 
 ## Getting Started

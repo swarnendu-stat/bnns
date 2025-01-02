@@ -35,15 +35,15 @@ The `bnns` package provides tools to fit Bayesian Neural Networks (BNNs) for reg
 
 To install the `bnns` package from CRAN, use the following:
 
-```{r}
-# install.packages("bnns")
+```{r eval=FALSE}
+install.packages("bnns")
 ```
 
 ## Installation (development version)
 
 To install the `bnns` package from GitHub, use the following:
 
-```{r}
+```{r eval=FALSE}
 # Install devtools if not already installed
 if (!requireNamespace("devtools", quietly = TRUE)) {
   install.packages("devtools")
