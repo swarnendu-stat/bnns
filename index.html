@@ -56,10 +56,10 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="bnns-bayesian-neural-networks-for-regression-and-classification">bnns: Bayesian Neural Networks for Regression and Classification<a class="anchor" aria-label="anchor" href="#bnns-bayesian-neural-networks-for-regression-and-classification"></a>
+<img src="logo.png" class="logo" alt=""><h1 id="bnns-">bnns 
+<a class="anchor" aria-label="anchor" href="#bnns-"></a>
 </h1>
 </div>
-<p><a href="https://swarnendu-stat.github.io/bnns/"><img src="reference/figures/logo.png" align="right" height="139" alt="bnns website"></a></p>
 <!-- badges: start -->
 
 <p>The <code>bnns</code> package provides tools to fit Bayesian Neural Networks (BNNs) for regression and classification problems. It is designed to be flexible, supporting various network architectures, activation functions, and output types, making it suitable for both simple and complex data analysis tasks.</p>
@@ -75,10 +75,17 @@
 </ul>
 </div>
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h2 id="installation-stable-cran-version">Installation (stable CRAN version)<a class="anchor" aria-label="anchor" href="#installation-stable-cran-version"></a>
+</h2>
+<p>To install the <code>bnns</code> package from CRAN, use the following:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("bnns")</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="installation-development-version">Installation (development version)<a class="anchor" aria-label="anchor" href="#installation-development-version"></a>
 </h2>
 <p>To install the <code>bnns</code> package from GitHub, use the following:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Install devtools if not already installed</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"devtools"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
@@ -86,17 +93,16 @@
 <span></span>
 <span><span class="co"># Install bnns</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"swarnendu-stat/bnns"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using GitHub PAT from the git credential store.</span></span>
 <span><span class="co">#&gt; Downloading GitHub repo swarnendu-stat/bnns@HEAD</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── R CMD build ─────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; * checking for file ‘/tmp/RtmpBqeKhD/remotes366521debc36/swarnendu-stat-bnns-c1b906d/DESCRIPTION’ ... OK</span></span>
+<span><span class="co">#&gt; * checking for file ‘/tmp/RtmplfOyMx/remotes3444450628fe/swarnendu-stat-bnns-540cc1e/DESCRIPTION’ ... OK</span></span>
 <span><span class="co">#&gt; * preparing ‘bnns’:</span></span>
 <span><span class="co">#&gt; * checking DESCRIPTION meta-information ... OK</span></span>
 <span><span class="co">#&gt; * checking for LF line-endings in source and make files and shell scripts</span></span>
 <span><span class="co">#&gt; * checking for empty or unneeded directories</span></span>
 <span><span class="co">#&gt; * building ‘bnns_0.0.0.9000.tar.gz’</span></span>
-<span><span class="co">#&gt; Installing package into '/tmp/Rtmpezcmqo/temp_libpathb437cdfdbe9'</span></span>
+<span><span class="co">#&gt; Installing package into '/tmp/RtmpzIYroh/temp_libpath11572c0b65b9'</span></span>
 <span><span class="co">#&gt; (as 'lib' is unspecified)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -106,7 +112,7 @@
 <h3 id="id_1-simulate-data">1. Simulate Data<a class="anchor" aria-label="anchor" href="#id_1-simulate-data"></a>
 </h3>
 <p>Below is an example of how to simulate data for regression:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -114,7 +120,7 @@
 <h3 id="id_2-fit-a-bnn-model">2. Fit a BNN Model<a class="anchor" aria-label="anchor" href="#id_2-fit-a-bnn-model"></a>
 </h3>
 <p>To fit a Bayesian Neural Network:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/swarnendu-stat/bnns" class="external-link">bnns</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span>,</span>
@@ -146,7 +152,7 @@
 <span><span class="co">#&gt;   15 : #endif</span></span>
 <span><span class="co">#&gt;   16 : // Code generated by stanc v2.32.2</span></span>
 <span><span class="co">#&gt;   17 : #include &lt;stan/model/model_header.hpp&gt;</span></span>
-<span><span class="co">#&gt;   18 : namespace model366565dff4f1__namespace {</span></span>
+<span><span class="co">#&gt;   18 : namespace model344435d116d5__namespace {</span></span>
 <span><span class="co">#&gt;   19 : using stan::model::model_base_crtp;</span></span>
 <span><span class="co">#&gt;   20 : using namespace stan::math;</span></span>
 <span><span class="co">#&gt;   21 : stan::math::profile_map profiles__;</span></span>
@@ -217,7 +223,7 @@
 <span><span class="co">#&gt;   86 :   " (in 'anon_model', line 23, column 9 to column 10)",</span></span>
 <span><span class="co">#&gt;   87 :   " (in 'anon_model', line 23, column 12 to column 20)",</span></span>
 <span><span class="co">#&gt;   88 :   " (in 'anon_model', line 24, column 9 to column 10)"};</span></span>
-<span><span class="co">#&gt;   89 : class model366565dff4f1_ final : public model_base_crtp&lt;model366565dff4f1_&gt; {</span></span>
+<span><span class="co">#&gt;   89 : class model344435d116d5_ final : public model_base_crtp&lt;model344435d116d5_&gt; {</span></span>
 <span><span class="co">#&gt;   90 : private:</span></span>
 <span><span class="co">#&gt;   91 :   int n;</span></span>
 <span><span class="co">#&gt;   92 :   int m;</span></span>
@@ -239,8 +245,8 @@
 <span><span class="co">#&gt;  108 :   Eigen::Map&lt;Eigen::Matrix&lt;double,-1,-1&gt;&gt; X{nullptr, 0, 0};</span></span>
 <span><span class="co">#&gt;  109 :   Eigen::Map&lt;Eigen::Matrix&lt;double,-1,1&gt;&gt; y{nullptr, 0};</span></span>
 <span><span class="co">#&gt;  110 : public:</span></span>
-<span><span class="co">#&gt;  111 :   ~model366565dff4f1_() {}</span></span>
-<span><span class="co">#&gt;  112 :   model366565dff4f1_(stan::io::var_context&amp; context__, unsigned int</span></span>
+<span><span class="co">#&gt;  111 :   ~model344435d116d5_() {}</span></span>
+<span><span class="co">#&gt;  112 :   model344435d116d5_(stan::io::var_context&amp; context__, unsigned int</span></span>
 <span><span class="co">#&gt;  113 :                      random_seed__ = 0, std::ostream* pstream__ = nullptr)</span></span>
 <span><span class="co">#&gt;  114 :       : model_base_crtp(0) {</span></span>
 <span><span class="co">#&gt;  115 :     int current_statement__ = 0;</span></span>
@@ -250,7 +256,7 @@
 <span><span class="co">#&gt;  119 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  120 :     (void) base_rng__;</span></span>
 <span><span class="co">#&gt;  121 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  122 :       "model366565dff4f1__namespace::model366565dff4f1_";</span></span>
+<span><span class="co">#&gt;  122 :       "model344435d116d5__namespace::model344435d116d5_";</span></span>
 <span><span class="co">#&gt;  123 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  124 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  125 :     local_scalar_t__ DUMMY_VAR__(std::numeric_limits&lt;double&gt;::quiet_NaN());</span></span>
@@ -445,7 +451,7 @@
 <span><span class="co">#&gt;  314 :       b2_1dim__ + w_out_1dim__ + 1 + 1;</span></span>
 <span><span class="co">#&gt;  315 :   }</span></span>
 <span><span class="co">#&gt;  316 :   inline std::string model_name() const final {</span></span>
-<span><span class="co">#&gt;  317 :     return "model366565dff4f1_";</span></span>
+<span><span class="co">#&gt;  317 :     return "model344435d116d5_";</span></span>
 <span><span class="co">#&gt;  318 :   }</span></span>
 <span><span class="co">#&gt;  319 :   inline std::vector&lt;std::string&gt; model_compile_info() const noexcept {</span></span>
 <span><span class="co">#&gt;  320 :     return std::vector&lt;std::string&gt;{"stanc_version = stanc3 v2.32.2",</span></span>
@@ -467,7 +473,7 @@
 <span><span class="co">#&gt;  336 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  337 :     (void) DUMMY_VAR__;</span></span>
 <span><span class="co">#&gt;  338 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  339 :       "model366565dff4f1__namespace::log_prob";</span></span>
+<span><span class="co">#&gt;  339 :       "model344435d116d5__namespace::log_prob";</span></span>
 <span><span class="co">#&gt;  340 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  341 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  342 :     try {</span></span>
@@ -660,7 +666,7 @@
 <span><span class="co">#&gt;  529 :     (void) DUMMY_VAR__;</span></span>
 <span><span class="co">#&gt;  530 :     constexpr bool jacobian__ = false;</span></span>
 <span><span class="co">#&gt;  531 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  532 :       "model366565dff4f1__namespace::write_array";</span></span>
+<span><span class="co">#&gt;  532 :       "model344435d116d5__namespace::write_array";</span></span>
 <span><span class="co">#&gt;  533 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  534 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  535 :     try {</span></span>
@@ -1303,7 +1309,7 @@
 <span><span class="co">#&gt; 1172 :   }</span></span>
 <span><span class="co">#&gt; 1173 : };</span></span>
 <span><span class="co">#&gt; 1174 : }</span></span>
-<span><span class="co">#&gt; 1175 : using stan_model = model366565dff4f1__namespace::model366565dff4f1_;</span></span>
+<span><span class="co">#&gt; 1175 : using stan_model = model344435d116d5__namespace::model344435d116d5_;</span></span>
 <span><span class="co">#&gt; 1176 : #ifndef USING_R</span></span>
 <span><span class="co">#&gt; 1177 : // Boilerplate</span></span>
 <span><span class="co">#&gt; 1178 : stan::model::model_base&amp;</span></span>
@@ -1313,14 +1319,14 @@
 <span><span class="co">#&gt; 1182 :   return *m;</span></span>
 <span><span class="co">#&gt; 1183 : }</span></span>
 <span><span class="co">#&gt; 1184 : stan::math::profile_map&amp; get_stan_profile_data() {</span></span>
-<span><span class="co">#&gt; 1185 :   return model366565dff4f1__namespace::profiles__;</span></span>
+<span><span class="co">#&gt; 1185 :   return model344435d116d5__namespace::profiles__;</span></span>
 <span><span class="co">#&gt; 1186 : }</span></span>
 <span><span class="co">#&gt; 1187 : #endif</span></span>
 <span><span class="co">#&gt; 1188 : #endif</span></span>
 <span><span class="co">#&gt; 1189 : </span></span>
-<span><span class="co">#&gt; 1190 : RCPP_MODULE(stan_fit4model366565dff4f1__mod) {</span></span>
+<span><span class="co">#&gt; 1190 : RCPP_MODULE(stan_fit4model344435d116d5__mod) {</span></span>
 <span><span class="co">#&gt; 1191 :   class_&lt;rstan::stan_fit&lt;stan_model, boost::random::ecuyer1988&gt; &gt;(</span></span>
-<span><span class="co">#&gt; 1192 :       "stan_fit4model366565dff4f1_")</span></span>
+<span><span class="co">#&gt; 1192 :       "stan_fit4model344435d116d5_")</span></span>
 <span><span class="co">#&gt; 1193 : </span></span>
 <span><span class="co">#&gt; 1194 :       .constructor&lt;SEXP, SEXP, SEXP&gt;()</span></span>
 <span><span class="co">#&gt; 1195 : </span></span>
@@ -1379,11 +1385,11 @@
 <span><span class="co">#&gt; 1248 : </span></span>
 <span><span class="co">#&gt; 1249 : // declarations</span></span>
 <span><span class="co">#&gt; 1250 : extern "C" {</span></span>
-<span><span class="co">#&gt; 1251 : SEXP file366590a1003( ) ;</span></span>
+<span><span class="co">#&gt; 1251 : SEXP file34444df8b86a( ) ;</span></span>
 <span><span class="co">#&gt; 1252 : }</span></span>
 <span><span class="co">#&gt; 1253 : </span></span>
 <span><span class="co">#&gt; 1254 : // definition</span></span>
-<span><span class="co">#&gt; 1255 : SEXP file366590a1003() {</span></span>
+<span><span class="co">#&gt; 1255 : SEXP file34444df8b86a() {</span></span>
 <span><span class="co">#&gt; 1256 :  return Rcpp::wrap("anon_model");</span></span>
 <span><span class="co">#&gt; 1257 : }</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1397,7 +1403,7 @@
 <h3 id="id_3-model-summary">3. Model Summary<a class="anchor" aria-label="anchor" href="#id_3-model-summary"></a>
 </h3>
 <p>Summarize the fitted model:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; bnns.default(formula = y ~ -1 + x1 + x2, data = df, L = 2, nodes = c(10, </span></span>
@@ -1455,17 +1461,17 @@
 <h3 id="id_4-predictions">4. Predictions<a class="anchor" aria-label="anchor" href="#id_4-predictions"></a>
 </h3>
 <p>Make predictions using the trained model:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="id_5-visualization">5. Visualization<a class="anchor" aria-label="anchor" href="#id_5-visualization"></a>
 </h3>
 <p>Visualize true vs predicted values for regression:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">y</span>, <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"True vs Predicted"</span>, xlab <span class="op">=</span> <span class="st">"True Values"</span>, ylab <span class="op">=</span> <span class="st">"Predicted Values"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-7-1.png" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-8-1.png" width="100%"></p>
 </div>
 </div>
 <div class="section level2">
@@ -1475,7 +1481,7 @@
 <h3 id="regression-example-with-custom-priors">Regression Example (with custom priors)<a class="anchor" aria-label="anchor" href="#regression-example-with-custom-priors"></a>
 </h3>
 <p>Use <code>bnns</code> for regression analysis to model continuous outcomes, such as predicting patient biomarkers in clinical trials.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">df</span>, L <span class="op">=</span> <span class="fl">2</span>, nodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">8</span><span class="op">)</span>, act_fn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, out_act_fn <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  iter <span class="op">=</span> <span class="fl">1e2</span>, warmup <span class="op">=</span> <span class="fl">5e1</span>, chains <span class="op">=</span> <span class="fl">1</span>, seed <span class="op">=</span> <span class="fl">123</span>,</span>
@@ -1507,7 +1513,7 @@
 <span><span class="co">#&gt;   15 : #endif</span></span>
 <span><span class="co">#&gt;   16 : // Code generated by stanc v2.32.2</span></span>
 <span><span class="co">#&gt;   17 : #include &lt;stan/model/model_header.hpp&gt;</span></span>
-<span><span class="co">#&gt;   18 : namespace model366534d1cd7b__namespace {</span></span>
+<span><span class="co">#&gt;   18 : namespace model344442aa462d__namespace {</span></span>
 <span><span class="co">#&gt;   19 : using stan::model::model_base_crtp;</span></span>
 <span><span class="co">#&gt;   20 : using namespace stan::math;</span></span>
 <span><span class="co">#&gt;   21 : stan::math::profile_map profiles__;</span></span>
@@ -1578,7 +1584,7 @@
 <span><span class="co">#&gt;   86 :   " (in 'anon_model', line 23, column 9 to column 10)",</span></span>
 <span><span class="co">#&gt;   87 :   " (in 'anon_model', line 23, column 12 to column 20)",</span></span>
 <span><span class="co">#&gt;   88 :   " (in 'anon_model', line 24, column 9 to column 10)"};</span></span>
-<span><span class="co">#&gt;   89 : class model366534d1cd7b_ final : public model_base_crtp&lt;model366534d1cd7b_&gt; {</span></span>
+<span><span class="co">#&gt;   89 : class model344442aa462d_ final : public model_base_crtp&lt;model344442aa462d_&gt; {</span></span>
 <span><span class="co">#&gt;   90 : private:</span></span>
 <span><span class="co">#&gt;   91 :   int n;</span></span>
 <span><span class="co">#&gt;   92 :   int m;</span></span>
@@ -1600,8 +1606,8 @@
 <span><span class="co">#&gt;  108 :   Eigen::Map&lt;Eigen::Matrix&lt;double,-1,-1&gt;&gt; X{nullptr, 0, 0};</span></span>
 <span><span class="co">#&gt;  109 :   Eigen::Map&lt;Eigen::Matrix&lt;double,-1,1&gt;&gt; y{nullptr, 0};</span></span>
 <span><span class="co">#&gt;  110 : public:</span></span>
-<span><span class="co">#&gt;  111 :   ~model366534d1cd7b_() {}</span></span>
-<span><span class="co">#&gt;  112 :   model366534d1cd7b_(stan::io::var_context&amp; context__, unsigned int</span></span>
+<span><span class="co">#&gt;  111 :   ~model344442aa462d_() {}</span></span>
+<span><span class="co">#&gt;  112 :   model344442aa462d_(stan::io::var_context&amp; context__, unsigned int</span></span>
 <span><span class="co">#&gt;  113 :                      random_seed__ = 0, std::ostream* pstream__ = nullptr)</span></span>
 <span><span class="co">#&gt;  114 :       : model_base_crtp(0) {</span></span>
 <span><span class="co">#&gt;  115 :     int current_statement__ = 0;</span></span>
@@ -1611,7 +1617,7 @@
 <span><span class="co">#&gt;  119 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  120 :     (void) base_rng__;</span></span>
 <span><span class="co">#&gt;  121 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  122 :       "model366534d1cd7b__namespace::model366534d1cd7b_";</span></span>
+<span><span class="co">#&gt;  122 :       "model344442aa462d__namespace::model344442aa462d_";</span></span>
 <span><span class="co">#&gt;  123 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  124 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  125 :     local_scalar_t__ DUMMY_VAR__(std::numeric_limits&lt;double&gt;::quiet_NaN());</span></span>
@@ -1806,7 +1812,7 @@
 <span><span class="co">#&gt;  314 :       b2_1dim__ + w_out_1dim__ + 1 + 1;</span></span>
 <span><span class="co">#&gt;  315 :   }</span></span>
 <span><span class="co">#&gt;  316 :   inline std::string model_name() const final {</span></span>
-<span><span class="co">#&gt;  317 :     return "model366534d1cd7b_";</span></span>
+<span><span class="co">#&gt;  317 :     return "model344442aa462d_";</span></span>
 <span><span class="co">#&gt;  318 :   }</span></span>
 <span><span class="co">#&gt;  319 :   inline std::vector&lt;std::string&gt; model_compile_info() const noexcept {</span></span>
 <span><span class="co">#&gt;  320 :     return std::vector&lt;std::string&gt;{"stanc_version = stanc3 v2.32.2",</span></span>
@@ -1828,7 +1834,7 @@
 <span><span class="co">#&gt;  336 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  337 :     (void) DUMMY_VAR__;</span></span>
 <span><span class="co">#&gt;  338 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  339 :       "model366534d1cd7b__namespace::log_prob";</span></span>
+<span><span class="co">#&gt;  339 :       "model344442aa462d__namespace::log_prob";</span></span>
 <span><span class="co">#&gt;  340 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  341 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  342 :     try {</span></span>
@@ -2021,7 +2027,7 @@
 <span><span class="co">#&gt;  529 :     (void) DUMMY_VAR__;</span></span>
 <span><span class="co">#&gt;  530 :     constexpr bool jacobian__ = false;</span></span>
 <span><span class="co">#&gt;  531 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  532 :       "model366534d1cd7b__namespace::write_array";</span></span>
+<span><span class="co">#&gt;  532 :       "model344442aa462d__namespace::write_array";</span></span>
 <span><span class="co">#&gt;  533 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  534 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  535 :     try {</span></span>
@@ -2664,7 +2670,7 @@
 <span><span class="co">#&gt; 1172 :   }</span></span>
 <span><span class="co">#&gt; 1173 : };</span></span>
 <span><span class="co">#&gt; 1174 : }</span></span>
-<span><span class="co">#&gt; 1175 : using stan_model = model366534d1cd7b__namespace::model366534d1cd7b_;</span></span>
+<span><span class="co">#&gt; 1175 : using stan_model = model344442aa462d__namespace::model344442aa462d_;</span></span>
 <span><span class="co">#&gt; 1176 : #ifndef USING_R</span></span>
 <span><span class="co">#&gt; 1177 : // Boilerplate</span></span>
 <span><span class="co">#&gt; 1178 : stan::model::model_base&amp;</span></span>
@@ -2674,14 +2680,14 @@
 <span><span class="co">#&gt; 1182 :   return *m;</span></span>
 <span><span class="co">#&gt; 1183 : }</span></span>
 <span><span class="co">#&gt; 1184 : stan::math::profile_map&amp; get_stan_profile_data() {</span></span>
-<span><span class="co">#&gt; 1185 :   return model366534d1cd7b__namespace::profiles__;</span></span>
+<span><span class="co">#&gt; 1185 :   return model344442aa462d__namespace::profiles__;</span></span>
 <span><span class="co">#&gt; 1186 : }</span></span>
 <span><span class="co">#&gt; 1187 : #endif</span></span>
 <span><span class="co">#&gt; 1188 : #endif</span></span>
 <span><span class="co">#&gt; 1189 : </span></span>
-<span><span class="co">#&gt; 1190 : RCPP_MODULE(stan_fit4model366534d1cd7b__mod) {</span></span>
+<span><span class="co">#&gt; 1190 : RCPP_MODULE(stan_fit4model344442aa462d__mod) {</span></span>
 <span><span class="co">#&gt; 1191 :   class_&lt;rstan::stan_fit&lt;stan_model, boost::random::ecuyer1988&gt; &gt;(</span></span>
-<span><span class="co">#&gt; 1192 :       "stan_fit4model366534d1cd7b_")</span></span>
+<span><span class="co">#&gt; 1192 :       "stan_fit4model344442aa462d_")</span></span>
 <span><span class="co">#&gt; 1193 : </span></span>
 <span><span class="co">#&gt; 1194 :       .constructor&lt;SEXP, SEXP, SEXP&gt;()</span></span>
 <span><span class="co">#&gt; 1195 : </span></span>
@@ -2740,11 +2746,11 @@
 <span><span class="co">#&gt; 1248 : </span></span>
 <span><span class="co">#&gt; 1249 : // declarations</span></span>
 <span><span class="co">#&gt; 1250 : extern "C" {</span></span>
-<span><span class="co">#&gt; 1251 : SEXP file36657890a125( ) ;</span></span>
+<span><span class="co">#&gt; 1251 : SEXP file34446920beb7( ) ;</span></span>
 <span><span class="co">#&gt; 1252 : }</span></span>
 <span><span class="co">#&gt; 1253 : </span></span>
 <span><span class="co">#&gt; 1254 : // definition</span></span>
-<span><span class="co">#&gt; 1255 : SEXP file36657890a125() {</span></span>
+<span><span class="co">#&gt; 1255 : SEXP file34446920beb7() {</span></span>
 <span><span class="co">#&gt; 1256 :  return Rcpp::wrap("anon_model");</span></span>
 <span><span class="co">#&gt; 1257 : }</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -2758,7 +2764,7 @@
 <h3 id="classification-example">Classification Example<a class="anchor" aria-label="anchor" href="#classification-example"></a>
 </h3>
 <p>For binary or multiclass classification, set the <code>out_act_fn</code> to <code>2</code> (binary) or <code>3</code> (multiclass). For example:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Simulate binary classification data</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -2789,7 +2795,7 @@
 <span><span class="co">#&gt;   15 : #endif</span></span>
 <span><span class="co">#&gt;   16 : // Code generated by stanc v2.32.2</span></span>
 <span><span class="co">#&gt;   17 : #include &lt;stan/model/model_header.hpp&gt;</span></span>
-<span><span class="co">#&gt;   18 : namespace model366545f86ded__namespace {</span></span>
+<span><span class="co">#&gt;   18 : namespace model3444334e0045__namespace {</span></span>
 <span><span class="co">#&gt;   19 : using stan::model::model_base_crtp;</span></span>
 <span><span class="co">#&gt;   20 : using namespace stan::math;</span></span>
 <span><span class="co">#&gt;   21 : stan::math::profile_map profiles__;</span></span>
@@ -2858,7 +2864,7 @@
 <span><span class="co">#&gt;   84 :   " (in 'anon_model', line 22, column 9 to column 10)",</span></span>
 <span><span class="co">#&gt;   85 :   " (in 'anon_model', line 22, column 12 to column 20)",</span></span>
 <span><span class="co">#&gt;   86 :   " (in 'anon_model', line 23, column 9 to column 10)"};</span></span>
-<span><span class="co">#&gt;   87 : class model366545f86ded_ final : public model_base_crtp&lt;model366545f86ded_&gt; {</span></span>
+<span><span class="co">#&gt;   87 : class model3444334e0045_ final : public model_base_crtp&lt;model3444334e0045_&gt; {</span></span>
 <span><span class="co">#&gt;   88 : private:</span></span>
 <span><span class="co">#&gt;   89 :   int n;</span></span>
 <span><span class="co">#&gt;   90 :   int m;</span></span>
@@ -2879,8 +2885,8 @@
 <span><span class="co">#&gt;  105 :   int a2_2dim__;</span></span>
 <span><span class="co">#&gt;  106 :   Eigen::Map&lt;Eigen::Matrix&lt;double,-1,-1&gt;&gt; X{nullptr, 0, 0};</span></span>
 <span><span class="co">#&gt;  107 : public:</span></span>
-<span><span class="co">#&gt;  108 :   ~model366545f86ded_() {}</span></span>
-<span><span class="co">#&gt;  109 :   model366545f86ded_(stan::io::var_context&amp; context__, unsigned int</span></span>
+<span><span class="co">#&gt;  108 :   ~model3444334e0045_() {}</span></span>
+<span><span class="co">#&gt;  109 :   model3444334e0045_(stan::io::var_context&amp; context__, unsigned int</span></span>
 <span><span class="co">#&gt;  110 :                      random_seed__ = 0, std::ostream* pstream__ = nullptr)</span></span>
 <span><span class="co">#&gt;  111 :       : model_base_crtp(0) {</span></span>
 <span><span class="co">#&gt;  112 :     int current_statement__ = 0;</span></span>
@@ -2890,7 +2896,7 @@
 <span><span class="co">#&gt;  116 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  117 :     (void) base_rng__;</span></span>
 <span><span class="co">#&gt;  118 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  119 :       "model366545f86ded__namespace::model366545f86ded_";</span></span>
+<span><span class="co">#&gt;  119 :       "model3444334e0045__namespace::model3444334e0045_";</span></span>
 <span><span class="co">#&gt;  120 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  121 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  122 :     local_scalar_t__ DUMMY_VAR__(std::numeric_limits&lt;double&gt;::quiet_NaN());</span></span>
@@ -3074,7 +3080,7 @@
 <span><span class="co">#&gt;  300 :       b2_1dim__ + w_out_1dim__ + 1;</span></span>
 <span><span class="co">#&gt;  301 :   }</span></span>
 <span><span class="co">#&gt;  302 :   inline std::string model_name() const final {</span></span>
-<span><span class="co">#&gt;  303 :     return "model366545f86ded_";</span></span>
+<span><span class="co">#&gt;  303 :     return "model3444334e0045_";</span></span>
 <span><span class="co">#&gt;  304 :   }</span></span>
 <span><span class="co">#&gt;  305 :   inline std::vector&lt;std::string&gt; model_compile_info() const noexcept {</span></span>
 <span><span class="co">#&gt;  306 :     return std::vector&lt;std::string&gt;{"stanc_version = stanc3 v2.32.2",</span></span>
@@ -3096,7 +3102,7 @@
 <span><span class="co">#&gt;  322 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  323 :     (void) DUMMY_VAR__;</span></span>
 <span><span class="co">#&gt;  324 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  325 :       "model366545f86ded__namespace::log_prob";</span></span>
+<span><span class="co">#&gt;  325 :       "model3444334e0045__namespace::log_prob";</span></span>
 <span><span class="co">#&gt;  326 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  327 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  328 :     try {</span></span>
@@ -3282,7 +3288,7 @@
 <span><span class="co">#&gt;  508 :     (void) DUMMY_VAR__;</span></span>
 <span><span class="co">#&gt;  509 :     constexpr bool jacobian__ = false;</span></span>
 <span><span class="co">#&gt;  510 :     static constexpr const char* function__ =</span></span>
-<span><span class="co">#&gt;  511 :       "model366545f86ded__namespace::write_array";</span></span>
+<span><span class="co">#&gt;  511 :       "model3444334e0045__namespace::write_array";</span></span>
 <span><span class="co">#&gt;  512 :     // suppress unused var warning</span></span>
 <span><span class="co">#&gt;  513 :     (void) function__;</span></span>
 <span><span class="co">#&gt;  514 :     try {</span></span>
@@ -3907,7 +3913,7 @@
 <span><span class="co">#&gt; 1133 :   }</span></span>
 <span><span class="co">#&gt; 1134 : };</span></span>
 <span><span class="co">#&gt; 1135 : }</span></span>
-<span><span class="co">#&gt; 1136 : using stan_model = model366545f86ded__namespace::model366545f86ded_;</span></span>
+<span><span class="co">#&gt; 1136 : using stan_model = model3444334e0045__namespace::model3444334e0045_;</span></span>
 <span><span class="co">#&gt; 1137 : #ifndef USING_R</span></span>
 <span><span class="co">#&gt; 1138 : // Boilerplate</span></span>
 <span><span class="co">#&gt; 1139 : stan::model::model_base&amp;</span></span>
@@ -3917,14 +3923,14 @@
 <span><span class="co">#&gt; 1143 :   return *m;</span></span>
 <span><span class="co">#&gt; 1144 : }</span></span>
 <span><span class="co">#&gt; 1145 : stan::math::profile_map&amp; get_stan_profile_data() {</span></span>
-<span><span class="co">#&gt; 1146 :   return model366545f86ded__namespace::profiles__;</span></span>
+<span><span class="co">#&gt; 1146 :   return model3444334e0045__namespace::profiles__;</span></span>
 <span><span class="co">#&gt; 1147 : }</span></span>
 <span><span class="co">#&gt; 1148 : #endif</span></span>
 <span><span class="co">#&gt; 1149 : #endif</span></span>
 <span><span class="co">#&gt; 1150 : </span></span>
-<span><span class="co">#&gt; 1151 : RCPP_MODULE(stan_fit4model366545f86ded__mod) {</span></span>
+<span><span class="co">#&gt; 1151 : RCPP_MODULE(stan_fit4model3444334e0045__mod) {</span></span>
 <span><span class="co">#&gt; 1152 :   class_&lt;rstan::stan_fit&lt;stan_model, boost::random::ecuyer1988&gt; &gt;(</span></span>
-<span><span class="co">#&gt; 1153 :       "stan_fit4model366545f86ded_")</span></span>
+<span><span class="co">#&gt; 1153 :       "stan_fit4model3444334e0045_")</span></span>
 <span><span class="co">#&gt; 1154 : </span></span>
 <span><span class="co">#&gt; 1155 :       .constructor&lt;SEXP, SEXP, SEXP&gt;()</span></span>
 <span><span class="co">#&gt; 1156 : </span></span>
@@ -3983,11 +3989,11 @@
 <span><span class="co">#&gt; 1209 : </span></span>
 <span><span class="co">#&gt; 1210 : // declarations</span></span>
 <span><span class="co">#&gt; 1211 : extern "C" {</span></span>
-<span><span class="co">#&gt; 1212 : SEXP file36655e3c7633( ) ;</span></span>
+<span><span class="co">#&gt; 1212 : SEXP file3444607e6f64( ) ;</span></span>
 <span><span class="co">#&gt; 1213 : }</span></span>
 <span><span class="co">#&gt; 1214 : </span></span>
 <span><span class="co">#&gt; 1215 : // definition</span></span>
-<span><span class="co">#&gt; 1216 : SEXP file36655e3c7633() {</span></span>
+<span><span class="co">#&gt; 1216 : SEXP file3444607e6f64() {</span></span>
 <span><span class="co">#&gt; 1217 :  return Rcpp::wrap("anon_model");</span></span>
 <span><span class="co">#&gt; 1218 : }</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -4057,8 +4063,8 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
-<li><a href="https://app.codecov.io/gh/swarnendu-stat/bnns" class="external-link"><img src="https://codecov.io/gh/swarnendu-stat/bnns/graph/badge.svg" alt="Codecov test coverage"></a></li>
 <li><a href="https://github.com/swarnendu-stat/bnns/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/swarnendu-stat/bnns/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/swarnendu-stat/bnns" class="external-link"><img src="https://codecov.io/gh/swarnendu-stat/bnns/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 
