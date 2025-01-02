@@ -68,7 +68,7 @@ df <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
 
 To fit a Bayesian Neural Network:
 
-```{r message=FALSE, warning=FALSE}
+```{r message = FALSE, warning = FALSE, echo = TRUE, results = 'hide'}
 library(bnns)
 
 model <- bnns(y ~ -1 + x1 + x2,
@@ -108,7 +108,7 @@ abline(0, 1, col = "red")
 
 Use `bnns` for regression analysis to model continuous outcomes, such as predicting patient biomarkers in clinical trials.
 
-```{r message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide'}
 model <- bnns(y ~ -1 + x1 + x2,
   data = df, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
   iter = 1e2, warmup = 5e1, chains = 1, seed = 123,
@@ -121,7 +121,7 @@ model <- bnns(y ~ -1 + x1 + x2,
 
 For binary or multiclass classification, set the `out_act_fn` to `2` (binary) or `3` (multiclass). For example:
 
-```{r message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide'}
 # Simulate binary classification data
 df <- data.frame(x1 = runif(10), x2 = runif(10), y = sample(0:1, 10, replace = TRUE))
 
