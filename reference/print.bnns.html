@@ -80,8 +80,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Gradient evaluation took 1.2e-05 seconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.12 seconds.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Gradient evaluation took 1.3e-05 seconds</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.13 seconds.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Adjust your expectations accordingly!</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
@@ -106,9 +106,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 90 / 100 [ 90%]  (Sampling)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 100 / 100 [100%]  (Sampling)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:  Elapsed Time: 0.007 seconds (Warm-up)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.006 seconds (Sampling)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.013 seconds (Total)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:  Elapsed Time: 0.006 seconds (Warm-up)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.005 seconds (Sampling)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.011 seconds (Total)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
@@ -120,20 +120,20 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 chains, each with iter=100; warmup=50; thin=1; </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> post-warmup draws per chain=50, total post-warmup draws=50.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            mean se_mean   sd   2.5%    25%    50%    75% 97.5% n_eff Rhat</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w1[1,1]    0.01    0.20 1.26  -2.43  -0.74   0.03   0.94  2.58    39 1.02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w1[1,2]   -0.01    0.12 0.72  -1.28  -0.40   0.02   0.44  1.47    37 0.98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w1[2,1]   -0.07    0.17 1.21  -2.25  -0.74  -0.16   0.52  2.31    53 1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w1[2,2]   -0.10    0.12 0.86  -1.82  -0.61  -0.18   0.48  1.44    49 0.99</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> b1[1]      0.09    0.11 0.98  -1.62  -0.52   0.09   0.77  1.86    85 1.03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> b1[2]      0.11    0.14 0.97  -1.36  -0.65   0.06   1.02  1.64    45 1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[1]   0.12    0.12 1.10  -1.79  -0.75   0.14   1.11  1.84    85 0.98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[2]   0.29    0.15 1.13  -1.46  -0.58   0.23   1.14  2.25    54 0.98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> b_out      0.21    0.08 0.59  -0.80  -0.27   0.14   0.58  1.37    59 0.98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sigma      1.10    0.03 0.25   0.71   0.91   1.06   1.27  1.65    55 0.98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lp__     -11.39    0.40 2.10 -15.87 -12.54 -10.89 -10.17 -7.96    28 1.12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mean se_mean   sd   2.5%    25%    50%   75% 97.5% n_eff Rhat</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w1[1,1]    0.09    0.19 1.21  -1.55  -1.00   0.12  0.87  2.56    40 1.03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w1[1,2]   -0.06    0.20 1.39  -2.66  -0.97   0.00  0.96  2.42    50 1.02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w1[2,1]   -0.03    0.13 0.85  -2.05  -0.55   0.02  0.46  1.27    41 0.98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w1[2,2]   -0.01    0.15 0.93  -1.65  -0.78   0.12  0.66  1.47    40 1.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b1[1]     -0.21    0.16 0.84  -1.94  -0.64  -0.26  0.32  1.38    27 1.14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b1[2]     -0.11    0.12 0.82  -1.35  -0.71  -0.17  0.41  1.50    51 0.98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[1]   0.08    0.17 1.16  -1.96  -0.72  -0.02  0.97  2.07    49 0.98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[2]   0.05    0.19 0.98  -1.59  -0.44  -0.05  0.77  1.78    28 0.99</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b_out      0.30    0.09 0.74  -1.01  -0.24   0.19  0.90  1.51    63 0.99</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sigma      1.07    0.03 0.23   0.69   0.95   1.05  1.18  1.56    49 0.98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lp__     -11.00    0.35 2.10 -15.17 -12.33 -11.11 -9.55 -7.33    36 0.99</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Samples were drawn using NUTS(diag_e) at Thu Jan  2 07:21:44 2025.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Samples were drawn using NUTS(diag_e) at Thu Jan  2 17:46:57 2025.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> For each parameter, n_eff is a crude measure of effective sample size,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> and Rhat is the potential scale reduction factor on split chains (at </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> convergence, Rhat=1).</span>

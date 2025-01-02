@@ -64,6 +64,7 @@ It is called by the exported bnns methods and is not intended for direct use.</p
 <span>  prior_sigma <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  refresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">iter</span><span class="op">/</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  normalize <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -179,6 +180,15 @@ For example:</p><ul><li><p><code>list(dist = "half_normal", params = list(mean =
 <dd><p>refresh (integer) can be used to control how often the progress of the sampling is reported (i.e. show the progress every refresh iterations). By default, refresh = max(iter/10, 1). The progress indicator is turned off if refresh &lt;= 0.</p></dd>
 
 
+<dt id="arg-normalize">normalize<a class="anchor" aria-label="anchor" href="#arg-normalize"></a></dt>
+<dd><p>Logical. If <code>TRUE</code> (default), the input predictors
+are normalized to have zero mean and unit variance before training.
+Normalization ensures stable and efficient Bayesian sampling by standardizing
+the input scale, which is particularly beneficial for neural network training.
+If <code>FALSE</code>, no normalization is applied, and it is assumed that the input data
+is already pre-processed appropriately.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Currently not in use.</p></dd>
 
@@ -243,9 +253,9 @@ For example:</p><ul><li><p><code>list(dist = "half_normal", params = list(mean =
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 90 / 100 [ 90%]  (Sampling)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 100 / 100 [100%]  (Sampling)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:  Elapsed Time: 0.006 seconds (Warm-up)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:  Elapsed Time: 0.007 seconds (Warm-up)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.005 seconds (Sampling)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.011 seconds (Total)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.012 seconds (Total)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Access Stan model fit</span></span></span>
@@ -254,20 +264,20 @@ For example:</p><ul><li><p><code>list(dist = "half_normal", params = list(mean =
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 chains, each with iter=100; warmup=50; thin=1; </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> post-warmup draws per chain=50, total post-warmup draws=50.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           mean se_mean   sd   2.5%   25%   50%   75% 97.5% n_eff Rhat</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w1[1,1]  -0.12    0.15 0.95  -1.81 -0.67 -0.17  0.47  1.70    42 1.02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w1[1,2]  -0.12    0.14 1.19  -2.48 -0.92 -0.09  0.75  1.86    72 0.98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w1[2,1]  -0.10    0.14 1.01  -1.72 -0.83 -0.15  0.58  1.64    54 0.98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w1[2,2]  -0.18    0.14 1.19  -2.50 -0.79 -0.14  0.71  1.72    73 0.99</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> b1[1]    -0.20    0.12 0.95  -1.75 -0.96 -0.20  0.38  1.61    65 1.01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> b1[2]    -0.11    0.18 1.04  -1.98 -0.86 -0.22  0.55  1.79    35 1.01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[1]  0.15    0.15 1.08  -1.99 -0.53  0.01  0.62  2.13    54 0.98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[2]  0.17    0.09 0.87  -1.69 -0.12  0.23  0.67  1.72    85 0.98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> b_out     0.10    0.08 0.63  -1.07 -0.25  0.15  0.45  1.46    65 1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sigma     0.77    0.02 0.20   0.45  0.61  0.75  0.89  1.14    85 0.98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lp__     -6.93    0.60 2.29 -10.76 -8.35 -6.48 -5.08 -3.86    15 1.07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           mean se_mean   sd  2.5%   25%   50%   75% 97.5% n_eff Rhat</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w1[1,1]   0.06    0.16 0.97 -1.70 -0.50  0.00  0.82  1.76    38 1.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w1[1,2]   0.03    0.19 0.98 -1.40 -0.69 -0.11  0.41  2.47    28 1.02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w1[2,1]   0.10    0.13 0.86 -1.40 -0.47  0.12  0.79  1.38    47 1.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w1[2,2]  -0.08    0.21 1.15 -2.24 -0.71 -0.01  0.84  1.68    30 0.98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b1[1]     0.08    0.14 0.89 -1.38 -0.64  0.21  0.70  1.80    43 1.07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b1[2]    -0.21    0.13 1.01 -2.06 -0.86 -0.37  0.66  1.69    63 0.98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[1] -0.15    0.16 0.90 -1.52 -0.69 -0.25  0.46  1.67    30 1.10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[2]  0.10    0.20 1.02 -1.63 -0.57  0.20  0.72  2.01    25 0.98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b_out     0.14    0.09 0.63 -0.94 -0.29  0.12  0.52  1.39    49 1.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sigma     0.70    0.03 0.20  0.45  0.57  0.65  0.78  1.21    51 1.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lp__     -5.84    0.34 1.95 -9.40 -7.00 -5.54 -4.25 -2.99    34 0.98</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Samples were drawn using NUTS(diag_e) at Thu Jan  2 07:19:32 2025.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Samples were drawn using NUTS(diag_e) at Thu Jan  2 17:44:48 2025.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> For each parameter, n_eff is a crude measure of effective sample size,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> and Rhat is the potential scale reduction factor on split chains (at </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> convergence, Rhat=1).</span>
