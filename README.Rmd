@@ -13,14 +13,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-# bnns: Bayesian Neural Networks for Regression and Classification
-
-<a href="https://swarnendu-stat.github.io/bnns/"><img src="man/figures/logo.png" align="right" height="139" alt="bnns website" /></a>
+# bnns <a href="https://swarnendu-stat.github.io/bnns/"><img src="man/figures/logo.png" align="right" height="139" alt="bnns website" /></a>
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![Codecov test coverage](https://codecov.io/gh/swarnendu-stat/bnns/graph/badge.svg)](https://app.codecov.io/gh/swarnendu-stat/bnns)
 [![R-CMD-check](https://github.com/swarnendu-stat/bnns/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/swarnendu-stat/bnns/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/swarnendu-stat/bnns/graph/badge.svg)](https://app.codecov.io/gh/swarnendu-stat/bnns)
 <!-- badges: end -->
 
 The `bnns` package provides tools to fit Bayesian Neural Networks (BNNs) for regression and classification problems. It is designed to be flexible, supporting various network architectures, activation functions, and output types, making it suitable for both simple and complex data analysis tasks.
@@ -33,7 +31,15 @@ The `bnns` package provides tools to fit Bayesian Neural Networks (BNNs) for reg
 - Bayesian inference, providing posterior distributions for predictions and parameters.
 - Applications in domains such as clinical trials, predictive modeling, and more.
 
-## Installation
+## Installation (stable CRAN version)
+
+To install the `bnns` package from CRAN, use the following:
+
+```{r}
+# install.packages("bnns")
+```
+
+## Installation (development version)
 
 To install the `bnns` package from GitHub, use the following:
 
