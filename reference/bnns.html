@@ -57,6 +57,7 @@
 <span>  cores <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">123</span>,</span>
 <span>  prior_weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  prior_bias <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  prior_sigma <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  refresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">iter</span><span class="op">/</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">)</span>,</span>
@@ -138,6 +139,21 @@ For example:</p><ul><li><p><code>list(dist = "normal", params = list(mean = 0, s
 </ul></dd>
 
 
+<dt id="arg-prior-bias">prior_bias<a class="anchor" aria-label="anchor" href="#arg-prior-bias"></a></dt>
+<dd><p>A list specifying the prior distribution for the biases in the neural network.
+The list must include two components:</p><ul><li><p><code>dist</code>: A character string specifying the distribution type. Supported values are
+<code>"normal"</code>, <code>"uniform"</code>, and <code>"cauchy"</code>.</p></li>
+<li><p><code>params</code>: A named list specifying the parameters for the chosen distribution:</p><ul><li><p>For <code>"normal"</code>: Provide <code>mean</code> (mean of the distribution) and <code>sd</code> (standard deviation).</p></li>
+<li><p>For <code>"uniform"</code>: Provide <code>alpha</code> (lower bound) and <code>beta</code> (upper bound).</p></li>
+<li><p>For <code>"cauchy"</code>: Provide <code>mu</code> (location parameter) and <code>sigma</code> (scale parameter).</p></li>
+</ul></li>
+</ul><p>If <code>prior_bias</code> is <code>NULL</code>, the default prior is a <code>normal(0, 1)</code> distribution.
+For example:</p><ul><li><p><code>list(dist = "normal", params = list(mean = 0, sd = 1))</code></p></li>
+<li><p><code>list(dist = "uniform", params = list(alpha = -1, beta = 1))</code></p></li>
+<li><p><code>list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))</code></p></li>
+</ul></dd>
+
+
 <dt id="arg-prior-sigma">prior_sigma<a class="anchor" aria-label="anchor" href="#arg-prior-sigma"></a></dt>
 <dd><p>A list specifying the prior distribution for the <code>sigma</code> parameter in regression
 models (<code>out_act_fn = 1</code>). This allows for setting priors on the standard deviation of the residuals.
@@ -195,8 +211,8 @@ For example:</p><ul><li><p><code>list(dist = "half_normal", params = list(mean =
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Gradient evaluation took 2.9e-05 seconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.29 seconds.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Gradient evaluation took 2.8e-05 seconds</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.28 seconds.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Adjust your expectations accordingly!</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
@@ -222,8 +238,8 @@ For example:</p><ul><li><p><code>list(dist = "half_normal", params = list(mean =
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 100 / 100 [100%]  (Sampling)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:  Elapsed Time: 0.005 seconds (Warm-up)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.005 seconds (Sampling)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.01 seconds (Total)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.004 seconds (Sampling)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.009 seconds (Total)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># See the documentation for bnns.default for more details on the default implementation.</span></span></span>

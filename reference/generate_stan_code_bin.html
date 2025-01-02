@@ -129,10 +129,10 @@ predictions between 0 and 1, which aligns with the Bernoulli likelihood.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> model {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w1) ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   b1 ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   w_out ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   b_out ~ PRIOR_SPECIFICATION;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w1) ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b1 ~ PRIOR_BIAS;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   w_out ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b_out ~ PRIOR_BIAS;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   y ~ bernoulli_logit(y_hat);</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-in"><span></span></span>
@@ -179,12 +179,12 @@ predictions between 0 and 1, which aligns with the Bernoulli likelihood.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> model {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w1) ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   b1 ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w2) ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   b2 ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   w_out ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   b_out ~ PRIOR_SPECIFICATION;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w1) ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b1 ~ PRIOR_BIAS;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w2) ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b2 ~ PRIOR_BIAS;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   w_out ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b_out ~ PRIOR_BIAS;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   y ~ bernoulli_logit(y_hat);</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-in"><span></span></span>

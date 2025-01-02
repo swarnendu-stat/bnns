@@ -60,6 +60,7 @@ It is called by the exported bnns methods and is not intended for direct use.</p
 <span>  cores <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">123</span>,</span>
 <span>  prior_weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  prior_bias <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  prior_sigma <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  refresh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">iter</span><span class="op">/</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">)</span>,</span>
@@ -135,6 +136,21 @@ The list must include two components:</p><ul><li><p><code>dist</code>: A charact
 <li><p>For <code>"cauchy"</code>: Provide <code>mu</code> (location parameter) and <code>sigma</code> (scale parameter).</p></li>
 </ul></li>
 </ul><p>If <code>prior_weights</code> is <code>NULL</code>, the default prior is a <code>normal(0, 1)</code> distribution.
+For example:</p><ul><li><p><code>list(dist = "normal", params = list(mean = 0, sd = 1))</code></p></li>
+<li><p><code>list(dist = "uniform", params = list(alpha = -1, beta = 1))</code></p></li>
+<li><p><code>list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))</code></p></li>
+</ul></dd>
+
+
+<dt id="arg-prior-bias">prior_bias<a class="anchor" aria-label="anchor" href="#arg-prior-bias"></a></dt>
+<dd><p>A list specifying the prior distribution for the biases in the neural network.
+The list must include two components:</p><ul><li><p><code>dist</code>: A character string specifying the distribution type. Supported values are
+<code>"normal"</code>, <code>"uniform"</code>, and <code>"cauchy"</code>.</p></li>
+<li><p><code>params</code>: A named list specifying the parameters for the chosen distribution:</p><ul><li><p>For <code>"normal"</code>: Provide <code>mean</code> (mean of the distribution) and <code>sd</code> (standard deviation).</p></li>
+<li><p>For <code>"uniform"</code>: Provide <code>alpha</code> (lower bound) and <code>beta</code> (upper bound).</p></li>
+<li><p>For <code>"cauchy"</code>: Provide <code>mu</code> (location parameter) and <code>sigma</code> (scale parameter).</p></li>
+</ul></li>
+</ul><p>If <code>prior_bias</code> is <code>NULL</code>, the default prior is a <code>normal(0, 1)</code> distribution.
 For example:</p><ul><li><p><code>list(dist = "normal", params = list(mean = 0, sd = 1))</code></p></li>
 <li><p><code>list(dist = "uniform", params = list(alpha = -1, beta = 1))</code></p></li>
 <li><p><code>list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))</code></p></li>
@@ -251,7 +267,7 @@ For example:</p><ul><li><p><code>list(dist = "half_normal", params = list(mean =
 <span class="r-out co"><span class="r-pr">#&gt;</span> sigma     0.77    0.02 0.20   0.45  0.61  0.75  0.89  1.14    85 0.98</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lp__     -6.93    0.60 2.29 -10.76 -8.35 -6.48 -5.08 -3.86    15 1.07</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Samples were drawn using NUTS(diag_e) at Thu Jan  2 06:07:38 2025.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Samples were drawn using NUTS(diag_e) at Thu Jan  2 07:19:32 2025.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> For each parameter, n_eff is a crude measure of effective sample size,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> and Rhat is the potential scale reduction factor on split chains (at </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> convergence, Rhat=1).</span>

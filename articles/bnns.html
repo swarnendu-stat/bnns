@@ -509,7 +509,7 @@ case.</p>
 <span><span class="va">metrics_cat_cauchy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measure_cat.html">measure_cat</a></span><span class="op">(</span>obs <span class="op">=</span> <span class="va">test_y_cat</span>, pred <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">model_cat_cauchy</span>, <span class="va">test_x</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">metrics_cat_cauchy</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $log_loss</span></span>
-<span><span class="co">#&gt; [1] 1.473218</span></span>
+<span><span class="co">#&gt; [1] 1.423818</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $ROC</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -517,10 +517,10 @@ case.</p>
 <span><span class="co">#&gt; multiclass.roc.default(response = obs, predictor = `colnames&lt;-`(data.frame(pred),     levels(obs)))</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data: multivariate predictor `colnames&lt;-`(data.frame(pred), levels(obs)) with 3 levels of obs: a, b, c.</span></span>
-<span><span class="co">#&gt; Multi-class area under the curve: 0.2778</span></span>
+<span><span class="co">#&gt; Multi-class area under the curve: 0.2222</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $AUC</span></span>
-<span><span class="co">#&gt; [1] 0.2777778</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.2222222</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="notes-on-bayesian-neural-networks">8. Notes on Bayesian Neural Networks<a class="anchor" aria-label="anchor" href="#notes-on-bayesian-neural-networks"></a>

@@ -146,12 +146,12 @@ likelihood functions and transformations.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> model {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w1) ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   b1 ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w2) ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   b2 ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   w_out ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   b_out ~ PRIOR_SPECIFICATION;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w1) ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b1 ~ PRIOR_BIAS;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w2) ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b2 ~ PRIOR_BIAS;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   w_out ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b_out ~ PRIOR_BIAS;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   sigma ~ PRIOR_SIGMA;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   y ~ normal(y_hat, sigma);</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
@@ -199,12 +199,12 @@ likelihood functions and transformations.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> model {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w1) ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   b1 ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w2) ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   b2 ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   w_out ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   b_out ~ PRIOR_SPECIFICATION;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w1) ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b1 ~ PRIOR_BIAS;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w2) ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b2 ~ PRIOR_BIAS;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   w_out ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b_out ~ PRIOR_BIAS;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   y ~ bernoulli_logit(y_hat);</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-in"><span></span></span>
@@ -252,12 +252,12 @@ likelihood functions and transformations.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> model {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w1) ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   b1 ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w2) ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   b2 ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w_out) ~ PRIOR_SPECIFICATION;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   b_out ~ PRIOR_SPECIFICATION;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w1) ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b1 ~ PRIOR_BIAS;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w2) ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b2 ~ PRIOR_BIAS;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w_out) ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b_out ~ PRIOR_BIAS;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   for (i in 1:n) y[i] ~ categorical_logit(y_hat[i]');</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-in"><span></span></span>
