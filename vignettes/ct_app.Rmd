@@ -71,7 +71,7 @@ test_data <- trial_data[-train_idx, ]
 
 Fit a BNN to the simulated data. We use a binary classification model with a logistic sigmoid activation for the output layer.
 
-```{r}
+```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide'}
 # Fit a BNN
 model <- bnns(
   formula = Success ~ -1 + .,

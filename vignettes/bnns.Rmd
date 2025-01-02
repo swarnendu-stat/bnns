@@ -75,7 +75,7 @@ Fit a Bayesian Neural Network using the `bnns()` function. Specify the network a
 
 ### Regression Example
 
-```{r message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide'}
 model_reg <- bnns(
   y ~ -1 + x1 + x2,
   data = df,
@@ -91,7 +91,7 @@ model_reg <- bnns(
 
 ### Binary Classification Example
 
-```{r}
+```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide'}
 model_bin <- bnns(
   y_bin ~ -1 + x1 + x2,
   data = df,
@@ -107,7 +107,7 @@ model_bin <- bnns(
 
 ### Multiclass Classification Example
 
-```{r}
+```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide'}
 model_cat <- bnns(
   y_cat ~ -1 + x1 + x2,
   data = df,
@@ -192,7 +192,7 @@ print(metrics_cat)
 
 Customized priors can be used for weights as well as the `sigma` parameter (for regression).  Here we show an example use of a `Cauchy` prior for weights in multi-classification case.
 
-```{r}
+```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide'}
 model_cat_cauchy <- bnns(
   y_cat ~ -1 + x1 + x2,
   data = df,
@@ -205,7 +205,9 @@ model_cat_cauchy <- bnns(
   chains = 1,
   prior_weights = list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))
 )
+```
 
+```{r}
 # Evaluate predictions
 metrics_cat_cauchy <- measure_cat(obs = test_y_cat, pred = predict(model_cat_cauchy, test_x))
 print(metrics_cat_cauchy)
