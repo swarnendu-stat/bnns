@@ -18,6 +18,7 @@ bnns_train(
   cores = 2,
   seed = 123,
   prior_weights = NULL,
+  prior_bias = NULL,
   prior_sigma = NULL,
   verbose = FALSE,
   refresh = max(iter/10, 1),
@@ -73,6 +74,26 @@ The list must include two components:
 }
 }
 If \code{prior_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
+For example:
+\itemize{
+\item \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
+\item \code{list(dist = "uniform", params = list(alpha = -1, beta = 1))}
+\item \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
+}}
+
+\item{prior_bias}{A list specifying the prior distribution for the biases in the neural network.
+The list must include two components:
+\itemize{
+\item \code{dist}: A character string specifying the distribution type. Supported values are
+\code{"normal"}, \code{"uniform"}, and \code{"cauchy"}.
+\item \code{params}: A named list specifying the parameters for the chosen distribution:
+\itemize{
+\item For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
+\item For \code{"uniform"}: Provide \code{alpha} (lower bound) and \code{beta} (upper bound).
+\item For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
+}
+}
+If \code{prior_bias} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
 For example:
 \itemize{
 \item \code{list(dist = "normal", params = list(mean = 0, sd = 1))}

@@ -44,6 +44,25 @@
 #'     \item \code{list(dist = "uniform", params = list(alpha = -1, beta = 1))}
 #'     \item \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
 #'   }
+#' @param prior_bias A list specifying the prior distribution for the biases in the neural network.
+#'   The list must include two components:
+#'   \itemize{
+#'     \item \code{dist}: A character string specifying the distribution type. Supported values are
+#'       \code{"normal"}, \code{"uniform"}, and \code{"cauchy"}.
+#'     \item \code{params}: A named list specifying the parameters for the chosen distribution:
+#'       \itemize{
+#'         \item For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
+#'         \item For \code{"uniform"}: Provide \code{alpha} (lower bound) and \code{beta} (upper bound).
+#'         \item For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
+#'       }
+#'   }
+#'   If \code{prior_bias} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
+#'   For example:
+#'   \itemize{
+#'     \item \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
+#'     \item \code{list(dist = "uniform", params = list(alpha = -1, beta = 1))}
+#'     \item \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
+#'   }
 #' @param prior_sigma A list specifying the prior distribution for the \code{sigma} parameter in regression
 #'   models (\code{out_act_fn = 1}). This allows for setting priors on the standard deviation of the residuals.
 #'   The list must include two components:
@@ -91,7 +110,8 @@
 
 bnns <- function(formula, data = list(), L = 1, nodes = 16,
                  act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
-                 thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), ...) {
+                 thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
+                 prior_bias = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), ...) {
   UseMethod("bnns")
 }
 
@@ -136,6 +156,25 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 #'       }
 #'   }
 #'   If \code{prior_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
+#'   For example:
+#'   \itemize{
+#'     \item \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
+#'     \item \code{list(dist = "uniform", params = list(alpha = -1, beta = 1))}
+#'     \item \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
+#'   }
+#' @param prior_bias A list specifying the prior distribution for the biases in the neural network.
+#'   The list must include two components:
+#'   \itemize{
+#'     \item \code{dist}: A character string specifying the distribution type. Supported values are
+#'       \code{"normal"}, \code{"uniform"}, and \code{"cauchy"}.
+#'     \item \code{params}: A named list specifying the parameters for the chosen distribution:
+#'       \itemize{
+#'         \item For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
+#'         \item For \code{"uniform"}: Provide \code{alpha} (lower bound) and \code{beta} (upper bound).
+#'         \item For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
+#'       }
+#'   }
+#'   If \code{prior_bias} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
 #'   For example:
 #'   \itemize{
 #'     \item \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
@@ -190,7 +229,8 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 
 bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
                        act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
-                       thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), ...) {
+                       thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
+                       prior_bias = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), ...) {
   stopifnot("Argument train_x is missing" = !missing(train_x))
   stopifnot("Argument train_y is missing" = !missing(train_y))
 
@@ -210,7 +250,28 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
   supported_distributions <- c("normal", "uniform", "cauchy")
   if (!(prior_weights$dist %in% supported_distributions)) {
     stop(paste(
-      "Unsupported distribution:", prior_weights$dist,
+      "Unsupported distribution for weights:", prior_weights$dist,
+      ". Supported distributions are:", paste(supported_distributions, collapse = ", ")
+    ))
+  }
+
+  # Default priors: Normal(0, 1)
+  if (is.null(prior_bias)) {
+    prior_bias <- list(
+      dist = "normal",
+      params = list(mean = 0, sd = 1)
+    )
+  }
+
+  # Validate the prior specification
+  if (!is.list(prior_bias) || !("dist" %in% names(prior_bias)) || !("params" %in% names(prior_bias))) {
+    stop("'prior_bias' must be a list with elements 'dist' and 'params'.")
+  }
+
+  supported_distributions <- c("normal", "uniform", "cauchy")
+  if (!(prior_bias$dist %in% supported_distributions)) {
+    stop(paste(
+      "Unsupported distribution for biases:", prior_bias$dist,
       ". Supported distributions are:", paste(supported_distributions, collapse = ", ")
     ))
   }
@@ -247,12 +308,19 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
   }
 
   validate_prior(prior_weights$dist, prior_weights$params)
+  validate_prior(prior_bias$dist, prior_bias$params)
 
   # Replace PRIOR_SPECIFICATION with the appropriate Stan syntax
-  prior_specification <- switch(prior_weights$dist,
+  prior_specification_weights <- switch(prior_weights$dist,
     normal = sprintf("normal(%f, %f)", prior_weights$params$mean, prior_weights$params$sd),
     uniform = sprintf("uniform(%f, %f)", prior_weights$params$alpha, prior_weights$params$beta),
     cauchy = sprintf("cauchy(%f, %f)", prior_weights$params$mu, prior_weights$params$sigma)
+  )
+
+  prior_specification_bias <- switch(prior_bias$dist,
+                                        normal = sprintf("normal(%f, %f)", prior_bias$params$mean, prior_bias$params$sd),
+                                        uniform = sprintf("uniform(%f, %f)", prior_bias$params$alpha, prior_bias$params$beta),
+                                        cauchy = sprintf("cauchy(%f, %f)", prior_bias$params$mu, prior_bias$params$sigma)
   )
 
   if (out_act_fn == 3) {
@@ -300,7 +368,8 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
     pars <- c(pars, "sigma")
   }
 
-  stan_model <- gsub("PRIOR_SPECIFICATION", prior_specification, generate_stan_code(num_layers = L, nodes = nodes, out_act_fn = out_act_fn))
+  stan_model <- gsub("PRIOR_WEIGHT", prior_specification_weights, generate_stan_code(num_layers = L, nodes = nodes, out_act_fn = out_act_fn)) |>
+    gsub(x = _, pattern = "PRIOR_BIAS", replacement = prior_specification_bias)
 
   # Check prior_sigma (only relevant for regression models)
   if (out_act_fn == 1) {
@@ -386,6 +455,25 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 #'     \item \code{list(dist = "uniform", params = list(alpha = -1, beta = 1))}
 #'     \item \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
 #'   }
+#' @param prior_bias A list specifying the prior distribution for the biases in the neural network.
+#'   The list must include two components:
+#'   \itemize{
+#'     \item \code{dist}: A character string specifying the distribution type. Supported values are
+#'       \code{"normal"}, \code{"uniform"}, and \code{"cauchy"}.
+#'     \item \code{params}: A named list specifying the parameters for the chosen distribution:
+#'       \itemize{
+#'         \item For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
+#'         \item For \code{"uniform"}: Provide \code{alpha} (lower bound) and \code{beta} (upper bound).
+#'         \item For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
+#'       }
+#'   }
+#'   If \code{prior_bias} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
+#'   For example:
+#'   \itemize{
+#'     \item \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
+#'     \item \code{list(dist = "uniform", params = list(alpha = -1, beta = 1))}
+#'     \item \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
+#'   }
 #' @param prior_sigma A list specifying the prior distribution for the \code{sigma} parameter in regression
 #'   models (\code{out_act_fn = 1}). This allows for setting priors on the standard deviation of the residuals.
 #'   The list must include two components:
@@ -430,7 +518,8 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 
 bnns.default <- function(formula, data = list(), L = 1, nodes = 16,
                          act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
-                         thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), ...) {
+                         thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
+                         prior_bias = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), ...) {
   if (missing(formula) || missing(data)) {
     stop("Both 'formula' and 'data' must be provided.")
   }
@@ -442,7 +531,7 @@ bnns.default <- function(formula, data = list(), L = 1, nodes = 16,
     train_x = train_x, train_y = train_y, L = L, nodes = nodes,
     act_fn = act_fn, out_act_fn = out_act_fn, iter = iter,
     warmup = warmup, thin = thin, chains = chains,
-    cores = cores, seed = seed, prior_weights = prior_weights, prior_sigma = prior_sigma, verbose = verbose, refresh = refresh, ...
+    cores = cores, seed = seed, prior_weights = prior_weights, prior_bias = prior_bias, prior_sigma = prior_sigma, verbose = verbose, refresh = refresh, ...
   )
   est$call <- match.call()
   est$formula <- formula

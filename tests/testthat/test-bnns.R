@@ -20,7 +20,7 @@ test_that("bnns works for regression (linear output)", {
   expect_equal(result_2$data$out_act_fn, 1)
 })
 
-test_that("bnns works for regression (with custom prior_weights and prior_sigma)", {
+test_that("bnns works for regression (with custom prior_weights, prior_bias and prior_sigma)", {
   set.seed(123)
   df <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
 
@@ -28,6 +28,7 @@ test_that("bnns works for regression (with custom prior_weights and prior_sigma)
     data = df, L = 1, nodes = 2, out_act_fn = 1,
     iter = 1e2, warmup = 5e1, chains = 1,
     prior_weights = list(dist = "uniform", params = list(alpha = -1, beta = 1)),
+    prior_bias = list(dist = "cauchy", params = list(mu = 0, sigma = 2.5)),
     prior_sigma = list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))
   )
 
@@ -125,6 +126,11 @@ test_that("bnns.default throws errors for incorrect inputs", {
 
   expect_error(
     bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 3, prior_weights = list(dist = "lognormal", params = list(lower = -1, upper = 1))),
-    "Unsupported distribution: lognormal . Supported distributions are: normal, uniform, cauchy"
+    "Unsupported distribution for weights: lognormal . Supported distributions are: normal, uniform, cauchy"
+  )
+
+  expect_error(
+    bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 3, prior_bias = list(dist = "lognormal", params = list(lower = -1, upper = 1))),
+    "Unsupported distribution for biases: lognormal . Supported distributions are: normal, uniform, cauchy"
   )
 })

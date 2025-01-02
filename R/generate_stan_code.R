@@ -143,10 +143,10 @@ transformed parameters {
 }
 
 model {
-  to_vector(w1) ~ PRIOR_SPECIFICATION;
-  b1 ~ PRIOR_SPECIFICATION;
-  w_out ~ PRIOR_SPECIFICATION;
-  b_out ~ PRIOR_SPECIFICATION;
+  to_vector(w1) ~ PRIOR_WEIGHT;
+  b1 ~ PRIOR_BIAS;
+  w_out ~ PRIOR_WEIGHT;
+  b_out ~ PRIOR_BIAS;
   sigma ~ PRIOR_SIGMA;
   y ~ normal(y_hat, sigma);
 }
@@ -210,16 +210,16 @@ data {
     sections$transformed <- paste(transformed, collapse = "\n")
 
     # Model block
-    model <- c("model {", "  to_vector(w1) ~ PRIOR_SPECIFICATION;", "  b1 ~ PRIOR_SPECIFICATION;")
+    model <- c("model {", "  to_vector(w1) ~ PRIOR_WEIGHT;", "  b1 ~ PRIOR_BIAS;")
     for (l in seq(2, num_layers)) {
       model <- c(
         model,
-        paste0("  to_vector(w", l, ") ~ PRIOR_SPECIFICATION;"),
-        paste0("  b", l, " ~ PRIOR_SPECIFICATION;")
+        paste0("  to_vector(w", l, ") ~ PRIOR_WEIGHT;"),
+        paste0("  b", l, " ~ PRIOR_BIAS;")
       )
     }
 
-    model <- c(model, "  w_out ~ PRIOR_SPECIFICATION;", "  b_out ~ PRIOR_SPECIFICATION;", "  sigma ~ PRIOR_SIGMA;", "  y ~ normal(y_hat, sigma);", "}")
+    model <- c(model, "  w_out ~ PRIOR_WEIGHT;", "  b_out ~ PRIOR_BIAS;", "  sigma ~ PRIOR_SIGMA;", "  y ~ normal(y_hat, sigma);", "}")
     sections$model <- paste(model, collapse = "\n")
 
     # Combine all sections
@@ -311,10 +311,10 @@ transformed parameters {
 }
 
 model {
-  to_vector(w1) ~ PRIOR_SPECIFICATION;
-  b1 ~ PRIOR_SPECIFICATION;
-  w_out ~ PRIOR_SPECIFICATION;
-  b_out ~ PRIOR_SPECIFICATION;
+  to_vector(w1) ~ PRIOR_WEIGHT;
+  b1 ~ PRIOR_BIAS;
+  w_out ~ PRIOR_WEIGHT;
+  b_out ~ PRIOR_BIAS;
   y ~ bernoulli_logit(y_hat);
 }
 ")
@@ -377,16 +377,16 @@ data {
     sections$transformed <- paste(transformed, collapse = "\n")
 
     # Model block
-    model <- c("model {", "  to_vector(w1) ~ PRIOR_SPECIFICATION;", "  b1 ~ PRIOR_SPECIFICATION;")
+    model <- c("model {", "  to_vector(w1) ~ PRIOR_WEIGHT;", "  b1 ~ PRIOR_BIAS;")
     for (l in seq(2, num_layers)) {
       model <- c(
         model,
-        paste0("  to_vector(w", l, ") ~ PRIOR_SPECIFICATION;"),
-        paste0("  b", l, " ~ PRIOR_SPECIFICATION;")
+        paste0("  to_vector(w", l, ") ~ PRIOR_WEIGHT;"),
+        paste0("  b", l, " ~ PRIOR_BIAS;")
       )
     }
 
-    model <- c(model, "  w_out ~ PRIOR_SPECIFICATION;", "  b_out ~ PRIOR_SPECIFICATION;", "  y ~ bernoulli_logit(y_hat);", "}")
+    model <- c(model, "  w_out ~ PRIOR_WEIGHT;", "  b_out ~ PRIOR_BIAS;", "  y ~ bernoulli_logit(y_hat);", "}")
     sections$model <- paste(model, collapse = "\n")
 
     # Combine all sections
@@ -476,10 +476,10 @@ transformed parameters {
 }
 
 model {
-  to_vector(w1) ~ PRIOR_SPECIFICATION;
-  b1 ~ PRIOR_SPECIFICATION;
-  to_vector(w_out) ~ PRIOR_SPECIFICATION;
-  b_out ~ PRIOR_SPECIFICATION;
+  to_vector(w1) ~ PRIOR_WEIGHT;
+  b1 ~ PRIOR_BIAS;
+  to_vector(w_out) ~ PRIOR_WEIGHT;
+  b_out ~ PRIOR_BIAS;
   for (i in 1:n) y[i] ~ categorical_logit(y_hat[i]');
 }
 ")
@@ -543,17 +543,17 @@ data {
     sections$transformed <- paste(transformed, collapse = "\n")
 
     # Model block
-    model <- c("model {", "  to_vector(w1) ~ PRIOR_SPECIFICATION;", "  b1 ~ PRIOR_SPECIFICATION;")
+    model <- c("model {", "  to_vector(w1) ~ PRIOR_WEIGHT;", "  b1 ~ PRIOR_BIAS;")
     for (l in seq(2, num_layers)) {
       model <- c(
         model,
-        paste0("  to_vector(w", l, ") ~ PRIOR_SPECIFICATION;"),
-        paste0("  b", l, " ~ PRIOR_SPECIFICATION;")
+        paste0("  to_vector(w", l, ") ~ PRIOR_WEIGHT;"),
+        paste0("  b", l, " ~ PRIOR_BIAS;")
       )
     }
 
     model <- c(
-      model, "  to_vector(w_out) ~ PRIOR_SPECIFICATION;", "  b_out ~ PRIOR_SPECIFICATION;",
+      model, "  to_vector(w_out) ~ PRIOR_WEIGHT;", "  b_out ~ PRIOR_BIAS;",
       "  for (i in 1:n) y[i] ~ categorical_logit(y_hat[i]');", "}"
     )
     sections$model <- paste(model, collapse = "\n")
