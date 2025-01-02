@@ -35,7 +35,11 @@ predict.bnns <- function(object, newdata = NULL, ...) {
     } else {
       test_x <- as.matrix(newdata)
     }
+    if(object$normalize){
+      test_x <- sweep(test_x, 2, object$x_mean, "-") / object$x_sd
+    }
   }
+
   list_of_draws <- rstan::extract(object$fit)
 
   if (object$data$out_act_fn == 3) {

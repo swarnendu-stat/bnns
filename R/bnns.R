@@ -83,6 +83,12 @@
 #'   }
 #' @param verbose TRUE or FALSE: flag indicating whether to print intermediate output from Stan on the console, which might be helpful for model debugging.
 #' @param refresh refresh (integer) can be used to control how often the progress of the sampling is reported (i.e. show the progress every refresh iterations). By default, refresh = max(iter/10, 1). The progress indicator is turned off if refresh <= 0.
+#' @param normalize Logical. If `TRUE` (default), the input predictors
+#'   are normalized to have zero mean and unit variance before training.
+#'   Normalization ensures stable and efficient Bayesian sampling by standardizing
+#'   the input scale, which is particularly beneficial for neural network training.
+#'   If `FALSE`, no normalization is applied, and it is assumed that the input data
+#'   is already pre-processed appropriately.
 #' @param ... Currently not in use.
 #'
 #' @return The result of the method dispatched by the class of the input data. Typically, this would be an object of class \code{"bnns"} containing the fitted model and associated information.
@@ -111,7 +117,7 @@
 bnns <- function(formula, data = list(), L = 1, nodes = 16,
                  act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
                  thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
-                 prior_bias = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), ...) {
+                 prior_bias = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), normalize = TRUE, ...) {
   UseMethod("bnns")
 }
 
@@ -201,6 +207,12 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 #'   }
 #' @param verbose TRUE or FALSE: flag indicating whether to print intermediate output from Stan on the console, which might be helpful for model debugging.
 #' @param refresh refresh (integer) can be used to control how often the progress of the sampling is reported (i.e. show the progress every refresh iterations). By default, refresh = max(iter/10, 1). The progress indicator is turned off if refresh <= 0.
+#' @param normalize Logical. If `TRUE` (default), the input predictors
+#'   are normalized to have zero mean and unit variance before training.
+#'   Normalization ensures stable and efficient Bayesian sampling by standardizing
+#'   the input scale, which is particularly beneficial for neural network training.
+#'   If `FALSE`, no normalization is applied, and it is assumed that the input data
+#'   is already pre-processed appropriately.
 #' @param ... Currently not in use.
 #'
 #' @return An object of class \code{"bnns"} containing the following components:
@@ -230,7 +242,7 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
                        act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
                        thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
-                       prior_bias = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), ...) {
+                       prior_bias = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), normalize = TRUE, ...) {
   stopifnot("Argument train_x is missing" = !missing(train_x))
   stopifnot("Argument train_y is missing" = !missing(train_y))
 
@@ -323,6 +335,12 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
                                         cauchy = sprintf("cauchy(%f, %f)", prior_bias$params$mu, prior_bias$params$sigma)
   )
 
+  if(normalize){
+    x_mean <- colMeans(train_x)
+    x_sd <- apply(train_x, 2, sd)
+    train_x <- sweep(train_x, 2, x_mean, "-") / x_sd
+  }
+
   if (out_act_fn == 3) {
     stopifnot("train_y must be a factor" = is.factor(train_y))
     stopifnot("train_y must have at least 3 levels" = length(levels(train_y)) >= 3)
@@ -405,6 +423,12 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 
   est$call <- match.call()
   est$data <- stan_data
+  est$normalize <- normalize
+  if(normalize){
+    est$x_mean <- x_mean
+    est$x_sd <- x_sd
+  }
+
   class(est) <- "bnns"
   return(est)
 }
@@ -494,6 +518,12 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 #'   }
 #' @param verbose TRUE or FALSE: flag indicating whether to print intermediate output from Stan on the console, which might be helpful for model debugging.
 #' @param refresh refresh (integer) can be used to control how often the progress of the sampling is reported (i.e. show the progress every refresh iterations). By default, refresh = max(iter/10, 1). The progress indicator is turned off if refresh <= 0.
+#' @param normalize Logical. If `TRUE` (default), the input predictors
+#'   are normalized to have zero mean and unit variance before training.
+#'   Normalization ensures stable and efficient Bayesian sampling by standardizing
+#'   the input scale, which is particularly beneficial for neural network training.
+#'   If `FALSE`, no normalization is applied, and it is assumed that the input data
+#'   is already pre-processed appropriately.
 #' @param ... Currently not in use.
 #'
 #' @return An object of class \code{"bnns"} containing the fitted model and associated information, including:
@@ -519,7 +549,7 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 bnns.default <- function(formula, data = list(), L = 1, nodes = 16,
                          act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
                          thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
-                         prior_bias = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), ...) {
+                         prior_bias = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), normalize = TRUE, ...) {
   if (missing(formula) || missing(data)) {
     stop("Both 'formula' and 'data' must be provided.")
   }
@@ -531,7 +561,9 @@ bnns.default <- function(formula, data = list(), L = 1, nodes = 16,
     train_x = train_x, train_y = train_y, L = L, nodes = nodes,
     act_fn = act_fn, out_act_fn = out_act_fn, iter = iter,
     warmup = warmup, thin = thin, chains = chains,
-    cores = cores, seed = seed, prior_weights = prior_weights, prior_bias = prior_bias, prior_sigma = prior_sigma, verbose = verbose, refresh = refresh, ...
+    cores = cores, seed = seed, prior_weights = prior_weights,
+    prior_bias = prior_bias, prior_sigma = prior_sigma,
+    verbose = verbose, refresh = refresh, normalize = normalize, ...
   )
   est$call <- match.call()
   est$formula <- formula

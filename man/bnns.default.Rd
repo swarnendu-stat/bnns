@@ -22,6 +22,7 @@
   prior_sigma = NULL,
   verbose = FALSE,
   refresh = max(iter/10, 1),
+  normalize = TRUE,
   ...
 )
 }
@@ -123,6 +124,13 @@ For example:
 \item{verbose}{TRUE or FALSE: flag indicating whether to print intermediate output from Stan on the console, which might be helpful for model debugging.}
 
 \item{refresh}{refresh (integer) can be used to control how often the progress of the sampling is reported (i.e. show the progress every refresh iterations). By default, refresh = max(iter/10, 1). The progress indicator is turned off if refresh <= 0.}
+
+\item{normalize}{Logical. If \code{TRUE} (default), the input predictors
+are normalized to have zero mean and unit variance before training.
+Normalization ensures stable and efficient Bayesian sampling by standardizing
+the input scale, which is particularly beneficial for neural network training.
+If \code{FALSE}, no normalization is applied, and it is assumed that the input data
+is already pre-processed appropriately.}
 
 \item{...}{Currently not in use.}
 }

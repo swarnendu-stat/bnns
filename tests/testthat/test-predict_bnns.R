@@ -1,7 +1,7 @@
 # Running NN
 
 data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
-model_f <- bnns(y ~ -1 + x1 + x2, data = data, L = 1, nodes = 2, act_fn = 2, iter = 1e2, warmup = 5e1, chains = 1)
+model_f <- bnns(y ~ -1 + x1 + x2, data = data, L = 1, nodes = 2, act_fn = 2, iter = 1e2, warmup = 5e1, chains = 1, normalize = FALSE)
 model_f_2 <- bnns(y ~ -1 + x1 + x2, data = data, L = 4, nodes = rep(2, 4), act_fn = 1:4, iter = 1e2, warmup = 5e1, chains = 1)
 new_data <- data.frame(x1 = runif(5), x2 = runif(5))
 
