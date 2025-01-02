@@ -62,6 +62,8 @@
 #'     \item \code{list(dist = "half_normal", params = list(mean = 0, sd = 1))}
 #'     \item \code{list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))}
 #'   }
+#' @param verbose TRUE or FALSE: flag indicating whether to print intermediate output from Stan on the console, which might be helpful for model debugging.
+#' @param refresh refresh (integer) can be used to control how often the progress of the sampling is reported (i.e. show the progress every refresh iterations). By default, refresh = max(iter/10, 1). The progress indicator is turned off if refresh <= 0.
 #' @param ... Currently not in use.
 #'
 #' @return The result of the method dispatched by the class of the input data. Typically, this would be an object of class \code{"bnns"} containing the fitted model and associated information.
@@ -89,7 +91,7 @@
 
 bnns <- function(formula, data = list(), L = 1, nodes = 16,
                  act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
-                 thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL, prior_sigma = NULL, ...) {
+                 thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), ...) {
   UseMethod("bnns")
 }
 
@@ -158,6 +160,8 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 #'     \item \code{list(dist = "half_normal", params = list(mean = 0, sd = 1))}
 #'     \item \code{list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))}
 #'   }
+#' @param verbose TRUE or FALSE: flag indicating whether to print intermediate output from Stan on the console, which might be helpful for model debugging.
+#' @param refresh refresh (integer) can be used to control how often the progress of the sampling is reported (i.e. show the progress every refresh iterations). By default, refresh = max(iter/10, 1). The progress indicator is turned off if refresh <= 0.
 #' @param ... Currently not in use.
 #'
 #' @return An object of class \code{"bnns"} containing the following components:
@@ -186,7 +190,7 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 
 bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
                        act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
-                       thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL, prior_sigma = NULL, ...) {
+                       thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), ...) {
   stopifnot("Argument train_x is missing" = !missing(train_x))
   stopifnot("Argument train_y is missing" = !missing(train_y))
 
@@ -327,7 +331,7 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
     model_code = stan_model, data = stan_data, include = TRUE,
     pars = pars,
     iter = iter, warmup = warmup, thin = thin, chains = chains, cores = cores,
-    init = 0, seed = seed, verbose = TRUE, refresh = 0
+    init = 0, seed = seed, verbose = verbose, refresh = refresh
   ))
 
   est$call <- match.call()
@@ -400,6 +404,8 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 #'     \item \code{list(dist = "half_normal", params = list(mean = 0, sd = 1))}
 #'     \item \code{list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))}
 #'   }
+#' @param verbose TRUE or FALSE: flag indicating whether to print intermediate output from Stan on the console, which might be helpful for model debugging.
+#' @param refresh refresh (integer) can be used to control how often the progress of the sampling is reported (i.e. show the progress every refresh iterations). By default, refresh = max(iter/10, 1). The progress indicator is turned off if refresh <= 0.
 #' @param ... Currently not in use.
 #'
 #' @return An object of class \code{"bnns"} containing the fitted model and associated information, including:
@@ -424,7 +430,7 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 
 bnns.default <- function(formula, data = list(), L = 1, nodes = 16,
                          act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
-                         thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL, prior_sigma = NULL, ...) {
+                         thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), ...) {
   if (missing(formula) || missing(data)) {
     stop("Both 'formula' and 'data' must be provided.")
   }
@@ -436,7 +442,7 @@ bnns.default <- function(formula, data = list(), L = 1, nodes = 16,
     train_x = train_x, train_y = train_y, L = L, nodes = nodes,
     act_fn = act_fn, out_act_fn = out_act_fn, iter = iter,
     warmup = warmup, thin = thin, chains = chains,
-    cores = cores, seed = seed, prior_weights = prior_weights, prior_sigma = prior_sigma, ...
+    cores = cores, seed = seed, prior_weights = prior_weights, prior_sigma = prior_sigma, verbose = verbose, refresh = refresh, ...
   )
   est$call <- match.call()
   est$formula <- formula

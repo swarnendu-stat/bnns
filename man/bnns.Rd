@@ -19,6 +19,8 @@ bnns(
   seed = 123,
   prior_weights = NULL,
   prior_sigma = NULL,
+  verbose = FALSE,
+  refresh = max(iter/10, 1),
   ...
 )
 }
@@ -96,6 +98,10 @@ For example:
 \item \code{list(dist = "half_normal", params = list(mean = 0, sd = 1))}
 \item \code{list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))}
 }}
+
+\item{verbose}{TRUE or FALSE: flag indicating whether to print intermediate output from Stan on the console, which might be helpful for model debugging.}
+
+\item{refresh}{refresh (integer) can be used to control how often the progress of the sampling is reported (i.e. show the progress every refresh iterations). By default, refresh = max(iter/10, 1). The progress indicator is turned off if refresh <= 0.}
 
 \item{...}{Currently not in use.}
 }
