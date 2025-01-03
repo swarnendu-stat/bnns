@@ -56,9 +56,11 @@ predict.bnns <- function(object, newdata = NULL, ...) {
       } else if (object$data$act_fn[1] == 2) {
         a1[i, , ] <- sigmoid(z1[i, , ])
       } else if (object$data$act_fn[1] == 3) {
-        a1[i, , ] <- relu(z1[i, , ])
-      } else if (object$data$act_fn[1] == 4) {
         a1[i, , ] <- softplus(z1[i, , ])
+      } else if (object$data$act_fn[1] == 4) {
+        a1[i, , ] <- relu(z1[i, , ])
+      } else{
+        a1[i, , ] <- z1[i, , ]
       }
     }
 
@@ -77,6 +79,8 @@ predict.bnns <- function(object, newdata = NULL, ...) {
             eval(parse(text = paste0("a", id3, " <- softplus(z", id3, ")")))
           } else if (object$data$act_fn[l] == 4) {
             eval(parse(text = paste0("a", id3, " <- relu(z", id3, ")")))
+          } else{
+            eval(parse(text = paste0("a", id3, " <- z", id3, "")))
           }
         }
       }
@@ -96,15 +100,17 @@ predict.bnns <- function(object, newdata = NULL, ...) {
 
     for (i in seq_len(ncol(predictions))) {
       z1[i, , ] <- test_x %*% list_of_draws$w1[i, , ] + matrix(rep(list_of_draws$b1[i, ], nrow(test_x)), nrow = nrow(test_x), byrow = TRUE)
-      # Activation functions (1 = ta3H, 2 = sigmoid, 3 = ReLU, 4 = softplus)
+      # Activation functions (1 = ta3H, 2 = sigmoid, 3 = softplus, 4 = ReLU, 5 = linear)
       if (object$data$act_fn[1] == 1) {
         a1[i, , ] <- tanh(z1[i, , ])
       } else if (object$data$act_fn[1] == 2) {
         a1[i, , ] <- sigmoid(z1[i, , ])
       } else if (object$data$act_fn[1] == 3) {
-        a1[i, , ] <- relu(z1[i, , ])
-      } else if (object$data$act_fn[1] == 4) {
         a1[i, , ] <- softplus(z1[i, , ])
+      } else if (object$data$act_fn[1] == 4) {
+        a1[i, , ] <- relu(z1[i, , ])
+      } else{
+        a1[i, , ] <- z1[i, , ]
       }
     }
 
@@ -123,6 +129,8 @@ predict.bnns <- function(object, newdata = NULL, ...) {
             eval(parse(text = paste0("a", id3, " <- softplus(z", id3, ")")))
           } else if (object$data$act_fn[l] == 4) {
             eval(parse(text = paste0("a", id3, " <- relu(z", id3, ")")))
+          } else{
+            eval(parse(text = paste0("a", id3, " <- z", id3, "")))
           }
         }
       }

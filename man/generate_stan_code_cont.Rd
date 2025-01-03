@@ -41,6 +41,7 @@ Supported activation functions for the hidden layers:
 \item 2: Sigmoid
 \item 3: Softplus
 \item 4: ReLU
+\item 5: linear
 }
 }
 \examples{

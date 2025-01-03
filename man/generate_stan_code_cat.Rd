@@ -32,12 +32,13 @@ and calculates the final predictions (\code{y_hat}) using the softmax function.
 using \code{categorical_logit}.
 }
 
-Supported activation functions for each layer:
+Supported activation functions for the hidden layers:
 \itemize{
-\item 1: Hyperbolic tangent (\code{tanh})
-\item 2: Logistic sigmoid (\code{inv_logit})
-\item 3: Softplus (\code{log(1 + exp(x))})
-\item Default: Rectified linear unit (ReLU)
+\item 1: Tanh
+\item 2: Sigmoid
+\item 3: Softplus
+\item 4: ReLU
+\item 5: linear
 }
 
 The categorical response (\code{y}) is assumed to take integer values from 1 to \code{K},

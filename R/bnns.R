@@ -10,8 +10,9 @@
 #'   \itemize{
 #'     \item \code{1} for tanh
 #'     \item \code{2} for sigmoid (default)
-#'     \item \code{3} for ReLU
-#'     \item \code{4} for softplus
+#'     \item \code{3} for softplus
+#'     \item \code{4} for ReLU
+#'     \item \code{5} for linear
 #'   }
 #' @param out_act_fn An integer specifying the activation function for the output layer. Options are:
 #'   \itemize{
@@ -114,10 +115,11 @@
 #'
 #' @export
 
-bnns <- function(formula, data = list(), L = 1, nodes = 16,
-                 act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
+bnns <- function(formula, data = list(), L = 1, nodes = rep(2, L),
+                 act_fn = rep(2, L), out_act_fn = 1, iter = 1e3, warmup = 2e2,
                  thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
-                 prior_bias = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), normalize = TRUE, ...) {
+                 prior_bias = NULL, prior_sigma = NULL, verbose = FALSE,
+                 refresh = max(iter/10, 1), normalize = TRUE, ...) {
   UseMethod("bnns")
 }
 
@@ -134,8 +136,9 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 #'   \itemize{
 #'     \item \code{1} for tanh
 #'     \item \code{2} for sigmoid (default)
-#'     \item \code{3} for ReLU
-#'     \item \code{4} for softplus
+#'     \item \code{3} for softplus
+#'     \item \code{4} for ReLU
+#'     \item \code{5} for linear
 #'   }
 #' @param out_act_fn An integer specifying the activation function for the output layer. Options are:
 #'   \itemize{
@@ -239,12 +242,19 @@ bnns <- function(formula, data = list(), L = 1, nodes = 16,
 #' @seealso \code{\link[rstan]{stan}}
 #' @keywords internal
 
-bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
-                       act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
+bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
+                       act_fn = rep(2, L), out_act_fn = 1, iter = 1e3, warmup = 2e2,
                        thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
-                       prior_bias = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), normalize = TRUE, ...) {
+                       prior_bias = NULL, prior_sigma = NULL, verbose = FALSE,
+                       refresh = max(iter/10, 1), normalize = TRUE, ...) {
+
   stopifnot("Argument train_x is missing" = !missing(train_x))
   stopifnot("Argument train_y is missing" = !missing(train_y))
+  stopifnot("L must be a positive integer" = ((L %% 1 == 0) & (sign(L) == 1)))
+  stopifnot("nodes must be of length L" = length(nodes) == L)
+  stopifnot("nodes must be positive integer(s)" = (all(nodes %% 1 == 0) & all(sign(nodes) == 1)))
+  stopifnot("act_fn must be of length L" = length(act_fn) == L)
+  stopifnot("act_fn must be a sequence of 1/2/3/4/5" = all(act_fn %in% 1:5))
 
   # Default priors: Normal(0, 1)
   if (is.null(prior_weights)) {
@@ -446,8 +456,9 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 #'   \itemize{
 #'     \item \code{1} for tanh
 #'     \item \code{2} for sigmoid (default)
-#'     \item \code{3} for ReLU
-#'     \item \code{4} for softplus
+#'     \item \code{3} for softplus
+#'     \item \code{4} for ReLU
+#'     \item \code{5} for linear
 #'   }
 #' @param out_act_fn An integer specifying the activation function for the output layer. Options are:
 #'   \itemize{
@@ -547,10 +558,11 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
 #'
 #' @export
 
-bnns.default <- function(formula, data = list(), L = 1, nodes = 16,
-                         act_fn = 2, out_act_fn = 1, iter = 1e3, warmup = 2e2,
+bnns.default <- function(formula, data = list(), L = 1, nodes = rep(2, L),
+                         act_fn = rep(2, L), out_act_fn = 1, iter = 1e3, warmup = 2e2,
                          thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
-                         prior_bias = NULL, prior_sigma = NULL, verbose = FALSE, refresh = max(iter/10, 1), normalize = TRUE, ...) {
+                         prior_bias = NULL, prior_sigma = NULL, verbose = FALSE,
+                         refresh = max(iter/10, 1), normalize = TRUE, ...) {
   if (missing(formula) || missing(data)) {
     stop("Both 'formula' and 'data' must be provided.")
   }

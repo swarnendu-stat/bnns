@@ -1,7 +1,5 @@
 ---
 title: "bnns"
-author: "Swarnendu Chatterjee"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{bnns}

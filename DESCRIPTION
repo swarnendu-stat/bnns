@@ -23,3 +23,4 @@ Imports:
 URL: https://github.com/swarnendu-stat/bnns, https://swarnendu-stat.github.io/bnns/
 BugReports: https://github.com/swarnendu-stat/bnns/issues
 VignetteBuilder: knitr
+Config/Needs/website: rmarkdown

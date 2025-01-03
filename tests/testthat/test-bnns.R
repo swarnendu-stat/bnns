@@ -27,11 +27,11 @@ test_that("bnns works for regression (with custom prior_weights, prior_bias and 
   df <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
 
   result <- bnns(y ~ -1 + x1 + x2,
-    data = df, L = 1, nodes = 2, out_act_fn = 1,
-    iter = 1e2, warmup = 5e1, chains = 1,
-    prior_weights = list(dist = "uniform", params = list(alpha = -1, beta = 1)),
-    prior_bias = list(dist = "cauchy", params = list(mu = 0, sigma = 2.5)),
-    prior_sigma = list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))
+                 data = df, L = 1, nodes = 2, out_act_fn = 1,
+                 iter = 1e2, warmup = 5e1, chains = 1,
+                 prior_weights = list(dist = "uniform", params = list(alpha = -1, beta = 1)),
+                 prior_bias = list(dist = "cauchy", params = list(mu = 0, sigma = 2.5)),
+                 prior_sigma = list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))
   )
 
   # Check class of result
@@ -105,7 +105,7 @@ test_that("bnns works for multiclass classification (softmax output)", {
   expect_equal(result_2$data$out_act_fn, 3)
 })
 
-test_that("bnns.default throws errors for incorrect inputs", {
+test_that("bnns throws errors for incorrect inputs", {
   set.seed(123)
   df <- data.frame(x1 = runif(10), x2 = runif(10), y = c(0, 1, 2, 1, 0, 0, 1, 2, 1, 0))
   expect_error(
@@ -134,5 +134,30 @@ test_that("bnns.default throws errors for incorrect inputs", {
   expect_error(
     bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 3, prior_bias = list(dist = "lognormal", params = list(lower = -1, upper = 1))),
     "Unsupported distribution for biases: lognormal . Supported distributions are: normal, uniform, cauchy"
+  )
+
+  expect_error(
+    bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 3, L = 0.5),
+    "L must be a positive integer"
+  )
+
+  expect_error(
+    bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 3, L = 1, nodes = c(4, 2)),
+    "nodes must be of length L"
+  )
+
+  expect_error(
+    bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 3, L = 1, nodes = 1.5),
+    "nodes must be positive integer\\(s\\)"
+  )
+
+  expect_error(
+    bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 3, L = 1, act_fn = c(2, 2)),
+    "act_fn must be of length L"
+  )
+
+  expect_error(
+    bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 3, L = 1, act_fn = 0),
+    "act_fn must be a sequence of 1/2/3/4/5"
   )
 })

@@ -1,7 +1,5 @@
 ---
 title: "Using Bayesian Neural Networks in Clinical Trials"
-author: "Swarnendu Chatterjee"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Using Bayesian Neural Networks in Clinical Trials}

@@ -8,8 +8,8 @@ bnns_train(
   train_x,
   train_y,
   L = 1,
-  nodes = 16,
-  act_fn = 2,
+  nodes = rep(2, L),
+  act_fn = rep(2, L),
   out_act_fn = 1,
   iter = 1000,
   warmup = 200,
@@ -39,8 +39,9 @@ bnns_train(
 \itemize{
 \item \code{1} for tanh
 \item \code{2} for sigmoid (default)
-\item \code{3} for ReLU
-\item \code{4} for softplus
+\item \code{3} for softplus
+\item \code{4} for ReLU
+\item \code{5} for linear
 }}
 
 \item{out_act_fn}{An integer specifying the activation function for the output layer. Options are:

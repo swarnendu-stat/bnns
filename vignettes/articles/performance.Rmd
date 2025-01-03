@@ -1,0 +1,128 @@
+---
+title: "performance"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(bnns)
+library(mlbench)
+library(rsample)
+```
+
+## Introduction
+
+This article evaluates the performance of the `bnns` package on three datasets from the `mlbench` package:  
+- **Regression**: `BostonHousing` dataset  
+- **Binary Classification**: `PimaIndiansDiabetes` dataset  
+- **Multi-class Classification**: `Glass` dataset  
+
+For each dataset, we:
+1. Prepare the data for training and testing.
+2. Build a Bayesian Neural Network using the `bnns` package.
+3. Evaluate the model's predictive performance.
+
+---
+
+## Regression: BostonHousing Dataset
+
+### Dataset Description
+The `BostonHousing` dataset contains information on housing prices in Boston, with features like crime rate, average number of rooms, and more.
+
+```{r regression-data}
+data(BostonHousing)
+BH_data <- BostonHousing
+# Splitting data into training and testing sets
+BH_split <- initial_split(BH_data, prop = 0.8)
+BH_train <- training(BH_split)
+BH_test <- testing(BH_split)
+```
+
+### Model Training
+```{r regression-model}
+model_reg <- bnns(
+  medv ~ -1 + ., data = BH_train, L = 2,  out_act_fn = 1,
+  iter = 1e3, warmup = 2e2, chains = 2, cores = 2
+)
+```
+
+### Model Evaluation
+```{r regression-evaluation}
+BH_pred <- predict(model_reg, newdata = BH_test)
+measure_cont(BH_test$medv, BH_pred)
+```
+
+---
+
+## Binary Classification: PimaIndiansDiabetes Dataset
+
+### Dataset Description
+The `PimaIndiansDiabetes` dataset contains features related to health status for predicting the presence of diabetes.
+
+```{r binary-data}
+data(PimaIndiansDiabetes)
+PID_data <- PimaIndiansDiabetes |>
+  transform(diabetes = ifelse(diabetes == "pos", 1, 0))
+# Splitting data into training and testing sets
+PID_split <- initial_split(PID_data, prop = 0.8, strata = "diabetes")
+PID_train <- training(PID_split)
+PID_test <- testing(PID_split)
+```
+
+### Model Training
+```{r binary-model}
+model_bin <- bnns(
+  diabetes ~ -1 + ., data = PID_train, L = 2,  
+  out_act_fn = 2, iter = 1e3, warmup = 2e2, chains = 2, cores = 2
+)
+```
+
+### Model Evaluation
+```{r binary-evaluation}
+PID_pred <- predict(model_bin, newdata = PID_test)
+measure_bin(PID_test$diabetes, PID_pred)
+```
+
+---
+
+## Multi-class Classification: Glass Dataset
+
+### Dataset Description
+The `Glass` dataset contains features to classify glass types.
+
+```{r multi-data}
+data(Glass)
+Glass_data <- Glass
+
+# Splitting data into training and testing sets
+Glass_split <- initial_split(Glass_data, prop = 0.8, strata = "Type")
+Glass_train <- training(Glass_split)
+Glass_test <- testing(Glass_split)
+```
+
+### Model Training
+```{r multi-model}
+model_multi <- bnns(
+  Type ~ -1 + ., data = Glass_train, L = 2,  
+  out_act_fn = 3, iter = 1e3, warmup = 2e2, chains = 2, cores = 2
+)
+```
+
+### Model Evaluation
+```{r multi-evaluation}
+Glass_pred <- predict(model_multi, newdata = Glass_test)
+measure_cat(Glass_test$Type, Glass_pred)
+```
+
+---
+
+## Summary
+
+The performance of the `bnns` package demonstrates its flexibility across various machine learning tasks. It provides posterior distributions of predictions, which can be used for uncertainty quantification and probabilistic decision-making.
+
+```

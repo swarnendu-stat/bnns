@@ -92,6 +92,7 @@ generate_stan_code <- function(num_layers, nodes, out_act_fn = 1) {
 #' - 2: Sigmoid
 #' - 3: Softplus
 #' - 4: ReLU
+#' - 5: linear
 #'
 #' @examples
 #' # Generate Stan code for a single hidden layer with 10 nodes
@@ -117,7 +118,7 @@ generate_stan_code_cont <- function(num_layers, nodes) {
   int<lower=1> nodes;
   matrix[n, m] X;
   vector[n] y;
-  int<lower=1, upper=3> act_fn;
+  int<lower=1> act_fn;
 }
 
 parameters {
@@ -137,7 +138,8 @@ transformed parameters {
   if (act_fn == 1) a1 = tanh(z1);
   else if (act_fn == 2) a1 = inv_logit(z1);
   else if (act_fn == 3) a1 = log(1 + exp(z1));
-  else a1 = fmax(rep_matrix(0, n, nodes), z1);
+  else if (act_fn == 4) a1 = fmax(rep_matrix(0, n, nodes), z1);
+  else a1 = z1;
 
   y_hat = a1 * w_out + b_out;
 }
@@ -197,7 +199,8 @@ data {
         paste0("  if (act_fn[", l, "] == 1) a", l, " = tanh(z", l, ");"),
         paste0("  else if (act_fn[", l, "] == 2) a", l, " = inv_logit(z", l, ");"),
         paste0("  else if (act_fn[", l, "] == 3) a", l, " = log(1 + exp(z", l, "));"),
-        paste0("  else a", l, " = fmax(rep_matrix(0, n, nodes[", l, "]), z", l, ");")
+        paste0("  else if (act_fn[", l, "] == 4) a", l, " = fmax(rep_matrix(0, n, nodes[", l, "]), z", l, ");"),
+        paste0("  else a", l, " = z", l, ";")
       )
       if (l < num_layers) {
         transformed <- c(
@@ -258,6 +261,7 @@ data {
 #' - 2: Sigmoid
 #' - 3: Softplus
 #' - 4: ReLU
+#' - 5: linear
 #'
 #' The output layer uses a logistic transformation (`inv_logit`) to constrain
 #' predictions between 0 and 1, which aligns with the Bernoulli likelihood.
@@ -286,7 +290,7 @@ generate_stan_code_bin <- function(num_layers, nodes) {
   int<lower=1> nodes;
   matrix[n, m] X;
   array[n] int<lower=0, upper=1> y;
-  int<lower=1, upper=3> act_fn;
+  int<lower=1> act_fn;
 }
 
 parameters {
@@ -305,7 +309,8 @@ transformed parameters {
   if (act_fn == 1) a1 = tanh(z1);
   else if (act_fn == 2) a1 = inv_logit(z1);
   else if (act_fn == 3) a1 = log(1 + exp(z1));
-  else a1 = fmax(rep_matrix(0, n, nodes), z1);
+  else if (act_fn == 4) a1 = fmax(rep_matrix(0, n, nodes), z1);
+  else a1 = z1;
 
   y_hat = a1 * w_out + b_out;
 }
@@ -364,7 +369,8 @@ data {
         paste0("  if (act_fn[", l, "] == 1) a", l, " = tanh(z", l, ");"),
         paste0("  else if (act_fn[", l, "] == 2) a", l, " = inv_logit(z", l, ");"),
         paste0("  else if (act_fn[", l, "] == 3) a", l, " = log(1 + exp(z", l, "));"),
-        paste0("  else a", l, " = fmax(rep_matrix(0, n, nodes[", l, "]), z", l, ");")
+        paste0("  else if (act_fn[", l, "] == 4) a", l, " = fmax(rep_matrix(0, n, nodes[", l, "]), z", l, ");"),
+        paste0("  else a", l, " = z", l, ";")
       )
       if (l < num_layers) {
         transformed <- c(
@@ -417,11 +423,12 @@ data {
 #' - **Model Block**: Specifies priors for parameters and models the categorical response
 #'   using `categorical_logit`.
 #'
-#' Supported activation functions for each layer:
-#' - 1: Hyperbolic tangent (`tanh`)
-#' - 2: Logistic sigmoid (`inv_logit`)
-#' - 3: Softplus (`log(1 + exp(x))`)
-#' - Default: Rectified linear unit (ReLU)
+#' Supported activation functions for the hidden layers:
+#' - 1: Tanh
+#' - 2: Sigmoid
+#' - 3: Softplus
+#' - 4: ReLU
+#' - 5: linear
 #'
 #' The categorical response (`y`) is assumed to take integer values from 1 to `K`,
 #' where `K` is the total number of categories.
@@ -451,7 +458,7 @@ generate_stan_code_cat <- function(num_layers, nodes) {
   matrix[n, m] X;
   array[n] int<lower=1> y;
   int<lower=2> K; // Number of categories
-  int<lower=1, upper=3> act_fn;
+  int<lower=1> act_fn;
 }
 
 parameters {
@@ -470,7 +477,8 @@ transformed parameters {
   if (act_fn == 1) a1 = tanh(z1);
   else if (act_fn == 2) a1 = inv_logit(z1);
   else if (act_fn == 3) a1 = log(1 + exp(z1));
-  else a1 = fmax(rep_matrix(0, n, nodes), z1);
+  else if (act_fn == 4) a1 = fmax(rep_matrix(0, n, nodes), z1);
+  else a1 = z1;
 
   y_hat = a1 * w_out + rep_matrix(b_out', n);
 }
@@ -530,7 +538,8 @@ data {
         paste0("  if (act_fn[", l, "] == 1) a", l, " = tanh(z", l, ");"),
         paste0("  else if (act_fn[", l, "] == 2) a", l, " = inv_logit(z", l, ");"),
         paste0("  else if (act_fn[", l, "] == 3) a", l, " = log(1 + exp(z", l, "));"),
-        paste0("  else a", l, " = fmax(rep_matrix(0, n, nodes[", l, "]), z", l, ");")
+        paste0("  else if (act_fn[", l, "] == 4) a", l, " = fmax(rep_matrix(0, n, nodes[", l, "]), z", l, ");"),
+        paste0("  else a", l, " = z", l, ";")
       )
       if (l < num_layers) {
         transformed <- c(
