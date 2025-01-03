@@ -25,6 +25,8 @@ complex data analysis tasks.
 - Choice of activation functions (e.g., sigmoid, ReLU, tanh).
 - Outputs for regression (continuous response) and classification
   (binary and multiclass).
+- Choice of prior distributions for weights, biases and sigma (for
+  regression).
 - Bayesian inference, providing posterior distributions for predictions
   and parameters.
 - Applications in domains such as clinical trials, predictive modeling,
@@ -166,6 +168,7 @@ model <- bnns(y ~ -1 + x1 + x2,
   data = df, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
   iter = 1e2, warmup = 5e1, chains = 1, seed = 123,
   prior_weights = list(dist = "uniform", params = list(alpha = -1, beta = 1)),
+  prior_bias =  list(dist = "cauchy", params = list(mu = 0, sigma = 2.5)),
   prior_sigma = list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))
 )
 ```

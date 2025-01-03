@@ -338,6 +338,7 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = 16,
   if(normalize){
     x_mean <- colMeans(train_x)
     x_sd <- apply(train_x, 2, sd)
+    x_sd[which(x_sd == 0)] <- 1
     train_x <- sweep(train_x, 2, x_mean, "-") / x_sd
   }
 
