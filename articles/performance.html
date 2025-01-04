@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>performance • bnns</title>
+<title>Performance of bnns • bnns</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="performance">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Performance of bnns">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -35,7 +35,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/ct_app.html">Using Bayesian Neural Networks in Clinical Trials</a></li>
-    <li><a class="dropdown-item" href="../articles/performance.html">performance</a></li>
+    <li><a class="dropdown-item" href="../articles/performance.html">Performance of bnns</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -57,7 +57,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>performance</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Performance of bnns</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/swarnendu-stat/bnns/blob/master/vignettes/articles/performance.Rmd" class="external-link"><code>vignettes/articles/performance.Rmd</code></a></small>
@@ -73,7 +73,8 @@
 <span><span class="co">#&gt;   object 'type_sum.accel' not found</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/swarnendu-stat/bnns" class="external-link">bnns</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mlbench</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rsample.tidymodels.org" class="external-link">rsample</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rsample.tidymodels.org" class="external-link">rsample</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
@@ -130,17 +131,17 @@ of rooms, and more.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000346 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 3.46 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000373 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 3.73 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.00033 seconds</span></span>
-<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 3.3 seconds.</span></span>
+<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000354 seconds</span></span>
+<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 3.54 seconds.</span></span>
 <span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
@@ -149,33 +150,33 @@ of rooms, and more.</p>
 <span><span class="co">#&gt; Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2:  Elapsed Time: 12.965 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 2:                38.239 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2:                51.204 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 2:  Elapsed Time: 15.553 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 2:                48.325 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2:                63.878 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 18.487 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                81.04 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                99.527 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 18.418 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                80.813 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                99.231 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1:</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -185,10 +186,10 @@ of rooms, and more.</p>
 <code class="sourceCode R"><span><span class="va">BH_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">model_reg</span>, newdata <span class="op">=</span> <span class="va">BH_test</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/measure_cont.html">measure_cont</a></span><span class="op">(</span><span class="va">BH_test</span><span class="op">$</span><span class="va">medv</span>, <span class="va">BH_pred</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $rmse</span></span>
-<span><span class="co">#&gt; [1] 8.176328</span></span>
+<span><span class="co">#&gt; [1] 8.297719</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $mae</span></span>
-<span><span class="co">#&gt; [1] 5.33447</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 5.822318</span></span></code></pre></div>
 <hr>
 </div>
 </div>
@@ -233,52 +234,52 @@ related to health status for predicting the presence of diabetes.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000436 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.36 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000484 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.84 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000398 seconds</span></span>
-<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 3.98 seconds.</span></span>
+<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000435 seconds</span></span>
+<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 4.35 seconds.</span></span>
 <span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2:  Elapsed Time: 19.998 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 2:                22.338 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2:                42.336 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 2:  Elapsed Time: 21.094 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 2:                51.85 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2:                72.944 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 21.124 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                37.919 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                59.043 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 22.567 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                51.276 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                73.843 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1:</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -286,17 +287,18 @@ related to health status for predicting the presence of diabetes.</p>
 </h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">PID_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">model_bin</span>, newdata <span class="op">=</span> <span class="va">PID_test</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/measure_bin.html">measure_bin</a></span><span class="op">(</span><span class="va">PID_test</span><span class="op">$</span><span class="va">diabetes</span>, <span class="va">PID_pred</span><span class="op">)</span></span>
+<span><span class="va">PID_measure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measure_bin.html">measure_bin</a></span><span class="op">(</span><span class="va">PID_test</span><span class="op">$</span><span class="va">diabetes</span>, <span class="va">PID_pred</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Setting levels: control = 0, case = 1</span></span>
 <span><span class="co">#&gt; Setting direction: controls &lt; cases</span></span>
+<span><span class="va">PID_measure</span></span>
 <span><span class="co">#&gt; $conf_mat</span></span>
 <span><span class="co">#&gt;    pred_label</span></span>
 <span><span class="co">#&gt; obs  0  1</span></span>
-<span><span class="co">#&gt;   0 89 11</span></span>
-<span><span class="co">#&gt;   1 30 24</span></span>
+<span><span class="co">#&gt;   0 84 16</span></span>
+<span><span class="co">#&gt;   1 22 32</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $accuracy</span></span>
-<span><span class="co">#&gt; [1] 0.7337662</span></span>
+<span><span class="co">#&gt; [1] 0.7532468</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $ROC</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -304,10 +306,12 @@ related to health status for predicting the presence of diabetes.</p>
 <span><span class="co">#&gt; roc.default(response = obs, predictor = pred)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data: pred in 100 controls (obs 0) &lt; 54 cases (obs 1).</span></span>
-<span><span class="co">#&gt; Area under the curve: 0.8041</span></span>
+<span><span class="co">#&gt; Area under the curve: 0.7754</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $AUC</span></span>
-<span><span class="co">#&gt; [1] 0.8040741</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.7753704</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">PID_measure</span><span class="op">$</span><span class="va">ROC</span><span class="op">)</span></span></code></pre></div>
+<p><img src="performance_files/figure-html/binary-evaluation-1.png" width="700"></p>
 <hr>
 </div>
 </div>
@@ -352,8 +356,8 @@ types.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000348 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 3.48 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000333 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 3.33 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -361,8 +365,8 @@ types.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000322 seconds</span></span>
-<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 3.22 seconds.</span></span>
+<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000325 seconds</span></span>
+<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 3.25 seconds.</span></span>
 <span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
@@ -372,32 +376,32 @@ types.</p>
 <span><span class="co">#&gt; Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 14.975 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                28.183 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                43.158 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 17.656 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                47.606 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                65.262 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2:  Elapsed Time: 18.352 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 2:                82.018 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2:                100.37 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 2:  Elapsed Time: 18.211 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 2:                83.245 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2:                101.456 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 2:</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -407,7 +411,7 @@ types.</p>
 <code class="sourceCode R"><span><span class="va">Glass_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">model_multi</span>, newdata <span class="op">=</span> <span class="va">Glass_test</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/measure_cat.html">measure_cat</a></span><span class="op">(</span><span class="va">Glass_test</span><span class="op">$</span><span class="va">Type</span>, <span class="va">Glass_pred</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $log_loss</span></span>
-<span><span class="co">#&gt; [1] 1.201767</span></span>
+<span><span class="co">#&gt; [1] 1.301215</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $ROC</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -415,10 +419,10 @@ types.</p>
 <span><span class="co">#&gt; multiclass.roc.default(response = obs, predictor = `colnames&lt;-`(data.frame(pred),     levels(obs)))</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data: multivariate predictor `colnames&lt;-`(data.frame(pred), levels(obs)) with 6 levels of obs: 1, 2, 3, 5, 6, 7.</span></span>
-<span><span class="co">#&gt; Multi-class area under the curve: 0.7302</span></span>
+<span><span class="co">#&gt; Multi-class area under the curve: 0.8032</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $AUC</span></span>
-<span><span class="co">#&gt; [1] 0.7301867</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.803229</span></span></code></pre></div>
 <hr>
 </div>
 </div>
