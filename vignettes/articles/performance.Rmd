@@ -10,6 +10,8 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+stopifnot("mlbench not installed" = requireNamespace("mlbench", quietly = TRUE))
+stopifnot("rsample not installed" = requireNamespace("rsample", quietly = TRUE))
 library(bnns)
 library(mlbench)
 library(rsample)
