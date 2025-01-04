@@ -1,5 +1,5 @@
 ---
-title: "performance"
+title: "Performance of bnns"
 ---
 
 ```{r, include = FALSE}
@@ -15,6 +15,7 @@ stopifnot("rsample not installed" = requireNamespace("rsample", quietly = TRUE))
 library(bnns)
 library(mlbench)
 library(rsample)
+set.seed(123)
 ```
 
 ## Introduction
@@ -87,7 +88,9 @@ model_bin <- bnns(
 ### Model Evaluation
 ```{r binary-evaluation}
 PID_pred <- predict(model_bin, newdata = PID_test)
-measure_bin(PID_test$diabetes, PID_pred)
+PID_measure <- measure_bin(PID_test$diabetes, PID_pred)
+PID_measure
+plot(PID_measure$ROC)
 ```
 
 ---

@@ -24,9 +24,11 @@ measure_cont <- function(obs, pred) {
       pred <- rowMeans(pred)
     }
   }
+  error <- (obs - pred)
+  error <- error[is.finite(error)]
   return(list(
-    rmse = sqrt(mean((obs - pred)^2)),
-    mae = mean(abs(obs - pred))
+    rmse = sqrt(mean(error^2)),
+    mae = mean(abs(error))
   ))
 }
 
