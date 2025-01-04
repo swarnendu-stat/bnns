@@ -4,7 +4,8 @@ pkgdown_sha: ~
 articles:
   bnns: bnns.html
   ct_app: ct_app.html
-last_built: 2025-01-03T04:34Z
+  articles/performance: performance.html
+last_built: 2025-01-04T11:06Z
 urls:
   reference: https://swarnendu-stat.github.io/bnns/reference
   article: https://swarnendu-stat.github.io/bnns/articles

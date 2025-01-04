@@ -28,6 +28,7 @@ tanh, sigmoid, softplus and relu. The model uses a Bernoulli likelihood for bina
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/ct_app.html">Using Bayesian Neural Networks in Clinical Trials</a></li>
+    <li><a class="dropdown-item" href="../articles/performance.html">performance</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -88,6 +89,7 @@ based on the input arguments.</p></li>
 <li><p>2: Sigmoid</p></li>
 <li><p>3: Softplus</p></li>
 <li><p>4: ReLU</p></li>
+<li><p>5: linear</p></li>
 </ul><p>The output layer uses a logistic transformation (<code>inv_logit</code>) to constrain
 predictions between 0 and 1, which aligns with the Bernoulli likelihood.</p>
     </div>
@@ -104,7 +106,7 @@ predictions between 0 and 1, which aligns with the Bernoulli likelihood.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; nodes;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, m] X;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   array[n] int&lt;lower=0, upper=1&gt; y;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1, upper=3&gt; act_fn;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; act_fn;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> parameters {</span>
@@ -123,7 +125,8 @@ predictions between 0 and 1, which aligns with the Bernoulli likelihood.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   if (act_fn == 1) a1 = tanh(z1);</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn == 2) a1 = inv_logit(z1);</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn == 3) a1 = log(1 + exp(z1));</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   else a1 = fmax(rep_matrix(0, n, nodes), z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn == 4) a1 = fmax(rep_matrix(0, n, nodes), z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else a1 = z1;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   y_hat = a1 * w_out + b_out;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
@@ -169,12 +172,14 @@ predictions between 0 and 1, which aligns with the Bernoulli likelihood.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   if (act_fn[1] == 1) a1 = tanh(z1);</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[1] == 2) a1 = inv_logit(z1);</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[1] == 3) a1 = log(1 + exp(z1));</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   else a1 = fmax(rep_matrix(0, n, nodes[1]), z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[1] == 4) a1 = fmax(rep_matrix(0, n, nodes[1]), z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else a1 = z1;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   z2 = a1 * w2 + rep_matrix(b2', n);</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   if (act_fn[2] == 1) a2 = tanh(z2);</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[2] == 2) a2 = inv_logit(z2);</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[2] == 3) a2 = log(1 + exp(z2));</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   else a2 = fmax(rep_matrix(0, n, nodes[2]), z2);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[2] == 4) a2 = fmax(rep_matrix(0, n, nodes[2]), z2);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else a2 = z2;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   y_hat = a2 * w_out + b_out;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

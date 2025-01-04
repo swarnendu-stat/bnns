@@ -35,6 +35,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/ct_app.html">Using Bayesian Neural Networks in Clinical Trials</a></li>
+    <li><a class="dropdown-item" href="../articles/performance.html">performance</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -57,10 +58,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>bnns</h1>
-                        <h4 data-toc-skip class="author">Swarnendu
-Chatterjee</h4>
             
-            <h4 data-toc-skip class="date">2025-01-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/swarnendu-stat/bnns/blob/master/vignettes/bnns.Rmd" class="external-link"><code>vignettes/bnns.Rmd</code></a></small>
       <div class="d-none name"><code>bnns.Rmd</code></div>
@@ -378,7 +376,7 @@ predictive performance.</p>
 <span><span class="co">#&gt; Chains: 1 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictive Performance:</span></span>
-<span><span class="co">#&gt; Log-loss (training): 0.9360327 </span></span>
+<span><span class="co">#&gt; Log-loss (training): 0.9418529 </span></span>
 <span><span class="co">#&gt; AUC (training): 0.9111111 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Notes:</span></span>
@@ -470,7 +468,7 @@ function.</p>
 <span><span class="va">metrics_cat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measure_cat.html">measure_cat</a></span><span class="op">(</span>obs <span class="op">=</span> <span class="va">test_y_cat</span>, pred <span class="op">=</span> <span class="va">pred_cat</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">metrics_cat</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $log_loss</span></span>
-<span><span class="co">#&gt; [1] 1.23786</span></span>
+<span><span class="co">#&gt; [1] 1.215955</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $ROC</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -478,10 +476,10 @@ function.</p>
 <span><span class="co">#&gt; multiclass.roc.default(response = obs, predictor = `colnames&lt;-`(data.frame(pred),     levels(obs)))</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data: multivariate predictor `colnames&lt;-`(data.frame(pred), levels(obs)) with 3 levels of obs: a, b, c.</span></span>
-<span><span class="co">#&gt; Multi-class area under the curve: 0.1111</span></span>
+<span><span class="co">#&gt; Multi-class area under the curve: 0.1667</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $AUC</span></span>
-<span><span class="co">#&gt; [1] 0.1111111</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.1666667</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -509,7 +507,7 @@ case.</p>
 <span><span class="va">metrics_cat_cauchy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measure_cat.html">measure_cat</a></span><span class="op">(</span>obs <span class="op">=</span> <span class="va">test_y_cat</span>, pred <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">model_cat_cauchy</span>, <span class="va">test_x</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">metrics_cat_cauchy</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $log_loss</span></span>
-<span><span class="co">#&gt; [1] 2.39124</span></span>
+<span><span class="co">#&gt; [1] 2.484133</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $ROC</span></span>
 <span><span class="co">#&gt; </span></span>
