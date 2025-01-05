@@ -12,6 +12,7 @@ Suggests:
     ggplot2,
     knitr,
     mlbench,
+    ranger,
     rmarkdown,
     rsample,
     testthat (>= 3.0.0)

@@ -119,7 +119,7 @@ bnns <- function(formula, data = list(), L = 1, nodes = rep(2, L),
                  act_fn = rep(2, L), out_act_fn = 1, iter = 1e3, warmup = 2e2,
                  thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
                  prior_bias = NULL, prior_sigma = NULL, verbose = FALSE,
-                 refresh = max(iter/10, 1), normalize = TRUE, ...) {
+                 refresh = max(iter / 10, 1), normalize = TRUE, ...) {
   UseMethod("bnns")
 }
 
@@ -246,8 +246,7 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
                        act_fn = rep(2, L), out_act_fn = 1, iter = 1e3, warmup = 2e2,
                        thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
                        prior_bias = NULL, prior_sigma = NULL, verbose = FALSE,
-                       refresh = max(iter/10, 1), normalize = TRUE, ...) {
-
+                       refresh = max(iter / 10, 1), normalize = TRUE, ...) {
   stopifnot("Argument train_x is missing" = !missing(train_x))
   stopifnot("Argument train_y is missing" = !missing(train_y))
   stopifnot("L must be a positive integer" = ((L %% 1 == 0) & (sign(L) == 1)))
@@ -340,12 +339,12 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
   )
 
   prior_specification_bias <- switch(prior_bias$dist,
-                                        normal = sprintf("normal(%f, %f)", prior_bias$params$mean, prior_bias$params$sd),
-                                        uniform = sprintf("uniform(%f, %f)", prior_bias$params$alpha, prior_bias$params$beta),
-                                        cauchy = sprintf("cauchy(%f, %f)", prior_bias$params$mu, prior_bias$params$sigma)
+    normal = sprintf("normal(%f, %f)", prior_bias$params$mean, prior_bias$params$sd),
+    uniform = sprintf("uniform(%f, %f)", prior_bias$params$alpha, prior_bias$params$beta),
+    cauchy = sprintf("cauchy(%f, %f)", prior_bias$params$mu, prior_bias$params$sigma)
   )
 
-  if(normalize){
+  if (normalize) {
     x_mean <- colMeans(train_x)
     x_sd <- apply(train_x, 2, sd)
     x_sd[which(x_sd == 0)] <- 1
@@ -435,7 +434,7 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
   est$call <- match.call()
   est$data <- stan_data
   est$normalize <- normalize
-  if(normalize){
+  if (normalize) {
     est$x_mean <- x_mean
     est$x_sd <- x_sd
   }
@@ -562,7 +561,7 @@ bnns.default <- function(formula, data = list(), L = 1, nodes = rep(2, L),
                          act_fn = rep(2, L), out_act_fn = 1, iter = 1e3, warmup = 2e2,
                          thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
                          prior_bias = NULL, prior_sigma = NULL, verbose = FALSE,
-                         refresh = max(iter/10, 1), normalize = TRUE, ...) {
+                         refresh = max(iter / 10, 1), normalize = TRUE, ...) {
   if (missing(formula) || missing(data)) {
     stop("Both 'formula' and 'data' must be provided.")
   }

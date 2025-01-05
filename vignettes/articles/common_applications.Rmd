@@ -1,5 +1,5 @@
 ---
-title: "Performance of bnns"
+title: "Common Application Areas of bnns"
 ---
 
 ```{r, include = FALSE}
@@ -20,7 +20,8 @@ set.seed(123)
 
 ## Introduction
 
-This article evaluates the performance of the `bnns` package on three datasets from the `mlbench` package:  
+This article demonstrates the use of the `bnns` package on three datasets from the `mlbench` package:  
+
 - **Regression**: `BostonHousing` dataset  
 - **Binary Classification**: `PimaIndiansDiabetes` dataset  
 - **Multi-class Classification**: `Glass` dataset  
@@ -49,7 +50,8 @@ BH_test <- testing(BH_split)
 ### Model Training
 ```{r regression-model}
 model_reg <- bnns(
-  medv ~ -1 + ., data = BH_train, L = 2,  out_act_fn = 1,
+  medv ~ -1 + .,
+  data = BH_train, L = 2, out_act_fn = 1,
   iter = 1e3, warmup = 2e2, chains = 2, cores = 2
 )
 ```
@@ -80,7 +82,8 @@ PID_test <- testing(PID_split)
 ### Model Training
 ```{r binary-model}
 model_bin <- bnns(
-  diabetes ~ -1 + ., data = PID_train, L = 2,  
+  diabetes ~ -1 + .,
+  data = PID_train, L = 2,
   out_act_fn = 2, iter = 1e3, warmup = 2e2, chains = 2, cores = 2
 )
 ```
@@ -113,7 +116,8 @@ Glass_test <- testing(Glass_split)
 ### Model Training
 ```{r multi-model}
 model_multi <- bnns(
-  Type ~ -1 + ., data = Glass_train, L = 2,  
+  Type ~ -1 + .,
+  data = Glass_train, L = 2,
   out_act_fn = 3, iter = 1e3, warmup = 2e2, chains = 2, cores = 2
 )
 ```
@@ -129,5 +133,3 @@ measure_cat(Glass_test$Type, Glass_pred)
 ## Summary
 
 The performance of the `bnns` package demonstrates its flexibility across various machine learning tasks. It provides posterior distributions of predictions, which can be used for uncertainty quantification and probabilistic decision-making.
-
-```

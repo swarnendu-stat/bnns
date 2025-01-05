@@ -35,7 +35,7 @@ predict.bnns <- function(object, newdata = NULL, ...) {
     } else {
       test_x <- as.matrix(newdata)
     }
-    if(object$normalize){
+    if (object$normalize) {
       test_x <- sweep(test_x, 2, object$x_mean, "-") / object$x_sd
     }
   }
@@ -59,7 +59,7 @@ predict.bnns <- function(object, newdata = NULL, ...) {
         a1[i, , ] <- softplus(z1[i, , ])
       } else if (object$data$act_fn[1] == 4) {
         a1[i, , ] <- relu(z1[i, , ])
-      } else{
+      } else {
         a1[i, , ] <- z1[i, , ]
       }
     }
@@ -79,7 +79,7 @@ predict.bnns <- function(object, newdata = NULL, ...) {
             eval(parse(text = paste0("a", id3, " <- softplus(z", id3, ")")))
           } else if (object$data$act_fn[l] == 4) {
             eval(parse(text = paste0("a", id3, " <- relu(z", id3, ")")))
-          } else{
+          } else {
             eval(parse(text = paste0("a", id3, " <- z", id3, "")))
           }
         }
@@ -109,7 +109,7 @@ predict.bnns <- function(object, newdata = NULL, ...) {
         a1[i, , ] <- softplus(z1[i, , ])
       } else if (object$data$act_fn[1] == 4) {
         a1[i, , ] <- relu(z1[i, , ])
-      } else{
+      } else {
         a1[i, , ] <- z1[i, , ]
       }
     }
@@ -129,7 +129,7 @@ predict.bnns <- function(object, newdata = NULL, ...) {
             eval(parse(text = paste0("a", id3, " <- softplus(z", id3, ")")))
           } else if (object$data$act_fn[l] == 4) {
             eval(parse(text = paste0("a", id3, " <- relu(z", id3, ")")))
-          } else{
+          } else {
             eval(parse(text = paste0("a", id3, " <- z", id3, "")))
           }
         }

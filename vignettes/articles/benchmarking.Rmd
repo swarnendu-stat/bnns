@@ -1,0 +1,180 @@
+---
+title: "Benchmarking bnns"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+stopifnot("mlbench not installed" = requireNamespace("mlbench", quietly = TRUE))
+stopifnot("rsample not installed" = requireNamespace("rsample", quietly = TRUE))
+stopifnot("ranger not installed" = requireNamespace("ranger", quietly = TRUE))
+library(bnns)
+library(mlbench)
+library(rsample)
+library(ranger)
+set.seed(123)
+```
+
+## Introduction
+
+This article demonstrates the performance of the `bnns` package on three datasets from the `mlbench` package:  
+
+- **Regression**: `mlbench.friedman1` dataset  
+- **Binary Classification**: `mlbench.spirals` dataset  
+- **Multi-class Classification**: `mlbench.waveform` dataset  
+
+For each dataset, we:
+
+1. Prepare the data for training and testing.
+2. Build a Bayesian Neural Network using the `bnns` package.
+3. Evaluate the model's predictive performance.
+4. To compare, show the performance of the randomforest algorithm from `ranger` package with default settings.
+
+---
+
+## Regression: Friedman1 Dataset
+
+### Dataset Description
+The dataset generated with `mlbench.friedman1` is the regression problem Friedman 1 as described in Friedman (1991) and Breiman (1996). Inputs are 10 independent variables uniformly distributed on the interval [0,1], only 5 out of these 10 are actually used. Outputs are created according to the formula
+
+$$
+y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
+$$
+
+$\epsilon \sim N(0, 1).$
+
+```{r regression-data}
+friedman1_data <- mlbench.friedman1(n = 100, sd = 1)
+friedman1_split <- initial_split(
+  cbind.data.frame(y = friedman1_data$y, friedman1_data$x),
+  prop = 0.8
+)
+friedman1_train <- training(friedman1_split)
+friedman1_test <- testing(friedman1_split)
+```
+
+### Model Training
+```{r regression-model}
+friedman1_bnn <- bnns(y ~ -1 + .,
+  data = friedman1_train, L = 2,
+  out_act_fn = 1, iter = 1e3, warmup = 2e2
+)
+```
+
+### Model Evaluation
+```{r regression-evaluation}
+friedman1_bnn_pred <- predict(friedman1_bnn, friedman1_test)
+measure_cont(friedman1_test$y, friedman1_bnn_pred)
+```
+
+### Model Comparison
+```{r regression-comparison}
+friedman1_rf <- ranger(
+  y ~ -1 + .,
+  data = friedman1_train |> `colnames<-`(c("y", paste0("x", 1:10)))
+)
+friedman1_rf_pred <- predict(
+  friedman1_rf,
+  friedman1_test |> `colnames<-`(c("y", paste0("x", 1:10)))
+)
+measure_cont(friedman1_test$y, friedman1_rf_pred$predictions)
+```
+
+---
+
+## Binary Classification: Spirals  Dataset
+
+### Dataset Description
+The dataset generated with the `mlbench.spirals` consists of points on two entangled spirals. If `sd>0`, then Gaussian noise is added to each data point.
+
+```{r binary-data}
+spirals_data <- mlbench.spirals(100, 1.5, 0.05)
+spirals_data <- cbind.data.frame(y = spirals_data$classes, spirals_data$x) |>
+  transform(y = as.numeric(y) - 1)
+spirals_split <- initial_split(spirals_data, prop = 0.8, strata = "y")
+spirals_train <- training(spirals_split)
+spirals_test <- testing(spirals_split)
+```
+
+### Model Training
+```{r binary-model}
+spirals_bnn <- bnns(y ~ -1 + .,
+  data = spirals_train, L = 3,
+  nodes = c(64, 64, 16), act_fn = c(1, 4, 4),
+  out_act_fn = 2, iter = 1e3, warmup = 2e2
+)
+```
+
+### Model Evaluation
+```{r binary-evaluation}
+spirals_bnn_pred <- predict(spirals_bnn, spirals_test)
+measure_bin(spirals_test$y, spirals_bnn_pred)
+```
+
+### Model Comparison
+```{r binary-comparison}
+spirals_rf <- ranger(
+  y ~ -1 + .,
+  data = spirals_train |> `colnames<-`(c("y", paste0("x", 1:2)))
+)
+spirals_rf_pred <- predict(
+  spirals_rf,
+  spirals_test |> `colnames<-`(c("y", paste0("x", 1:2)))
+)
+measure_bin(spirals_test$y, spirals_rf_pred$predictions)
+```
+
+---
+
+## Multi-class Classification: Waveform Dataset
+
+### Dataset Description
+The dataset generated with `mlbench.waveform` consists of 21 attributes with continuous values and a variable showing the 3 classes (33% for each of 3 classes). Each class is generated from a combination of 2 of 3 "base" waves.
+
+```{r multi-data}
+waveform_data <- mlbench.waveform(100)
+waveform_data <- cbind.data.frame(y = waveform_data$classes, waveform_data$x) |>
+  transform(y = as.factor(y))
+waveform_split <- initial_split(waveform_data, prop = 0.8, strata = "y")
+waveform_train <- training(waveform_split)
+waveform_test <- testing(waveform_split)
+```
+
+### Model Training
+```{r multi-model}
+waveform_bnn <- bnns(y ~ -1 + .,
+  data = waveform_train, L = 2, nodes = c(2, 2),
+  act_fn = 2:3, out_act_fn = 3, iter = 1e3, warmup = 2e2
+)
+```
+
+### Model Evaluation
+```{r multi-evaluation}
+waveform_bnn_pred <- predict(waveform_bnn, waveform_test)
+measure_cat(waveform_test$y, waveform_bnn_pred)
+```
+
+### Model Comparison
+```{r multi-comparison}
+waveform_rf <- ranger(
+  y ~ -1 + .,
+  data = waveform_train |> `colnames<-`(c("y", paste0("x", 1:21))),
+  probability = TRUE
+)
+waveform_rf_pred <- predict(
+  waveform_rf,
+  waveform_test |> `colnames<-`(c("y", paste0("x", 1:21)))
+)
+measure_cat(waveform_test$y, waveform_rf_pred$predictions)
+```
+
+---
+
+## Summary
+
+The performance of the `bnns` package demonstrates its predictive ability across various machine learning tasks. Additionally, it provides posterior distributions of predictions, which can be used for uncertainty quantification and probabilistic decision-making.

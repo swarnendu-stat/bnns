@@ -27,11 +27,11 @@ test_that("bnns works for regression (with custom prior_weights, prior_bias and 
   df <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
 
   result <- bnns(y ~ -1 + x1 + x2,
-                 data = df, L = 1, nodes = 2, out_act_fn = 1,
-                 iter = 1e2, warmup = 5e1, chains = 1,
-                 prior_weights = list(dist = "uniform", params = list(alpha = -1, beta = 1)),
-                 prior_bias = list(dist = "cauchy", params = list(mu = 0, sigma = 2.5)),
-                 prior_sigma = list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))
+    data = df, L = 1, nodes = 2, out_act_fn = 1,
+    iter = 1e2, warmup = 5e1, chains = 1,
+    prior_weights = list(dist = "uniform", params = list(alpha = -1, beta = 1)),
+    prior_bias = list(dist = "cauchy", params = list(mu = 0, sigma = 2.5)),
+    prior_sigma = list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))
   )
 
   # Check class of result
