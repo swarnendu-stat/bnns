@@ -2,10 +2,11 @@ pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
+  articles/benchmarking: benchmarking.html
   bnns: bnns.html
+  articles/common_applications: common_applications.html
   ct_app: ct_app.html
-  articles/performance: performance.html
-last_built: 2025-01-04T17:02Z
+last_built: 2025-01-05T17:41Z
 urls:
   reference: https://swarnendu-stat.github.io/bnns/reference
   article: https://swarnendu-stat.github.io/bnns/articles
