@@ -56,13 +56,12 @@ devtools::install_github("swarnendu-stat/bnns")
 
 ## Getting Started
 
-### 1. Simulate Data
+### 1. Iris Data
 
-Below is an example of how to simulate data for regression:
+We use the `iris` data for regression:
 
 ```{r}
-set.seed(123)
-df <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
+head(iris)
 ```
 
 ### 2. Fit a BNN Model
@@ -72,10 +71,7 @@ To fit a Bayesian Neural Network:
 ```{r message = FALSE, warning = FALSE, echo = TRUE, results = 'hide'}
 library(bnns)
 
-model <- bnns(y ~ -1 + x1 + x2,
-  data = df, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
-  iter = 1e2, warmup = 5e1, chains = 1, seed = 123
-)
+iris_bnn <- bnns(Sepal.Length ~ -1 + ., data = iris, L = 1, act_fn = 3, nodes = 4, out_act_fn = 1, chains = 1)
 ```
 
 ### 3. Model Summary
@@ -83,7 +79,7 @@ model <- bnns(y ~ -1 + x1 + x2,
 Summarize the fitted model:
 
 ```{r}
-summary(model)
+summary(iris_bnn)
 ```
 
 ### 4. Predictions
@@ -91,7 +87,7 @@ summary(model)
 Make predictions using the trained model:
 
 ```{r}
-pred <- predict(model)
+pred <- predict(iris_bnn)
 ```
 
 ### 5. Visualization
@@ -99,7 +95,7 @@ pred <- predict(model)
 Visualize true vs predicted values for regression:
 
 ```{r}
-plot(df$y, rowMeans(pred), main = "True vs Predicted", xlab = "True Values", ylab = "Predicted Values")
+plot(iris$Sepal.Length, rowMeans(pred), main = "True vs Predicted", xlab = "True Values", ylab = "Predicted Values")
 abline(0, 1, col = "red")
 ```
 
@@ -109,10 +105,10 @@ abline(0, 1, col = "red")
 
 Use `bnns` for regression analysis to model continuous outcomes, such as predicting patient biomarkers in clinical trials.
 
-```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide'}
-model <- bnns(y ~ -1 + x1 + x2,
-  data = df, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
-  iter = 1e2, warmup = 5e1, chains = 1, seed = 123,
+```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide', eval=FALSE}
+model <- bnns(Sepal.Length ~ -1 + .,
+  data = iris, L = 1, act_fn = 3, nodes = 4,
+  out_act_fn = 1, chains = 1,
   prior_weights = list(dist = "uniform", params = list(alpha = -1, beta = 1)),
   prior_bias = list(dist = "cauchy", params = list(mu = 0, sigma = 2.5)),
   prior_sigma = list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))
@@ -123,12 +119,19 @@ model <- bnns(y ~ -1 + x1 + x2,
 
 For binary or multiclass classification, set the `out_act_fn` to `2` (binary) or `3` (multiclass). For example:
 
-```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide'}
+```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide', eval=FALSE}
 # Simulate binary classification data
-df <- data.frame(x1 = runif(10), x2 = runif(10), y = sample(0:1, 10, replace = TRUE))
+df <- data.frame(
+  x1 = runif(10), x2 = runif(10),
+  y = sample(0:1, 10, replace = TRUE)
+)
 
 # Fit a binary classification BNN
-model <- bnns(y ~ -1 + x1 + x2, data = df, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_act_fn = 2, iter = 1e2, warmup = 5e1, chains = 1)
+model <- bnns(y ~ -1 + x1 + x2,
+  data = df, L = 2, nodes = c(16, 8),
+  act_fn = c(3, 2), out_act_fn = 2, iter = 1e2,
+  warmup = 5e1, chains = 1
+)
 ```
 
 ### Clinical Trial Applications
@@ -137,7 +140,7 @@ Explore posterior probabilities to estimate treatment effects or success probabi
 
 ## Documentation
 
-- Detailed vignettes are available to guide through various applications of the package.
+- Detailed [vignettes](https://swarnendu-stat.github.io/bnns/articles/) are available to guide through various applications of the package.
 - See `help(bnns)` for more information about the `bnns` function and its arguments.
 
 ## Contributing

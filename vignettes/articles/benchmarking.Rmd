@@ -61,7 +61,7 @@ friedman1_test <- testing(friedman1_split)
 ### Model Training
 ```{r regression-model}
 friedman1_bnn <- bnns(y ~ -1 + .,
-  data = friedman1_train, L = 2,
+  data = friedman1_train, L = 1, nodes = 4, act_fn = 3,
   out_act_fn = 1, iter = 1e3, warmup = 2e2
 )
 ```

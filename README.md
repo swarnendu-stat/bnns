@@ -56,13 +56,19 @@ devtools::install_github("swarnendu-stat/bnns")
 
 ## Getting Started
 
-### 1. Simulate Data
+### 1. Iris Data
 
-Below is an example of how to simulate data for regression:
+We use the `iris` data for regression:
 
 ``` r
-set.seed(123)
-df <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
+head(iris)
+#>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+#> 1          5.1         3.5          1.4         0.2  setosa
+#> 2          4.9         3.0          1.4         0.2  setosa
+#> 3          4.7         3.2          1.3         0.2  setosa
+#> 4          4.6         3.1          1.5         0.2  setosa
+#> 5          5.0         3.6          1.4         0.2  setosa
+#> 6          5.4         3.9          1.7         0.4  setosa
 ```
 
 ### 2. Fit a BNN Model
@@ -72,10 +78,7 @@ To fit a Bayesian Neural Network:
 ``` r
 library(bnns)
 
-model <- bnns(y ~ -1 + x1 + x2,
-  data = df, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
-  iter = 1e2, warmup = 5e1, chains = 1, seed = 123
-)
+iris_bnn <- bnns(Sepal.Length ~ -1 + ., data = iris, L = 1, act_fn = 3, nodes = 4, out_act_fn = 1, chains = 1)
 ```
 
 ### 3. Model Summary
@@ -83,55 +86,46 @@ model <- bnns(y ~ -1 + x1 + x2,
 Summarize the fitted model:
 
 ``` r
-summary(model)
+summary(iris_bnn)
 #> Call:
-#> bnns.default(formula = y ~ -1 + x1 + x2, data = df, L = 2, nodes = c(10, 
-#>     8), act_fn = c(2, 3), out_act_fn = 1, iter = 100, warmup = 50, 
-#>     chains = 1, seed = 123)
+#> bnns.default(formula = Sepal.Length ~ -1 + ., data = iris, L = 1, 
+#>     nodes = 4, act_fn = 3, out_act_fn = 1, chains = 1)
 #> 
 #> Data Summary:
-#> Number of observations: 10 
-#> Number of features: 2 
+#> Number of observations: 150 
+#> Number of features: 6 
 #> 
 #> Network Architecture:
-#> Number of hidden layers: 2 
-#> Nodes per layer: 10, 8 
-#> Activation functions: 2, 3 
+#> Number of hidden layers: 1 
+#> Nodes per layer: 4 
+#> Activation functions: 3 
 #> Output activation function: 1 
 #> 
 #> Posterior Summary (Key Parameters):
-#>                  mean    se_mean        sd       2.5%        25%         50%
-#> w_out[1]  0.046800977 0.10811114 0.8557186 -1.4270932 -0.4344960 -0.06862144
-#> w_out[2]  0.115880441 0.13319242 0.9380149 -1.5099093 -0.4571497  0.07552893
-#> w_out[3] -0.066245807 0.13469714 0.9291137 -1.6212377 -0.8311266 -0.12900962
-#> w_out[4] -0.103740675 0.09216505 0.7583326 -1.2582963 -0.6014192 -0.19034730
-#> w_out[5] -0.136488041 0.18784111 0.9671970 -1.8916180 -0.9706804  0.03012556
-#> w_out[6]  0.017294924 0.12168441 0.8081913 -1.3438848 -0.6034305 -0.08493691
-#> w_out[7]  0.135528160 0.12928282 0.9187944 -1.6799768 -0.4365047  0.12827137
-#> w_out[8] -0.005637373 0.13525773 0.8900234 -1.1675289 -0.6722286 -0.16385458
-#> b_out     0.046645154 0.12189640 0.9242511 -1.5332072 -0.4610939  0.10835165
-#> sigma     0.878312806 0.03548238 0.2349594  0.5149699  0.7192499  0.86315178
-#>                75%    97.5%    n_eff      Rhat
-#> w_out[1] 0.4759225 1.902804 62.64999 0.9982886
-#> w_out[2] 0.7984308 1.885203 49.59758 0.9804256
-#> w_out[3] 0.6134859 1.725527 47.57962 0.9826598
-#> w_out[4] 0.3863629 1.198198 67.69972 0.9997155
-#> w_out[5] 0.5359341 1.490437 26.51237 0.9805991
-#> w_out[6] 0.6106351 1.368162 44.11218 0.9848957
-#> w_out[7] 0.6400878 1.549369 50.50740 0.9820679
-#> w_out[8] 0.6303301 1.985030 43.29908 1.0042768
-#> b_out    0.6232685 1.547132 57.49078 0.9800999
-#> sigma    1.0105743 1.324582 43.84903 0.9809578
+#>                mean      se_mean         sd       2.5%         25%        50%
+#> w_out[1]  0.8345667 0.0728930420 0.65030179 -0.4150176  0.38054488  0.7769148
+#> w_out[2] -0.3719132 0.4067431773 0.96605220 -1.7062097 -1.03225732 -0.7365945
+#> w_out[3]  0.4783495 0.1965466796 0.86504113 -1.2350476  0.02944919  0.5634587
+#> w_out[4]  0.4537029 0.3334670001 0.89069977 -1.3791675  0.09313077  0.5518418
+#> b_out     2.2082591 0.0614548175 1.18859472 -0.1036760  1.38416657  2.2072194
+#> sigma     0.3015085 0.0004831093 0.01804107  0.2693205  0.28895030  0.3013415
+#>                75%     97.5%       n_eff      Rhat
+#> w_out[1] 1.2478028 2.1730066   79.589862 1.0254227
+#> w_out[2] 0.4680286 1.7548944    5.641059 1.3136052
+#> w_out[3] 1.0454306 2.0448172   19.370556 1.1335888
+#> w_out[4] 1.0281249 2.0733860    7.134392 1.1997484
+#> b_out    3.1573563 4.2214829  374.072451 1.0016806
+#> sigma    0.3128869 0.3386066 1394.549362 0.9988699
 #> 
 #> Model Fit Information:
-#> Iterations: 100 
-#> Warmup: 50 
+#> Iterations: 1000 
+#> Warmup: 200 
 #> Thinning: 1 
 #> Chains: 1 
 #> 
 #> Predictive Performance:
-#> RMSE (training): 0.6676959 
-#> MAE (training): 0.5158743 
+#> RMSE (training): 0.2821305 
+#> MAE (training): 0.2234606 
 #> 
 #> Notes:
 #> Check convergence diagnostics for parameters with high R-hat values.
@@ -142,7 +136,7 @@ summary(model)
 Make predictions using the trained model:
 
 ``` r
-pred <- predict(model)
+pred <- predict(iris_bnn)
 ```
 
 ### 5. Visualization
@@ -150,7 +144,7 @@ pred <- predict(model)
 Visualize true vs predicted values for regression:
 
 ``` r
-plot(df$y, rowMeans(pred), main = "True vs Predicted", xlab = "True Values", ylab = "Predicted Values")
+plot(iris$Sepal.Length, rowMeans(pred), main = "True vs Predicted", xlab = "True Values", ylab = "Predicted Values")
 abline(0, 1, col = "red")
 ```
 
@@ -164,9 +158,9 @@ Use `bnns` for regression analysis to model continuous outcomes, such as
 predicting patient biomarkers in clinical trials.
 
 ``` r
-model <- bnns(y ~ -1 + x1 + x2,
-  data = df, L = 2, nodes = c(10, 8), act_fn = c(2, 3), out_act_fn = 1,
-  iter = 1e2, warmup = 5e1, chains = 1, seed = 123,
+model <- bnns(Sepal.Length ~ -1 + .,
+  data = iris, L = 1, act_fn = 3, nodes = 4,
+  out_act_fn = 1, chains = 1,
   prior_weights = list(dist = "uniform", params = list(alpha = -1, beta = 1)),
   prior_bias = list(dist = "cauchy", params = list(mu = 0, sigma = 2.5)),
   prior_sigma = list(dist = "inv_gamma", params = list(alpha = 1, beta = 1))
@@ -180,10 +174,17 @@ For binary or multiclass classification, set the `out_act_fn` to `2`
 
 ``` r
 # Simulate binary classification data
-df <- data.frame(x1 = runif(10), x2 = runif(10), y = sample(0:1, 10, replace = TRUE))
+df <- data.frame(
+  x1 = runif(10), x2 = runif(10),
+  y = sample(0:1, 10, replace = TRUE)
+)
 
 # Fit a binary classification BNN
-model <- bnns(y ~ -1 + x1 + x2, data = df, L = 2, nodes = c(16, 8), act_fn = c(3, 2), out_act_fn = 2, iter = 1e2, warmup = 5e1, chains = 1)
+model <- bnns(y ~ -1 + x1 + x2,
+  data = df, L = 2, nodes = c(16, 8),
+  act_fn = c(3, 2), out_act_fn = 2, iter = 1e2,
+  warmup = 5e1, chains = 1
+)
 ```
 
 ### Clinical Trial Applications
@@ -195,8 +196,8 @@ population.
 
 ## Documentation
 
-- Detailed vignettes are available to guide through various applications
-  of the package.
+- Detailed [vignettes](https://swarnendu-stat.github.io/bnns/articles/)
+  are available to guide through various applications of the package.
 - See `help(bnns)` for more information about the `bnns` function and
   its arguments.
 
