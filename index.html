@@ -101,12 +101,18 @@
 <h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
 <div class="section level3">
-<h3 id="id_1-simulate-data">1. Simulate Data<a class="anchor" aria-label="anchor" href="#id_1-simulate-data"></a>
+<h3 id="id_1-iris-data">1. Iris Data<a class="anchor" aria-label="anchor" href="#id_1-iris-data"></a>
 </h3>
-<p>Below is an example of how to simulate data for regression:</p>
+<p>We use the <code>iris</code> data for regression:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width Species</span></span>
+<span><span class="co">#&gt; 1          5.1         3.5          1.4         0.2  setosa</span></span>
+<span><span class="co">#&gt; 2          4.9         3.0          1.4         0.2  setosa</span></span>
+<span><span class="co">#&gt; 3          4.7         3.2          1.3         0.2  setosa</span></span>
+<span><span class="co">#&gt; 4          4.6         3.1          1.5         0.2  setosa</span></span>
+<span><span class="co">#&gt; 5          5.0         3.6          1.4         0.2  setosa</span></span>
+<span><span class="co">#&gt; 6          5.4         3.9          1.7         0.4  setosa</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="id_2-fit-a-bnn-model">2. Fit a BNN Model<a class="anchor" aria-label="anchor" href="#id_2-fit-a-bnn-model"></a>
@@ -115,65 +121,53 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/swarnendu-stat/bnns" class="external-link">bnns</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span>,</span>
-<span>  data <span class="op">=</span> <span class="va">df</span>, L <span class="op">=</span> <span class="fl">2</span>, nodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">8</span><span class="op">)</span>, act_fn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, out_act_fn <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  iter <span class="op">=</span> <span class="fl">1e2</span>, warmup <span class="op">=</span> <span class="fl">5e1</span>, chains <span class="op">=</span> <span class="fl">1</span>, seed <span class="op">=</span> <span class="fl">123</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">iris_bnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span>, L <span class="op">=</span> <span class="fl">1</span>, act_fn <span class="op">=</span> <span class="fl">3</span>, nodes <span class="op">=</span> <span class="fl">4</span>, out_act_fn <span class="op">=</span> <span class="fl">1</span>, chains <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="id_3-model-summary">3. Model Summary<a class="anchor" aria-label="anchor" href="#id_3-model-summary"></a>
 </h3>
 <p>Summarize the fitted model:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">iris_bnn</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; bnns.default(formula = y ~ -1 + x1 + x2, data = df, L = 2, nodes = c(10, </span></span>
-<span><span class="co">#&gt;     8), act_fn = c(2, 3), out_act_fn = 1, iter = 100, warmup = 50, </span></span>
-<span><span class="co">#&gt;     chains = 1, seed = 123)</span></span>
+<span><span class="co">#&gt; bnns.default(formula = Sepal.Length ~ -1 + ., data = iris, L = 1, </span></span>
+<span><span class="co">#&gt;     nodes = 4, act_fn = 3, out_act_fn = 1, chains = 1)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data Summary:</span></span>
-<span><span class="co">#&gt; Number of observations: 10 </span></span>
-<span><span class="co">#&gt; Number of features: 2 </span></span>
+<span><span class="co">#&gt; Number of observations: 150 </span></span>
+<span><span class="co">#&gt; Number of features: 6 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Network Architecture:</span></span>
-<span><span class="co">#&gt; Number of hidden layers: 2 </span></span>
-<span><span class="co">#&gt; Nodes per layer: 10, 8 </span></span>
-<span><span class="co">#&gt; Activation functions: 2, 3 </span></span>
+<span><span class="co">#&gt; Number of hidden layers: 1 </span></span>
+<span><span class="co">#&gt; Nodes per layer: 4 </span></span>
+<span><span class="co">#&gt; Activation functions: 3 </span></span>
 <span><span class="co">#&gt; Output activation function: 1 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Posterior Summary (Key Parameters):</span></span>
-<span><span class="co">#&gt;                  mean    se_mean        sd       2.5%        25%         50%</span></span>
-<span><span class="co">#&gt; w_out[1]  0.046800977 0.10811114 0.8557186 -1.4270932 -0.4344960 -0.06862144</span></span>
-<span><span class="co">#&gt; w_out[2]  0.115880441 0.13319242 0.9380149 -1.5099093 -0.4571497  0.07552893</span></span>
-<span><span class="co">#&gt; w_out[3] -0.066245807 0.13469714 0.9291137 -1.6212377 -0.8311266 -0.12900962</span></span>
-<span><span class="co">#&gt; w_out[4] -0.103740675 0.09216505 0.7583326 -1.2582963 -0.6014192 -0.19034730</span></span>
-<span><span class="co">#&gt; w_out[5] -0.136488041 0.18784111 0.9671970 -1.8916180 -0.9706804  0.03012556</span></span>
-<span><span class="co">#&gt; w_out[6]  0.017294924 0.12168441 0.8081913 -1.3438848 -0.6034305 -0.08493691</span></span>
-<span><span class="co">#&gt; w_out[7]  0.135528160 0.12928282 0.9187944 -1.6799768 -0.4365047  0.12827137</span></span>
-<span><span class="co">#&gt; w_out[8] -0.005637373 0.13525773 0.8900234 -1.1675289 -0.6722286 -0.16385458</span></span>
-<span><span class="co">#&gt; b_out     0.046645154 0.12189640 0.9242511 -1.5332072 -0.4610939  0.10835165</span></span>
-<span><span class="co">#&gt; sigma     0.878312806 0.03548238 0.2349594  0.5149699  0.7192499  0.86315178</span></span>
-<span><span class="co">#&gt;                75%    97.5%    n_eff      Rhat</span></span>
-<span><span class="co">#&gt; w_out[1] 0.4759225 1.902804 62.64999 0.9982886</span></span>
-<span><span class="co">#&gt; w_out[2] 0.7984308 1.885203 49.59758 0.9804256</span></span>
-<span><span class="co">#&gt; w_out[3] 0.6134859 1.725527 47.57962 0.9826598</span></span>
-<span><span class="co">#&gt; w_out[4] 0.3863629 1.198198 67.69972 0.9997155</span></span>
-<span><span class="co">#&gt; w_out[5] 0.5359341 1.490437 26.51237 0.9805991</span></span>
-<span><span class="co">#&gt; w_out[6] 0.6106351 1.368162 44.11218 0.9848957</span></span>
-<span><span class="co">#&gt; w_out[7] 0.6400878 1.549369 50.50740 0.9820679</span></span>
-<span><span class="co">#&gt; w_out[8] 0.6303301 1.985030 43.29908 1.0042768</span></span>
-<span><span class="co">#&gt; b_out    0.6232685 1.547132 57.49078 0.9800999</span></span>
-<span><span class="co">#&gt; sigma    1.0105743 1.324582 43.84903 0.9809578</span></span>
+<span><span class="co">#&gt;                mean      se_mean         sd       2.5%         25%        50%</span></span>
+<span><span class="co">#&gt; w_out[1]  0.8345667 0.0728930420 0.65030179 -0.4150176  0.38054488  0.7769148</span></span>
+<span><span class="co">#&gt; w_out[2] -0.3719132 0.4067431773 0.96605220 -1.7062097 -1.03225732 -0.7365945</span></span>
+<span><span class="co">#&gt; w_out[3]  0.4783495 0.1965466796 0.86504113 -1.2350476  0.02944919  0.5634587</span></span>
+<span><span class="co">#&gt; w_out[4]  0.4537029 0.3334670001 0.89069977 -1.3791675  0.09313077  0.5518418</span></span>
+<span><span class="co">#&gt; b_out     2.2082591 0.0614548175 1.18859472 -0.1036760  1.38416657  2.2072194</span></span>
+<span><span class="co">#&gt; sigma     0.3015085 0.0004831093 0.01804107  0.2693205  0.28895030  0.3013415</span></span>
+<span><span class="co">#&gt;                75%     97.5%       n_eff      Rhat</span></span>
+<span><span class="co">#&gt; w_out[1] 1.2478028 2.1730066   79.589862 1.0254227</span></span>
+<span><span class="co">#&gt; w_out[2] 0.4680286 1.7548944    5.641059 1.3136052</span></span>
+<span><span class="co">#&gt; w_out[3] 1.0454306 2.0448172   19.370556 1.1335888</span></span>
+<span><span class="co">#&gt; w_out[4] 1.0281249 2.0733860    7.134392 1.1997484</span></span>
+<span><span class="co">#&gt; b_out    3.1573563 4.2214829  374.072451 1.0016806</span></span>
+<span><span class="co">#&gt; sigma    0.3128869 0.3386066 1394.549362 0.9988699</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Fit Information:</span></span>
-<span><span class="co">#&gt; Iterations: 100 </span></span>
-<span><span class="co">#&gt; Warmup: 50 </span></span>
+<span><span class="co">#&gt; Iterations: 1000 </span></span>
+<span><span class="co">#&gt; Warmup: 200 </span></span>
 <span><span class="co">#&gt; Thinning: 1 </span></span>
 <span><span class="co">#&gt; Chains: 1 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictive Performance:</span></span>
-<span><span class="co">#&gt; RMSE (training): 0.6676959 </span></span>
-<span><span class="co">#&gt; MAE (training): 0.5158743 </span></span>
+<span><span class="co">#&gt; RMSE (training): 0.2821305 </span></span>
+<span><span class="co">#&gt; MAE (training): 0.2234606 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; Check convergence diagnostics for parameters with high R-hat values.</span></span></code></pre></div>
@@ -183,14 +177,14 @@
 </h3>
 <p>Make predictions using the trained model:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">iris_bnn</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="id_5-visualization">5. Visualization<a class="anchor" aria-label="anchor" href="#id_5-visualization"></a>
 </h3>
 <p>Visualize true vs predicted values for regression:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">y</span>, <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"True vs Predicted"</span>, xlab <span class="op">=</span> <span class="st">"True Values"</span>, ylab <span class="op">=</span> <span class="st">"Predicted Values"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"True vs Predicted"</span>, xlab <span class="op">=</span> <span class="st">"True Values"</span>, ylab <span class="op">=</span> <span class="st">"Predicted Values"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-8-1.png" width="100%"></p>
 </div>
@@ -203,9 +197,9 @@
 </h3>
 <p>Use <code>bnns</code> for regression analysis to model continuous outcomes, such as predicting patient biomarkers in clinical trials.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span>,</span>
-<span>  data <span class="op">=</span> <span class="va">df</span>, L <span class="op">=</span> <span class="fl">2</span>, nodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">8</span><span class="op">)</span>, act_fn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, out_act_fn <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  iter <span class="op">=</span> <span class="fl">1e2</span>, warmup <span class="op">=</span> <span class="fl">5e1</span>, chains <span class="op">=</span> <span class="fl">1</span>, seed <span class="op">=</span> <span class="fl">123</span>,</span>
+<code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">.</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">iris</span>, L <span class="op">=</span> <span class="fl">1</span>, act_fn <span class="op">=</span> <span class="fl">3</span>, nodes <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  out_act_fn <span class="op">=</span> <span class="fl">1</span>, chains <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  prior_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="st">"uniform"</span>, params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, beta <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  prior_bias <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="st">"cauchy"</span>, params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fl">0</span>, sigma <span class="op">=</span> <span class="fl">2.5</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  prior_sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="st">"inv_gamma"</span>, params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span>, beta <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
@@ -217,10 +211,17 @@
 <p>For binary or multiclass classification, set the <code>out_act_fn</code> to <code>2</code> (binary) or <code>3</code> (multiclass). For example:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Simulate binary classification data</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>,</span>
+<span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Fit a binary classification BNN</span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span>, data <span class="op">=</span> <span class="va">df</span>, L <span class="op">=</span> <span class="fl">2</span>, nodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16</span>, <span class="fl">8</span><span class="op">)</span>, act_fn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span>, out_act_fn <span class="op">=</span> <span class="fl">2</span>, iter <span class="op">=</span> <span class="fl">1e2</span>, warmup <span class="op">=</span> <span class="fl">5e1</span>, chains <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">df</span>, L <span class="op">=</span> <span class="fl">2</span>, nodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16</span>, <span class="fl">8</span><span class="op">)</span>,</span>
+<span>  act_fn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span>, out_act_fn <span class="op">=</span> <span class="fl">2</span>, iter <span class="op">=</span> <span class="fl">1e2</span>,</span>
+<span>  warmup <span class="op">=</span> <span class="fl">5e1</span>, chains <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="clinical-trial-applications">Clinical Trial Applications<a class="anchor" aria-label="anchor" href="#clinical-trial-applications"></a>
@@ -232,7 +233,7 @@
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
 <ul>
-<li>Detailed vignettes are available to guide through various applications of the package.</li>
+<li>Detailed <a href="https://swarnendu-stat.github.io/bnns/articles/">vignettes</a> are available to guide through various applications of the package.</li>
 <li>See <code><a href="reference/bnns.html">help(bnns)</a></code> for more information about the <code>bnns</code> function and its arguments.</li>
 </ul>
 </div>
