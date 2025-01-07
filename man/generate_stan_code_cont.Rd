@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate_stan_code.R
 \name{generate_stan_code_cont}
 \alias{generate_stan_code_cont}
-\title{Generate Stan Code for Continuous Response Models}
+\title{Internal function to generate Stan Code for Continuous Response Models}
 \usage{
 generate_stan_code_cont(num_layers, nodes)
 }

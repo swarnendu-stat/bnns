@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate_stan_code.R
 \name{generate_stan_code}
 \alias{generate_stan_code}
-\title{Generate Stan Code Based on Output Activation Function}
+\title{Internal function to generate Stan Code Based on Output Activation Function}
 \usage{
 generate_stan_code(num_layers, nodes, out_act_fn = 1)
 }

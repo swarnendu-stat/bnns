@@ -1,4 +1,4 @@
-#' Generate Stan Code Based on Output Activation Function
+#' Internal function to generate Stan Code Based on Output Activation Function
 #'
 #' This function serves as a wrapper to generate Stan code for Bayesian neural networks
 #' tailored to different types of response variables. Based on the specified output
@@ -61,7 +61,7 @@ generate_stan_code <- function(num_layers, nodes, out_act_fn = 1) {
   }
 }
 
-#' Generate Stan Code for Continuous Response Models
+#' Internal function to generate Stan Code for Continuous Response Models
 #'
 #' This function generates Stan code for a Bayesian neural network model
 #' designed to predict continuous response variables. The Stan code is dynamically
@@ -232,7 +232,7 @@ data {
   }
 }
 
-#' Generate Stan Code for Binary Response Models
+#' Internal function to generate Stan Code for Binary Response Models
 #'
 #' This function generates Stan code for a Bayesian neural network model
 #' designed to predict binary response variables. The Stan code is dynamically
@@ -403,7 +403,7 @@ data {
   }
 }
 
-#' Generate Stan Code for Neural Networks with Categorical Response
+#' Internal function to generate Stan Code for Neural Networks with Categorical Response
 #'
 #' This function generates Stan code for modeling a categorical response using
 #' neural networks with multiple layers. The generated code supports customizable

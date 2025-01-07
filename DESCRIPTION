@@ -10,7 +10,7 @@ Description: Offers a flexible formula-based interface for building and training
     predictions, and support for regression, binary, and multi-class classification, 
     it is well-suited for applications in clinical trials, finance, and other fields 
     requiring robust Bayesian inference and decision-making. References: Neal(1996) <doi:10.1007/978-1-4612-0745-0>.
-License: Apache License (>= 2)
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2

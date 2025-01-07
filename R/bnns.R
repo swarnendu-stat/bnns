@@ -240,6 +240,8 @@ bnns <- function(formula, data = list(), L = 1, nodes = rep(2, L),
 #' model$fit
 #'
 #' @seealso \code{\link[rstan]{stan}}
+#'
+#' @export
 #' @keywords internal
 
 bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
@@ -564,6 +566,10 @@ bnns.default <- function(formula, data = list(), L = 1, nodes = rep(2, L),
                          refresh = max(iter / 10, 1), normalize = TRUE, ...) {
   if (missing(formula) || missing(data)) {
     stop("Both 'formula' and 'data' must be provided.")
+  }
+
+  if (anyNA(data)) {
+    stop("Data contains missing values. Please handle them before proceeding.")
   }
 
   mf <- stats::model.frame(formula = formula, data = data)

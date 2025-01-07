@@ -160,4 +160,11 @@ test_that("bnns throws errors for incorrect inputs", {
     bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 3, L = 1, act_fn = 0),
     "act_fn must be a sequence of 1/2/3/4/5"
   )
+
+  df$y[2] <- NA
+
+  expect_error(
+    bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 3, L = 1, act_fn = 0),
+    "Data contains missing values. Please handle them before proceeding."
+  )
 })

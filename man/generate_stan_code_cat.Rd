@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate_stan_code.R
 \name{generate_stan_code_cat}
 \alias{generate_stan_code_cat}
-\title{Generate Stan Code for Neural Networks with Categorical Response}
+\title{Internal function to generate Stan Code for Neural Networks with Categorical Response}
 \usage{
 generate_stan_code_cat(num_layers, nodes)
 }
