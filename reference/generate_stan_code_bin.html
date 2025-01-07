@@ -99,15 +99,101 @@ predictions between 0 and 1, which aligns with the Bernoulli likelihood.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Generate Stan code for a single hidden layer with 10 nodes</span></span></span>
 <span class="r-in"><span><span class="va">stan_code</span> <span class="op">&lt;-</span> <span class="fu">generate_stan_code_bin</span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in generate_stan_code_bin(1, c(10)):</span> could not find function "generate_stan_code_bin"</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">stan_code</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'stan_code' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> data {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; n;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; m;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; L;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; nodes;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, m] X;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   array[n] int&lt;lower=0, upper=1&gt; y;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; act_fn;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parameters {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[m, nodes] w1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[nodes] b1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[nodes] w_out;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   real b_out;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> transformed parameters {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes] z1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes] a1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[n] y_hat;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   z1 = X * w1 + rep_matrix(b1', n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   if (act_fn == 1) a1 = tanh(z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn == 2) a1 = inv_logit(z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn == 3) a1 = log(1 + exp(z1));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn == 4) a1 = fmax(rep_matrix(0, n, nodes), z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else a1 = z1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   y_hat = a1 * w_out + b_out;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> model {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w1) ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b1 ~ PRIOR_BIAS;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   w_out ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b_out ~ PRIOR_BIAS;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   y ~ bernoulli_logit(y_hat);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Generate Stan code for two hidden layers with 8 and 4 nodes</span></span></span>
 <span class="r-in"><span><span class="va">stan_code</span> <span class="op">&lt;-</span> <span class="fu">generate_stan_code_bin</span><span class="op">(</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in generate_stan_code_bin(2, c(8, 4)):</span> could not find function "generate_stan_code_bin"</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">stan_code</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'stan_code' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> data {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; n;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; m;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; L;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; nodes[L];</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, m] X;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   array[n] int&lt;lower=0, upper=1&gt; y;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   int&lt;lower=1&gt; act_fn[L];</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parameters {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[m, nodes[1]] w1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[nodes[1]] b1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[nodes[1], nodes[2]] w2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[nodes[2]] b2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[nodes[L]] w_out;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   real b_out;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> transformed parameters {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[1]] z1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[1]] a1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[2]] z2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   matrix[n, nodes[2]] a2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   vector[n] y_hat;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   z1 = X * w1 + rep_matrix(b1', n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   if (act_fn[1] == 1) a1 = tanh(z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[1] == 2) a1 = inv_logit(z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[1] == 3) a1 = log(1 + exp(z1));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[1] == 4) a1 = fmax(rep_matrix(0, n, nodes[1]), z1);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else a1 = z1;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   z2 = a1 * w2 + rep_matrix(b2', n);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   if (act_fn[2] == 1) a2 = tanh(z2);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[2] == 2) a2 = inv_logit(z2);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[2] == 3) a2 = log(1 + exp(z2));</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else if (act_fn[2] == 4) a2 = fmax(rep_matrix(0, n, nodes[2]), z2);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   else a2 = z2;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   y_hat = a2 * w_out + b_out;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> model {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w1) ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b1 ~ PRIOR_BIAS;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   to_vector(w2) ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b2 ~ PRIOR_BIAS;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   w_out ~ PRIOR_WEIGHT;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   b_out ~ PRIOR_BIAS;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   y ~ bernoulli_logit(y_hat);</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
