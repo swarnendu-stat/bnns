@@ -10,14 +10,17 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+# Ensuring required packages are installed before proceeding
 stopifnot("mlbench not installed" = requireNamespace("mlbench", quietly = TRUE))
 stopifnot("rsample not installed" = requireNamespace("rsample", quietly = TRUE))
 stopifnot("ranger not installed" = requireNamespace("ranger", quietly = TRUE))
-library(bnns)
-library(mlbench)
-library(rsample)
-library(ranger)
-set.seed(123)
+
+# Loading the necessary libraries
+library(bnns)    # For Bayesian Neural Networks
+library(mlbench) # For benchmark datasets
+library(rsample) # For data splitting
+library(ranger)  # For random forest model comparison
+set.seed(123)    # Setting seed for reproducibility
 ```
 
 ## Introduction
@@ -49,17 +52,21 @@ $$
 $\epsilon \sim N(0, 1).$
 
 ```{r regression-data}
+# Generating the Friedman1 dataset
 friedman1_data <- mlbench.friedman1(n = 100, sd = 1)
+
+# Splitting the data into training (80%) and testing (20%) sets
 friedman1_split <- initial_split(
   cbind.data.frame(y = friedman1_data$y, friedman1_data$x),
   prop = 0.8
 )
-friedman1_train <- training(friedman1_split)
-friedman1_test <- testing(friedman1_split)
+friedman1_train <- training(friedman1_split)  # Training data
+friedman1_test <- testing(friedman1_split)   # Testing data
 ```
 
 ### Model Training
 ```{r regression-model}
+# Training a Bayesian Neural Network with a single hidden layer and 4 nodes
 friedman1_bnn <- bnns(y ~ -1 + .,
   data = friedman1_train, L = 1, nodes = 4, act_fn = 3,
   out_act_fn = 1, iter = 1e3, warmup = 2e2
@@ -68,16 +75,20 @@ friedman1_bnn <- bnns(y ~ -1 + .,
 
 ### Model Evaluation
 ```{r regression-evaluation}
+# Making predictions on the test set and evaluating model performance
 friedman1_bnn_pred <- predict(friedman1_bnn, friedman1_test)
-measure_cont(friedman1_test$y, friedman1_bnn_pred)
+measure_cont(friedman1_test$y, friedman1_bnn_pred)  # Measures like RMSE, MAE
 ```
 
 ### Model Comparison
 ```{r regression-comparison}
+# Training a random forest model for comparison
 friedman1_rf <- ranger(
   y ~ -1 + .,
   data = friedman1_train |> `colnames<-`(c("y", paste0("x", 1:10)))
 )
+
+# Making predictions with random forest and evaluating performance
 friedman1_rf_pred <- predict(
   friedman1_rf,
   friedman1_test |> `colnames<-`(c("y", paste0("x", 1:10)))
@@ -93,35 +104,44 @@ measure_cont(friedman1_test$y, friedman1_rf_pred$predictions)
 The dataset generated with the `mlbench.spirals` consists of points on two entangled spirals. If `sd>0`, then Gaussian noise is added to each data point.
 
 ```{r binary-data}
+# Generating the Spirals dataset with Gaussian noise
 spirals_data <- mlbench.spirals(100, 1.5, 0.05)
 spirals_data <- cbind.data.frame(y = spirals_data$classes, spirals_data$x) |>
-  transform(y = as.numeric(y) - 1)
+  transform(y = as.numeric(y) - 1)  # Converting to binary 0/1
+
+# Splitting the data into training and testing sets (stratified by class)
 spirals_split <- initial_split(spirals_data, prop = 0.8, strata = "y")
-spirals_train <- training(spirals_split)
-spirals_test <- testing(spirals_split)
+spirals_train <- training(spirals_split)  # Training data
+spirals_test <- testing(spirals_split)   # Testing data
 ```
 
 ### Model Training
 ```{r binary-model}
+# Training a Bayesian Neural Network with three hidden layers
 spirals_bnn <- bnns(y ~ -1 + .,
   data = spirals_train, L = 3,
   nodes = c(64, 64, 16), act_fn = c(1, 4, 4),
   out_act_fn = 2, iter = 1e3, warmup = 2e2
 )
+
 ```
 
 ### Model Evaluation
 ```{r binary-evaluation}
+# Making predictions and calculating binary classification metrics (e.g., AUC)
 spirals_bnn_pred <- predict(spirals_bnn, spirals_test)
 measure_bin(spirals_test$y, spirals_bnn_pred)
 ```
 
 ### Model Comparison
 ```{r binary-comparison}
+# Training a random forest model for comparison
 spirals_rf <- ranger(
   y ~ -1 + .,
   data = spirals_train |> `colnames<-`(c("y", paste0("x", 1:2)))
 )
+
+# Evaluating the random forest model
 spirals_rf_pred <- predict(
   spirals_rf,
   spirals_test |> `colnames<-`(c("y", paste0("x", 1:2)))
@@ -137,16 +157,20 @@ measure_bin(spirals_test$y, spirals_rf_pred$predictions)
 The dataset generated with `mlbench.waveform` consists of 21 attributes with continuous values and a variable showing the 3 classes (33% for each of 3 classes). Each class is generated from a combination of 2 of 3 "base" waves.
 
 ```{r multi-data}
+# Generating the Waveform dataset
 waveform_data <- mlbench.waveform(100)
 waveform_data <- cbind.data.frame(y = waveform_data$classes, waveform_data$x) |>
-  transform(y = as.factor(y))
+  transform(y = as.factor(y))  # Converting the target to a factor
+
+# Splitting the data into training and testing sets (stratified by class)
 waveform_split <- initial_split(waveform_data, prop = 0.8, strata = "y")
-waveform_train <- training(waveform_split)
-waveform_test <- testing(waveform_split)
+waveform_train <- training(waveform_split)  # Training data
+waveform_test <- testing(waveform_split)   # Testing data
 ```
 
 ### Model Training
 ```{r multi-model}
+# Training a Bayesian Neural Network with two hidden layers
 waveform_bnn <- bnns(y ~ -1 + .,
   data = waveform_train, L = 2, nodes = c(2, 2),
   act_fn = 2:3, out_act_fn = 3, iter = 1e3, warmup = 2e2
@@ -155,17 +179,21 @@ waveform_bnn <- bnns(y ~ -1 + .,
 
 ### Model Evaluation
 ```{r multi-evaluation}
+# Making predictions and evaluating multi-class classification metrics
 waveform_bnn_pred <- predict(waveform_bnn, waveform_test)
 measure_cat(waveform_test$y, waveform_bnn_pred)
 ```
 
 ### Model Comparison
 ```{r multi-comparison}
+# Training a random forest model with probability outputs for comparison
 waveform_rf <- ranger(
   y ~ -1 + .,
   data = waveform_train |> `colnames<-`(c("y", paste0("x", 1:21))),
   probability = TRUE
 )
+
+# Evaluating the random forest model
 waveform_rf_pred <- predict(
   waveform_rf,
   waveform_test |> `colnames<-`(c("y", paste0("x", 1:21)))
@@ -177,4 +205,10 @@ measure_cat(waveform_test$y, waveform_rf_pred$predictions)
 
 ## Summary
 
-The performance of the `bnns` package demonstrates its predictive ability across various machine learning tasks. Additionally, it provides posterior distributions of predictions, which can be used for uncertainty quantification and probabilistic decision-making.
+The `bnns` package showcases strong predictive performance across regression, binary classification, and multi-class classification tasks. In addition to accurate predictions, it provides posterior distributions, enabling:
+
+1. Uncertainty Quantification: Offers insights into the confidence of predictions, crucial for high-stakes applications like clinical trials and finance.
+2. Probabilistic Decision-Making: Facilitates decisions under uncertainty by integrating Bayesian principles.
+3. Model Comparisons: Demonstrates comparable performance to the ranger package, with the added advantage of interpretability through Bayesian inference.
+
+Overall, `bnns` is a powerful tool for tasks requiring both predictive accuracy and interpretability, making it suitable for various domains.

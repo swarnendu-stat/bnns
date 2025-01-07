@@ -64,3 +64,4 @@ cat(stan_code)
 \item \link{generate_stan_code_cat}: For categorical response models.
 }
 }
+\keyword{internal}

@@ -45,9 +45,7 @@
 #' - [generate_stan_code_cont]: For continuous response models.
 #' - [generate_stan_code_bin]: For binary response models.
 #' - [generate_stan_code_cat]: For categorical response models.
-#'
-#' @export
-
+#' @keywords internal
 
 generate_stan_code <- function(num_layers, nodes, out_act_fn = 1) {
   if (out_act_fn == 1) {
@@ -102,8 +100,7 @@ generate_stan_code <- function(num_layers, nodes, out_act_fn = 1) {
 #' # Generate Stan code for two hidden layers with 8 and 4 nodes
 #' stan_code <- generate_stan_code_cont(2, c(8, 4))
 #' cat(stan_code)
-#'
-#' @export
+#' @keywords internal
 
 generate_stan_code_cont <- function(num_layers, nodes) {
   if (length(nodes) != num_layers || any(nodes <= 0)) {
@@ -274,8 +271,7 @@ data {
 #' # Generate Stan code for two hidden layers with 8 and 4 nodes
 #' stan_code <- generate_stan_code_bin(2, c(8, 4))
 #' cat(stan_code)
-#'
-#' @export
+#' @keywords internal
 
 generate_stan_code_bin <- function(num_layers, nodes) {
   if (length(nodes) != num_layers || any(nodes <= 0)) {
@@ -441,8 +437,7 @@ data {
 #' cat(stan_code)
 #'
 #' @seealso [generate_stan_code_bin()], [generate_stan_code_cont()]
-#'
-#' @export
+#' @keywords internal
 
 generate_stan_code_cat <- function(num_layers, nodes) {
   if (length(nodes) != num_layers || any(nodes <= 0)) {

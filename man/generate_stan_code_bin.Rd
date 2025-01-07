@@ -54,5 +54,5 @@ cat(stan_code)
 # Generate Stan code for two hidden layers with 8 and 4 nodes
 stan_code <- generate_stan_code_bin(2, c(8, 4))
 cat(stan_code)
-
 }
+\keyword{internal}

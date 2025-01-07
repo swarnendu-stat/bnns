@@ -55,3 +55,4 @@ cat(stan_code)
 \seealso{
 \code{\link[=generate_stan_code_bin]{generate_stan_code_bin()}}, \code{\link[=generate_stan_code_cont]{generate_stan_code_cont()}}
 }
+\keyword{internal}
