@@ -68,16 +68,19 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="st">"mlbench not installed"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"mlbench"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Ensuring required packages are installed before proceeding</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="st">"mlbench not installed"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"mlbench"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="st">"rsample not installed"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"rsample"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
 <span><span class="co">#&gt;   object 'type_sum.accel' not found</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="st">"ranger not installed"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"ranger"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/swarnendu-stat/bnns" class="external-link">bnns</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mlbench</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rsample.tidymodels.org" class="external-link">rsample</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://imbs-hl.github.io/ranger/" class="external-link">ranger</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span></code></pre></div>
+<span></span>
+<span><span class="co"># Loading the necessary libraries</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/swarnendu-stat/bnns" class="external-link">bnns</a></span><span class="op">)</span>    <span class="co"># For Bayesian Neural Networks</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mlbench</span><span class="op">)</span> <span class="co"># For benchmark datasets</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rsample.tidymodels.org" class="external-link">rsample</a></span><span class="op">)</span> <span class="co"># For data splitting</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://imbs-hl.github.io/ranger/" class="external-link">ranger</a></span><span class="op">)</span>  <span class="co"># For random forest model comparison</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>    <span class="co"># Setting seed for reproducibility</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
@@ -123,19 +126,23 @@ y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 </annotation></semantics></math></p>
 <p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϵ</mi><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">\epsilon \sim N(0, 1).</annotation></semantics></math></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">friedman1_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mlbench/man/mlbench.friedman1.html" class="external-link">mlbench.friedman1</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">100</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Generating the Friedman1 dataset</span></span>
+<span><span class="va">friedman1_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mlbench/man/mlbench.friedman1.html" class="external-link">mlbench.friedman1</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">100</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Splitting the data into training (80%) and testing (20%) sets</span></span>
 <span><span class="va">friedman1_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html" class="external-link">initial_split</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind.data.frame</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">friedman1_data</span><span class="op">$</span><span class="va">y</span>, <span class="va">friedman1_data</span><span class="op">$</span><span class="va">x</span><span class="op">)</span>,</span>
 <span>  prop <span class="op">=</span> <span class="fl">0.8</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">friedman1_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html" class="external-link">training</a></span><span class="op">(</span><span class="va">friedman1_split</span><span class="op">)</span></span>
-<span><span class="va">friedman1_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html" class="external-link">testing</a></span><span class="op">(</span><span class="va">friedman1_split</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">friedman1_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html" class="external-link">training</a></span><span class="op">(</span><span class="va">friedman1_split</span><span class="op">)</span>  <span class="co"># Training data</span></span>
+<span><span class="va">friedman1_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html" class="external-link">testing</a></span><span class="op">(</span><span class="va">friedman1_split</span><span class="op">)</span>   <span class="co"># Testing data</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="model-training">Model Training<a class="anchor" aria-label="anchor" href="#model-training"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">friedman1_bnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">.</span>,</span>
+<code class="sourceCode R"><span><span class="co"># Training a Bayesian Neural Network with a single hidden layer and 4 nodes</span></span>
+<span><span class="va">friedman1_bnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">.</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">friedman1_train</span>, L <span class="op">=</span> <span class="fl">1</span>, nodes <span class="op">=</span> <span class="fl">4</span>, act_fn <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  out_act_fn <span class="op">=</span> <span class="fl">1</span>, iter <span class="op">=</span> <span class="fl">1e3</span>, warmup <span class="op">=</span> <span class="fl">2e2</span></span>
 <span><span class="op">)</span></span>
@@ -155,8 +162,8 @@ y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000148 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.48 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000172 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.72 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -164,8 +171,8 @@ y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000141 seconds</span></span>
-<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.41 seconds.</span></span>
+<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.00014 seconds</span></span>
+<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.4 seconds.</span></span>
 <span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
@@ -191,24 +198,25 @@ y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 <span><span class="co">#&gt; Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2:  Elapsed Time: 1.34 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 2:                4.688 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2:                6.028 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 2:  Elapsed Time: 1.336 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 2:                4.735 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2:                6.071 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 1.238 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                5.651 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                6.889 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 1.223 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                5.62 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                6.843 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1:</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="model-evaluation">Model Evaluation<a class="anchor" aria-label="anchor" href="#model-evaluation"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">friedman1_bnn_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">friedman1_bnn</span>, <span class="va">friedman1_test</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/measure_cont.html">measure_cont</a></span><span class="op">(</span><span class="va">friedman1_test</span><span class="op">$</span><span class="va">y</span>, <span class="va">friedman1_bnn_pred</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Making predictions on the test set and evaluating model performance</span></span>
+<span><span class="va">friedman1_bnn_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">friedman1_bnn</span>, <span class="va">friedman1_test</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/measure_cont.html">measure_cont</a></span><span class="op">(</span><span class="va">friedman1_test</span><span class="op">$</span><span class="va">y</span>, <span class="va">friedman1_bnn_pred</span><span class="op">)</span>  <span class="co"># Measures like RMSE, MAE</span></span>
 <span><span class="co">#&gt; $rmse</span></span>
 <span><span class="co">#&gt; [1] 2.328514</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -219,10 +227,13 @@ y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 <h3 id="model-comparison">Model Comparison<a class="anchor" aria-label="anchor" href="#model-comparison"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">friedman1_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://imbs-hl.github.io/ranger/reference/ranger.html" class="external-link">ranger</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="co"># Training a random forest model for comparison</span></span>
+<span><span class="va">friedman1_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://imbs-hl.github.io/ranger/reference/ranger.html" class="external-link">ranger</a></span><span class="op">(</span></span>
 <span>  <span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">.</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">friedman1_train</span> <span class="op">|&gt;</span> <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Making predictions with random forest and evaluating performance</span></span>
 <span><span class="va">friedman1_rf_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span></span>
 <span>  <span class="va">friedman1_rf</span>,</span>
 <span>  <span class="va">friedman1_test</span> <span class="op">|&gt;</span> <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -246,18 +257,22 @@ y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 of points on two entangled spirals. If <code>sd&gt;0</code>, then
 Gaussian noise is added to each data point.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">spirals_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mlbench/man/mlbench.spirals.html" class="external-link">mlbench.spirals</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">1.5</span>, <span class="fl">0.05</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Generating the Spirals dataset with Gaussian noise</span></span>
+<span><span class="va">spirals_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mlbench/man/mlbench.spirals.html" class="external-link">mlbench.spirals</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">1.5</span>, <span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="va">spirals_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind.data.frame</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">spirals_data</span><span class="op">$</span><span class="va">classes</span>, <span class="va">spirals_data</span><span class="op">$</span><span class="va">x</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>  <span class="co"># Converting to binary 0/1</span></span>
+<span></span>
+<span><span class="co"># Splitting the data into training and testing sets (stratified by class)</span></span>
 <span><span class="va">spirals_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html" class="external-link">initial_split</a></span><span class="op">(</span><span class="va">spirals_data</span>, prop <span class="op">=</span> <span class="fl">0.8</span>, strata <span class="op">=</span> <span class="st">"y"</span><span class="op">)</span></span>
-<span><span class="va">spirals_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html" class="external-link">training</a></span><span class="op">(</span><span class="va">spirals_split</span><span class="op">)</span></span>
-<span><span class="va">spirals_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html" class="external-link">testing</a></span><span class="op">(</span><span class="va">spirals_split</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">spirals_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html" class="external-link">training</a></span><span class="op">(</span><span class="va">spirals_split</span><span class="op">)</span>  <span class="co"># Training data</span></span>
+<span><span class="va">spirals_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html" class="external-link">testing</a></span><span class="op">(</span><span class="va">spirals_split</span><span class="op">)</span>   <span class="co"># Testing data</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="model-training-1">Model Training<a class="anchor" aria-label="anchor" href="#model-training-1"></a>
 </h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">spirals_bnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">.</span>,</span>
+<code class="sourceCode R"><span><span class="co"># Training a Bayesian Neural Network with three hidden layers</span></span>
+<span><span class="va">spirals_bnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">.</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">spirals_train</span>, L <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  nodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">64</span>, <span class="fl">64</span>, <span class="fl">16</span><span class="op">)</span>, act_fn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span>,</span>
 <span>  out_act_fn <span class="op">=</span> <span class="fl">2</span>, iter <span class="op">=</span> <span class="fl">1e3</span>, warmup <span class="op">=</span> <span class="fl">2e2</span></span>
@@ -279,25 +294,25 @@ Gaussian noise is added to each data point.</p>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).</span></span>
-<span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.001357 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 13.57 seconds.</span></span>
-<span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
-<span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.001338 seconds</span></span>
-<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 13.38 seconds.</span></span>
-<span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
-<span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
+<span><span class="co">#&gt; Chain Chain 1: 2</span></span>
+<span><span class="co">#&gt; : </span></span>
+<span><span class="co">#&gt; Chain 1Chain : 2Gradient evaluation took 0.001469 seconds: </span></span>
+<span><span class="co">#&gt; Gradient evaluation took 0.001483 secondsChain </span></span>
+<span><span class="co">#&gt; 1Chain : 21000 transitions using 10 leapfrog steps per transition would take 14.69 seconds.: </span></span>
+<span><span class="co">#&gt; 1000 transitions using 10 leapfrog steps per transition would take 14.83 seconds.Chain </span></span>
+<span><span class="co">#&gt; 1Chain : 2Adjust your expectations accordingly!: </span></span>
+<span><span class="co">#&gt; Adjust your expectations accordingly!Chain </span></span>
+<span><span class="co">#&gt; 1Chain : 2</span></span>
+<span><span class="co">#&gt; : Chain </span></span>
+<span><span class="co">#&gt; 1Chain : 2</span></span>
+<span><span class="co">#&gt; : </span></span>
+<span><span class="co">#&gt; Chain Chain 12: : Iteration:   1 / 1000 [  0%]  (Warmup)Iteration:   1 / 1000 [  0%]  (Warmup)</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
@@ -315,22 +330,23 @@ Gaussian noise is added to each data point.</p>
 <span><span class="co">#&gt; Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2:  Elapsed Time: 158.83 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 2:                686.438 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2:                845.268 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 2:  Elapsed Time: 158.568 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 2:                686.621 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2:                845.189 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 159.572 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                686.823 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                846.395 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 160.719 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                691.503 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                852.222 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1:</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="model-evaluation-1">Model Evaluation<a class="anchor" aria-label="anchor" href="#model-evaluation-1"></a>
 </h3>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">spirals_bnn_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">spirals_bnn</span>, <span class="va">spirals_test</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Making predictions and calculating binary classification metrics (e.g., AUC)</span></span>
+<span><span class="va">spirals_bnn_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">spirals_bnn</span>, <span class="va">spirals_test</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/measure_bin.html">measure_bin</a></span><span class="op">(</span><span class="va">spirals_test</span><span class="op">$</span><span class="va">y</span>, <span class="va">spirals_bnn_pred</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Setting levels: control = 0, case = 1</span></span>
 <span><span class="co">#&gt; Setting direction: controls &lt; cases</span></span>
@@ -358,10 +374,13 @@ Gaussian noise is added to each data point.</p>
 <h3 id="model-comparison-1">Model Comparison<a class="anchor" aria-label="anchor" href="#model-comparison-1"></a>
 </h3>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">spirals_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://imbs-hl.github.io/ranger/reference/ranger.html" class="external-link">ranger</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="co"># Training a random forest model for comparison</span></span>
+<span><span class="va">spirals_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://imbs-hl.github.io/ranger/reference/ranger.html" class="external-link">ranger</a></span><span class="op">(</span></span>
 <span>  <span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">.</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">spirals_train</span> <span class="op">|&gt;</span> <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Evaluating the random forest model</span></span>
 <span><span class="va">spirals_rf_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span></span>
 <span>  <span class="va">spirals_rf</span>,</span>
 <span>  <span class="va">spirals_test</span> <span class="op">|&gt;</span> <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -402,18 +421,22 @@ Gaussian noise is added to each data point.</p>
 classes (33% for each of 3 classes). Each class is generated from a
 combination of 2 of 3 “base” waves.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">waveform_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mlbench/man/mlbench.waveform.html" class="external-link">mlbench.waveform</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Generating the Waveform dataset</span></span>
+<span><span class="va">waveform_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mlbench/man/mlbench.waveform.html" class="external-link">mlbench.waveform</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">waveform_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind.data.frame</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">waveform_data</span><span class="op">$</span><span class="va">classes</span>, <span class="va">waveform_data</span><span class="op">$</span><span class="va">x</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Converting the target to a factor</span></span>
+<span></span>
+<span><span class="co"># Splitting the data into training and testing sets (stratified by class)</span></span>
 <span><span class="va">waveform_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html" class="external-link">initial_split</a></span><span class="op">(</span><span class="va">waveform_data</span>, prop <span class="op">=</span> <span class="fl">0.8</span>, strata <span class="op">=</span> <span class="st">"y"</span><span class="op">)</span></span>
-<span><span class="va">waveform_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html" class="external-link">training</a></span><span class="op">(</span><span class="va">waveform_split</span><span class="op">)</span></span>
-<span><span class="va">waveform_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html" class="external-link">testing</a></span><span class="op">(</span><span class="va">waveform_split</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">waveform_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html" class="external-link">training</a></span><span class="op">(</span><span class="va">waveform_split</span><span class="op">)</span>  <span class="co"># Training data</span></span>
+<span><span class="va">waveform_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsample.tidymodels.org/reference/initial_split.html" class="external-link">testing</a></span><span class="op">(</span><span class="va">waveform_split</span><span class="op">)</span>   <span class="co"># Testing data</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="model-training-2">Model Training<a class="anchor" aria-label="anchor" href="#model-training-2"></a>
 </h3>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">waveform_bnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">.</span>,</span>
+<code class="sourceCode R"><span><span class="co"># Training a Bayesian Neural Network with two hidden layers</span></span>
+<span><span class="va">waveform_bnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">.</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">waveform_train</span>, L <span class="op">=</span> <span class="fl">2</span>, nodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>  act_fn <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">3</span>, out_act_fn <span class="op">=</span> <span class="fl">3</span>, iter <span class="op">=</span> <span class="fl">1e3</span>, warmup <span class="op">=</span> <span class="fl">2e2</span></span>
 <span><span class="op">)</span></span>
@@ -433,8 +456,8 @@ combination of 2 of 3 “base” waves.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000154 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.54 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000181 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.81 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -442,8 +465,8 @@ combination of 2 of 3 “base” waves.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000146 seconds</span></span>
-<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.46 seconds.</span></span>
+<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000169 seconds</span></span>
+<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.69 seconds.</span></span>
 <span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
@@ -463,29 +486,30 @@ combination of 2 of 3 “base” waves.</p>
 <span><span class="co">#&gt; Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.722 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                2.458 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                3.18 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.734 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                2.474 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                3.208 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2:  Elapsed Time: 0.755 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 2:                2.902 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2:                3.657 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 2:  Elapsed Time: 0.757 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 2:                2.863 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2:                3.62 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 2:</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="model-evaluation-2">Model Evaluation<a class="anchor" aria-label="anchor" href="#model-evaluation-2"></a>
 </h3>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">waveform_bnn_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">waveform_bnn</span>, <span class="va">waveform_test</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Making predictions and evaluating multi-class classification metrics</span></span>
+<span><span class="va">waveform_bnn_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">waveform_bnn</span>, <span class="va">waveform_test</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/measure_cat.html">measure_cat</a></span><span class="op">(</span><span class="va">waveform_test</span><span class="op">$</span><span class="va">y</span>, <span class="va">waveform_bnn_pred</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $log_loss</span></span>
 <span><span class="co">#&gt; [1] 0.5418342</span></span>
@@ -505,11 +529,14 @@ combination of 2 of 3 “base” waves.</p>
 <h3 id="model-comparison-2">Model Comparison<a class="anchor" aria-label="anchor" href="#model-comparison-2"></a>
 </h3>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">waveform_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://imbs-hl.github.io/ranger/reference/ranger.html" class="external-link">ranger</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="co"># Training a random forest model with probability outputs for comparison</span></span>
+<span><span class="va">waveform_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://imbs-hl.github.io/ranger/reference/ranger.html" class="external-link">ranger</a></span><span class="op">(</span></span>
 <span>  <span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">.</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">waveform_train</span> <span class="op">|&gt;</span> <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">21</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  probability <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Evaluating the random forest model</span></span>
 <span><span class="va">waveform_rf_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span></span>
 <span>  <span class="va">waveform_rf</span>,</span>
 <span>  <span class="va">waveform_test</span> <span class="op">|&gt;</span> <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">21</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -535,10 +562,23 @@ combination of 2 of 3 “base” waves.</p>
 <div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h2>
-<p>The performance of the <code>bnns</code> package demonstrates its
-predictive ability across various machine learning tasks. Additionally,
-it provides posterior distributions of predictions, which can be used
-for uncertainty quantification and probabilistic decision-making.</p>
+<p>The <code>bnns</code> package showcases strong predictive performance
+across regression, binary classification, and multi-class classification
+tasks. In addition to accurate predictions, it provides posterior
+distributions, enabling:</p>
+<ol style="list-style-type: decimal">
+<li>Uncertainty Quantification: Offers insights into the confidence of
+predictions, crucial for high-stakes applications like clinical trials
+and finance.</li>
+<li>Probabilistic Decision-Making: Facilitates decisions under
+uncertainty by integrating Bayesian principles.</li>
+<li>Model Comparisons: Demonstrates comparable performance to the ranger
+package, with the added advantage of interpretability through Bayesian
+inference.</li>
+</ol>
+<p>Overall, <code>bnns</code> is a powerful tool for tasks requiring
+both predictive accuracy and interpretability, making it suitable for
+various domains.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
