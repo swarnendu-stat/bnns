@@ -70,8 +70,6 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="st">"mlbench not installed"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"mlbench"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="st">"rsample not installed"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"rsample"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
-<span><span class="co">#&gt;   object 'type_sum.accel' not found</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/swarnendu-stat/bnns" class="external-link">bnns</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mlbench</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rsample.tidymodels.org" class="external-link">rsample</a></span><span class="op">)</span></span>
@@ -141,8 +139,8 @@ of rooms, and more.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000354 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 3.54 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000347 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 3.47 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -150,8 +148,8 @@ of rooms, and more.</p>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000357 seconds</span></span>
-<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 3.57 seconds.</span></span>
+<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000347 seconds</span></span>
+<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 3.47 seconds.</span></span>
 <span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
@@ -175,18 +173,18 @@ of rooms, and more.</p>
 <span><span class="co">#&gt; Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2:  Elapsed Time: 15.523 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 2:                48.285 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2:                63.808 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 2:  Elapsed Time: 15.758 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 2:                48.832 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2:                64.59 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 18.298 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                80.407 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                98.705 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 18.506 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                81.201 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                99.707 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1:</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -245,8 +243,8 @@ related to health status for predicting the presence of diabetes.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000491 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.91 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000493 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.93 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -254,8 +252,8 @@ related to health status for predicting the presence of diabetes.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000447 seconds</span></span>
-<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 4.47 seconds.</span></span>
+<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000571 seconds</span></span>
+<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 5.71 seconds.</span></span>
 <span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
@@ -282,15 +280,15 @@ related to health status for predicting the presence of diabetes.</p>
 <span><span class="co">#&gt; Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2:  Elapsed Time: 21.051 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 2:                51.534 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2:                72.585 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 2:  Elapsed Time: 21.185 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 2:                51.894 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2:                73.079 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 22.539 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                50.749 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                73.288 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 22.773 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                51.272 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                74.045 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1:</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -368,8 +366,8 @@ types.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000319 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 3.19 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000378 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 3.78 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -377,8 +375,8 @@ types.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000295 seconds</span></span>
-<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 2.95 seconds.</span></span>
+<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000396 seconds</span></span>
+<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 3.96 seconds.</span></span>
 <span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
@@ -402,18 +400,18 @@ types.</p>
 <span><span class="co">#&gt; Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 17.618 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                47.718 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                65.336 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 18.271 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                49.155 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                67.426 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2:  Elapsed Time: 18.149 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 2:                83.087 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2:                101.236 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 2:  Elapsed Time: 18.68 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 2:                85.617 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2:                104.297 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 2:</span></span></code></pre></div>
 </div>
 <div class="section level3">
