@@ -1,6 +1,6 @@
 Package: bnns
 Title: Bayesian Neural Network with Stan
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person("Swarnendu", "Chatterjee", , "swarnendu.stat@gmail.com", role = c("aut", "cre", "cph"))
 Description: Offers a flexible formula-based interface for building and training 
