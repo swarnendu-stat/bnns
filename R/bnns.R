@@ -576,6 +576,10 @@ bnns.default <- function(formula, data, L = 1, nodes = rep(2, L),
     stop("'data' contains missing values. Please handle them before proceeding.")
   }
 
+  if (any(unlist(lapply(data, is.nan))) | any(unlist(lapply(data, is.infinite)))) {
+    stop("'data' contains invalid values (NaN/Inf).")
+  }
+
   mf <- stats::model.frame(formula = formula, data = data)
   train_x <- stats::model.matrix(attr(mf, "terms"), data = mf)
   train_y <- stats::model.response(mf)

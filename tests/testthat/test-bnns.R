@@ -164,12 +164,20 @@ test_that("bnns throws errors for incorrect inputs", {
   df$y[2] <- NA
 
   expect_error(
-    bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 3, L = 1, act_fn = 0),
+    bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 3, L = 1, act_fn = 1),
     "'data' contains missing values. Please handle them before proceeding."
   )
 
+  df$y <- rnorm(10)
+  df$y[2] <- Inf
+
   expect_error(
-    bnns(y ~ -1 + x1 + x2, data = lapply(df, function(x)x), out_act_fn = 3, L = 1, act_fn = 0),
+    bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 1, L = 1, act_fn = 1),
+    "'data' contains invalid values \\(NaN/Inf\\)."
+  )
+
+  expect_error(
+    bnns(y ~ -1 + x1 + x2, data = lapply(df, function(x)x), out_act_fn = 1, L = 1, act_fn = 1),
     "'data' must be a data.frame."
   )
 })
