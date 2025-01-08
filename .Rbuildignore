@@ -10,3 +10,4 @@
 ^pkgdown$
 ^cran-comments\.md$
 ^vignettes/articles$
+^CRAN-SUBMISSION$
