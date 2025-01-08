@@ -3,7 +3,7 @@
 #' This is a generic function for fitting Bayesian Neural Network (BNN) models. It dispatches to methods based on the class of the input data.
 #'
 #' @param formula A symbolic description of the model to be fitted. The formula should specify the response variable and predictors (e.g., \code{y ~ x1 + x2}). \code{y} must be continuous for regression (`out_act_fn = 1`), numeric 0/1 for binary classification (`out_act_fn = 2`), and factor with at least 3 levels for multi-classification (`out_act_fn = 3`).
-#' @param data A data frame or list containing the variables in the model. Default is an empty list.
+#' @param data A data frame containing the variables in the model.
 #' @param L An integer specifying the number of hidden layers in the neural network. Default is 1.
 #' @param nodes An integer or vector specifying the number of nodes in each hidden layer. If a single value is provided, it is applied to all layers. Default is 16.
 #' @param act_fn An integer or vector specifying the activation function(s) for the hidden layers. Options are:
@@ -115,7 +115,7 @@
 #'
 #' @export
 
-bnns <- function(formula, data = list(), L = 1, nodes = rep(2, L),
+bnns <- function(formula, data, L = 1, nodes = rep(2, L),
                  act_fn = rep(2, L), out_act_fn = 1, iter = 1e3, warmup = 2e2,
                  thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
                  prior_bias = NULL, prior_sigma = NULL, verbose = FALSE,
@@ -450,7 +450,7 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
 #' Fits a Bayesian Neural Network (BNN) model using a formula interface. The function parses the formula and data to create the input feature matrix and target vector, then fits the model using \code{\link{bnns.default}}.
 #'
 #' @param formula A symbolic description of the model to be fitted. The formula should specify the response variable and predictors (e.g., \code{y ~ x1 + x2}).
-#' @param data A data frame or list containing the variables in the model. Default is an empty list.
+#' @param data A data frame containing the variables in the model.
 #' @param L An integer specifying the number of hidden layers in the neural network. Default is 1.
 #' @param nodes An integer or vector specifying the number of nodes in each hidden layer. If a single value is provided, it is applied to all layers. Default is 16.
 #' @param act_fn An integer or vector specifying the activation function(s) for the hidden layers. Options are:
@@ -559,7 +559,7 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
 #'
 #' @export
 
-bnns.default <- function(formula, data = list(), L = 1, nodes = rep(2, L),
+bnns.default <- function(formula, data, L = 1, nodes = rep(2, L),
                          act_fn = rep(2, L), out_act_fn = 1, iter = 1e3, warmup = 2e2,
                          thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
                          prior_bias = NULL, prior_sigma = NULL, verbose = FALSE,
@@ -568,8 +568,12 @@ bnns.default <- function(formula, data = list(), L = 1, nodes = rep(2, L),
     stop("Both 'formula' and 'data' must be provided.")
   }
 
+  if(!is.data.frame(data)){
+    stop("'data' must be a data.frame.")
+  }
+
   if (anyNA(data)) {
-    stop("Data contains missing values. Please handle them before proceeding.")
+    stop("'data' contains missing values. Please handle them before proceeding.")
   }
 
   mf <- stats::model.frame(formula = formula, data = data)

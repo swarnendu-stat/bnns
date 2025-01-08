@@ -6,7 +6,7 @@
 \usage{
 \method{bnns}{default}(
   formula,
-  data = list(),
+  data,
   L = 1,
   nodes = rep(2, L),
   act_fn = rep(2, L),
@@ -29,7 +29,7 @@
 \arguments{
 \item{formula}{A symbolic description of the model to be fitted. The formula should specify the response variable and predictors (e.g., \code{y ~ x1 + x2}).}
 
-\item{data}{A data frame or list containing the variables in the model. Default is an empty list.}
+\item{data}{A data frame containing the variables in the model.}
 
 \item{L}{An integer specifying the number of hidden layers in the neural network. Default is 1.}
 

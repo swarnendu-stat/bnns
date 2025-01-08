@@ -165,6 +165,11 @@ test_that("bnns throws errors for incorrect inputs", {
 
   expect_error(
     bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 3, L = 1, act_fn = 0),
-    "Data contains missing values. Please handle them before proceeding."
+    "'data' contains missing values. Please handle them before proceeding."
+  )
+
+  expect_error(
+    bnns(y ~ -1 + x1 + x2, data = lapply(df, function(x)x), out_act_fn = 3, L = 1, act_fn = 0),
+    "'data' must be a data.frame."
   )
 })
