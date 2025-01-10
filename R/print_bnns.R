@@ -12,6 +12,7 @@
 #'   }
 #'
 #' @examples
+#' \donttest{
 #' # Example usage:
 #' data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
 #' model <- bnns(y ~ -1 + x1 + x2,
@@ -19,7 +20,7 @@
 #'   iter = 1e2, warmup = 5e1, chains = 1
 #' )
 #' print(model)
-#'
+#' }
 #' @seealso \code{\link{bnns}}, \code{\link{summary.bnns}}
 #'
 #' @export

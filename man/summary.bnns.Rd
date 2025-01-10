@@ -44,6 +44,7 @@ The function prints the following information:
 }
 }
 \examples{
+\donttest{
 # Fit a Bayesian Neural Network
 data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
 model <- bnns(y ~ -1 + x1 + x2,
@@ -53,7 +54,7 @@ model <- bnns(y ~ -1 + x1 + x2,
 
 # Get a summary of the model
 summary(model)
-
+}
 }
 \seealso{
 \code{\link{bnns}}, \code{\link{print.bnns}}

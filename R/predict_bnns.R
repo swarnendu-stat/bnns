@@ -12,6 +12,7 @@
 #' This function uses the posterior distribution from the Stan model in the \code{bnns} object to compute predictions for the provided input data.
 #'
 #' @examples
+#' \donttest{
 #' # Example usage:
 #' data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
 #' model <- bnns(y ~ -1 + x1 + x2,
@@ -21,7 +22,7 @@
 #' new_data <- data.frame(x1 = runif(5), x2 = runif(5))
 #' predictions <- predict(model, newdata = new_data)
 #' print(predictions)
-#'
+#' }
 #' @seealso \code{\link{bnns}}, \code{\link{print.bnns}}
 #'
 #' @export

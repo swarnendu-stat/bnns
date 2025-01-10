@@ -102,13 +102,14 @@
 #' 3. Neal, R.M., 2012. Bayesian learning for neural networks (Vol. 118). Springer Science & Business Media.
 #'
 #' @examples
+#' \donttest{
 #' # Example usage with formula interface:
 #' data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
 #' model <- bnns(y ~ -1 + x1 + x2,
 #'   data = data, L = 1, nodes = 2, act_fn = 1,
 #'   iter = 1e2, warmup = 5e1, chains = 1
 #' )
-#'
+#' }
 #' # See the documentation for bnns.default for more details on the default implementation.
 #'
 #' @seealso \code{\link{bnns.default}}
@@ -228,17 +229,18 @@ bnns <- function(formula, data, L = 1, nodes = rep(2, L),
 #' @details The function uses the \code{generate_stan_code} function to dynamically generate Stan code based on the specified number of layers and nodes. Stan is then used to fit the Bayesian Neural Network.
 #'
 #' @examples
+#' \donttest{
 #' # Example usage:
 #' train_x <- matrix(runif(20), nrow = 10, ncol = 2)
 #' train_y <- rnorm(10)
-#' model <- bnns:::bnns_train(train_x, train_y,
+#' model <- bnns::bnns_train(train_x, train_y,
 #'   L = 1, nodes = 2, act_fn = 2,
 #'   iter = 1e2, warmup = 5e1, chains = 1
 #' )
 #'
 #' # Access Stan model fit
 #' model$fit
-#'
+#' }
 #' @seealso \code{\link[rstan]{stan}}
 #'
 #' @export
@@ -550,13 +552,14 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
 #' @details The function uses the provided formula and data to generate the design matrix for the predictors and the response vector. It then calls helper function bnns_train to fit the Bayesian Neural Network model.
 #'
 #' @examples
-#' # Example usage with formula interface:
+#' \donttest{
+#' # Example usage:
 #' data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
 #' model <- bnns(y ~ -1 + x1 + x2,
 #'   data = data, L = 1, nodes = 2, act_fn = 3,
 #'   iter = 1e2, warmup = 5e1, chains = 1
 #' )
-#'
+#' }
 #' @export
 
 bnns.default <- function(formula, data, L = 1, nodes = rep(2, L),

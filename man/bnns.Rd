@@ -145,13 +145,14 @@ This is a generic function for fitting Bayesian Neural Network (BNN) models. It 
 The function serves as a generic interface to different methods of fitting Bayesian Neural Networks. The specific method dispatched depends on the class of the input arguments, allowing for flexibility in the types of inputs supported.
 }
 \examples{
+\donttest{
 # Example usage with formula interface:
 data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
 model <- bnns(y ~ -1 + x1 + x2,
   data = data, L = 1, nodes = 2, act_fn = 1,
   iter = 1e2, warmup = 5e1, chains = 1
 )
-
+}
 # See the documentation for bnns.default for more details on the default implementation.
 
 }
