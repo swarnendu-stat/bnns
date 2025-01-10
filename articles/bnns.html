@@ -421,10 +421,10 @@ function.</p>
 <span><span class="va">metrics_reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measure_cont.html">measure_cont</a></span><span class="op">(</span>obs <span class="op">=</span> <span class="va">test_y</span>, pred <span class="op">=</span> <span class="va">pred_reg</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">metrics_reg</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $rmse</span></span>
-<span><span class="co">#&gt; [1] 0.9797903</span></span>
+<span><span class="co">#&gt; [1] 1.419593</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $mae</span></span>
-<span><span class="co">#&gt; [1] 0.8840652</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 1.377375</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="binary-classification-evaluation">Binary Classification Evaluation<a class="anchor" aria-label="anchor" href="#binary-classification-evaluation"></a>
@@ -453,10 +453,10 @@ function.</p>
 <span><span class="co">#&gt; roc.default(response = obs, predictor = pred)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data: pred in 2 controls (obs 0) &gt; 3 cases (obs 1).</span></span>
-<span><span class="co">#&gt; Area under the curve: 1</span></span>
+<span><span class="co">#&gt; Area under the curve: 0.6667</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $AUC</span></span>
-<span><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.6666667</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="multiclass-classification-evaluation">Multiclass Classification Evaluation<a class="anchor" aria-label="anchor" href="#multiclass-classification-evaluation"></a>
@@ -467,20 +467,22 @@ function.</p>
 <span></span>
 <span><span class="co"># Evaluate predictions</span></span>
 <span><span class="va">metrics_cat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measure_cat.html">measure_cat</a></span><span class="op">(</span>obs <span class="op">=</span> <span class="va">test_y_cat</span>, pred <span class="op">=</span> <span class="va">pred_cat</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in multiclass_roc_multivariate(response, predictor, levels, percent, :</span></span>
+<span><span class="co">#&gt; The following classes were not found in 'response': NA.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">metrics_cat</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $log_loss</span></span>
-<span><span class="co">#&gt; [1] 1.215955</span></span>
+<span><span class="co">#&gt; [1] 1.358409</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $ROC</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; multiclass.roc.default(response = obs, predictor = `colnames&lt;-`(data.frame(pred),     levels(obs)))</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Data: multivariate predictor `colnames&lt;-`(data.frame(pred), levels(obs)) with 3 levels of obs: a, b, c.</span></span>
-<span><span class="co">#&gt; Multi-class area under the curve: 0.1667</span></span>
+<span><span class="co">#&gt; Data: multivariate predictor `colnames&lt;-`(data.frame(pred), levels(obs)) with 2 levels of obs: b, c.</span></span>
+<span><span class="co">#&gt; Multi-class area under the curve: 1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $AUC</span></span>
-<span><span class="co">#&gt; [1] 0.1666667</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 1</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -506,20 +508,22 @@ case.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Evaluate predictions</span></span>
 <span><span class="va">metrics_cat_cauchy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measure_cat.html">measure_cat</a></span><span class="op">(</span>obs <span class="op">=</span> <span class="va">test_y_cat</span>, pred <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">model_cat_cauchy</span>, <span class="va">test_x</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in multiclass_roc_multivariate(response, predictor, levels, percent, :</span></span>
+<span><span class="co">#&gt; The following classes were not found in 'response': NA.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">metrics_cat_cauchy</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $log_loss</span></span>
-<span><span class="co">#&gt; [1] 2.484133</span></span>
+<span><span class="co">#&gt; [1] 1.483828</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $ROC</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; multiclass.roc.default(response = obs, predictor = `colnames&lt;-`(data.frame(pred),     levels(obs)))</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Data: multivariate predictor `colnames&lt;-`(data.frame(pred), levels(obs)) with 3 levels of obs: a, b, c.</span></span>
-<span><span class="co">#&gt; Multi-class area under the curve: 0.2778</span></span>
+<span><span class="co">#&gt; Data: multivariate predictor `colnames&lt;-`(data.frame(pred), levels(obs)) with 2 levels of obs: b, c.</span></span>
+<span><span class="co">#&gt; Multi-class area under the curve: 0.625</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $AUC</span></span>
-<span><span class="co">#&gt; [1] 0.2777778</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.625</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="notes-on-bayesian-neural-networks">8. Notes on Bayesian Neural Networks<a class="anchor" aria-label="anchor" href="#notes-on-bayesian-neural-networks"></a>

@@ -220,18 +220,19 @@ is already pre-processed appropriately.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Example usage:</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># Example usage:</span></span></span>
 <span class="r-in"><span><span class="va">train_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">10</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">train_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">bnns</span><span class="fu">:::</span><span class="fu">bnns_train</span><span class="op">(</span><span class="va">train_x</span>, <span class="va">train_y</span>,</span></span>
+<span class="r-in"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">bnns</span><span class="fu">::</span><span class="fu">bnns_train</span><span class="op">(</span><span class="va">train_x</span>, <span class="va">train_y</span>,</span></span>
 <span class="r-in"><span>  L <span class="op">=</span> <span class="fl">1</span>, nodes <span class="op">=</span> <span class="fl">2</span>, act_fn <span class="op">=</span> <span class="fl">2</span>,</span></span>
 <span class="r-in"><span>  iter <span class="op">=</span> <span class="fl">1e2</span>, warmup <span class="op">=</span> <span class="fl">5e1</span>, chains <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Gradient evaluation took 1.2e-05 seconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.12 seconds.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Gradient evaluation took 1.3e-05 seconds</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.13 seconds.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Adjust your expectations accordingly!</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
@@ -256,9 +257,9 @@ is already pre-processed appropriately.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 90 / 100 [ 90%]  (Sampling)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 100 / 100 [100%]  (Sampling)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:  Elapsed Time: 0.007 seconds (Warm-up)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.005 seconds (Sampling)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.012 seconds (Total)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:  Elapsed Time: 0.004 seconds (Warm-up)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.003 seconds (Sampling)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.007 seconds (Total)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Access Stan model fit</span></span></span>
@@ -267,24 +268,24 @@ is already pre-processed appropriately.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 chains, each with iter=100; warmup=50; thin=1; </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> post-warmup draws per chain=50, total post-warmup draws=50.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           mean se_mean   sd  2.5%   25%   50%   75% 97.5% n_eff Rhat</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w1[1,1]   0.06    0.16 0.97 -1.70 -0.50  0.00  0.82  1.76    38 1.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w1[1,2]   0.03    0.19 0.98 -1.40 -0.69 -0.11  0.41  2.47    28 1.02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w1[2,1]   0.10    0.13 0.86 -1.40 -0.47  0.12  0.79  1.38    47 1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w1[2,2]  -0.08    0.21 1.15 -2.24 -0.71 -0.01  0.84  1.68    30 0.98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> b1[1]     0.08    0.14 0.89 -1.38 -0.64  0.21  0.70  1.80    43 1.07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> b1[2]    -0.21    0.13 1.01 -2.06 -0.86 -0.37  0.66  1.69    63 0.98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[1] -0.15    0.16 0.90 -1.52 -0.69 -0.25  0.46  1.67    30 1.10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[2]  0.10    0.20 1.02 -1.63 -0.57  0.20  0.72  2.01    25 0.98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> b_out     0.14    0.09 0.63 -0.94 -0.29  0.12  0.52  1.39    49 1.01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sigma     0.70    0.03 0.20  0.45  0.57  0.65  0.78  1.21    51 1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lp__     -5.84    0.34 1.95 -9.40 -7.00 -5.54 -4.25 -2.99    34 0.98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mean se_mean   sd   2.5%    25%    50%    75% 97.5% n_eff Rhat</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w1[1,1]   -0.14    0.17 1.01  -2.14  -0.78  -0.25   0.65  1.61    35 1.04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w1[1,2]    0.06    0.23 1.15  -1.77  -0.83   0.19   0.76  2.39    25 0.99</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w1[2,1]   -0.14    0.13 1.23  -2.66  -1.00  -0.16   1.02  1.83    85 0.99</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w1[2,2]   -0.05    0.19 1.07  -2.29  -0.50   0.16   0.43  1.96    32 0.99</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b1[1]     -0.05    0.12 0.91  -1.85  -0.48   0.09   0.48  1.49    55 0.98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b1[2]      0.05    0.19 1.10  -2.11  -0.68   0.23   0.74  2.12    33 1.07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[1]  -0.02    0.11 0.88  -1.79  -0.48  -0.02   0.44  1.63    61 1.02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[2]   0.21    0.14 0.98  -1.49  -0.61   0.41   0.92  1.78    49 1.02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b_out     -0.11    0.11 0.76  -1.44  -0.68  -0.18   0.54  1.09    46 1.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sigma      1.13    0.03 0.27   0.74   0.91   1.07   1.25  1.71    69 0.98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lp__     -11.61    0.30 1.87 -15.16 -13.02 -11.63 -10.15 -8.71    39 1.00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Samples were drawn using NUTS(diag_e) at Wed Jan  8 17:48:39 2025.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Samples were drawn using NUTS(diag_e) at Fri Jan 10 03:59:09 2025.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> For each parameter, n_eff is a crude measure of effective sample size,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> and Rhat is the potential scale reduction factor on split chains (at </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> convergence, Rhat=1).</span>
-<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
