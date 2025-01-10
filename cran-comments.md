@@ -1,6 +1,7 @@
 ## Resubmission
 
-* Implemented the following changes as suggested by Konstanze Lauseker
+* Re-designed tests to run all checks under 10 minutes.
+* Implemented the following changes as suggested by Ms. Konstanze Lauseker
 * Written 'Stan' in single quotes in Title and Description fields of the DESCRIPTION file
 * Removed unnecessary spaces from the Description field of the DESCRIPTION file
 * Wrapped time consuming examples with '\donttest{}'
