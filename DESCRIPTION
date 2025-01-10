@@ -3,7 +3,7 @@ Title: Bayesian Neural Network with 'Stan'
 Version: 0.1.1
 Authors@R: 
     person("Swarnendu", "Chatterjee", , "swarnendu.stat@gmail.com", role = c("aut", "cre", "cph"))
-Description: Offers a flexible formula-based interface for building and training Bayesian Neural Networks (BNNs) powered by 'Stan'. The package supports modeling complex relationships while providing rigorous uncertainty quantification via posterior distributions. With features like customizable priors, interpretable predictions, and support for regression, binary, and multi-class classification, it is well-suited for applications in clinical trials, finance, and other fields requiring robust Bayesian inference and decision-making. References: Neal(1996) <doi:10.1007/978-1-4612-0745-0>.
+Description: Offers a flexible formula-based interface for building and training Bayesian Neural Networks powered by 'Stan'. The package supports modeling complex relationships while providing rigorous uncertainty quantification via posterior distributions. With features like user chosen priors, clear predictions, and support for regression, binary, and multi-class classification, it is well-suited for applications in clinical trials, finance, and other fields requiring robust Bayesian inference and decision-making. References: Neal(1996) <doi:10.1007/978-1-4612-0745-0>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

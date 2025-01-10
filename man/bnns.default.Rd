@@ -156,7 +156,7 @@ The function uses the provided formula and data to generate the design matrix fo
 data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
 model <- bnns(y ~ -1 + x1 + x2,
   data = data, L = 1, nodes = 2, act_fn = 3,
-  iter = 1e2, warmup = 5e1, chains = 1
+  iter = 1e1, warmup = 5, chains = 1
 )
 }
 }

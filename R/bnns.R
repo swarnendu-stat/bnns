@@ -107,7 +107,7 @@
 #' data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
 #' model <- bnns(y ~ -1 + x1 + x2,
 #'   data = data, L = 1, nodes = 2, act_fn = 1,
-#'   iter = 1e2, warmup = 5e1, chains = 1
+#'   iter = 1e1, warmup = 5, chains = 1
 #' )
 #' }
 #' # See the documentation for bnns.default for more details on the default implementation.
@@ -235,7 +235,7 @@ bnns <- function(formula, data, L = 1, nodes = rep(2, L),
 #' train_y <- rnorm(10)
 #' model <- bnns::bnns_train(train_x, train_y,
 #'   L = 1, nodes = 2, act_fn = 2,
-#'   iter = 1e2, warmup = 5e1, chains = 1
+#'   iter = 1e1, warmup = 5, chains = 1
 #' )
 #'
 #' # Access Stan model fit
@@ -557,7 +557,7 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
 #' data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
 #' model <- bnns(y ~ -1 + x1 + x2,
 #'   data = data, L = 1, nodes = 2, act_fn = 3,
-#'   iter = 1e2, warmup = 5e1, chains = 1
+#'   iter = 1e1, warmup = 5, chains = 1
 #' )
 #' }
 #' @export

@@ -157,7 +157,7 @@ train_x <- matrix(runif(20), nrow = 10, ncol = 2)
 train_y <- rnorm(10)
 model <- bnns::bnns_train(train_x, train_y,
   L = 1, nodes = 2, act_fn = 2,
-  iter = 1e2, warmup = 5e1, chains = 1
+  iter = 1e1, warmup = 5, chains = 1
 )
 
 # Access Stan model fit

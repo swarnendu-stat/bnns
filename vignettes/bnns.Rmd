@@ -77,19 +77,19 @@ Fit a Bayesian Neural Network using the `bnns()` function. Specify the network a
 model_reg <- bnns(
   y ~ -1 + x1 + x2,
   data = df,
-  L = 2, # Number of hidden layers
-  nodes = c(16, 8), # Nodes per layer
-  act_fn = c(2, 3), # Activation functions: 2 = Sigmoid, 3 = ReLU
+  L = 1, # Number of hidden layers
+  nodes = 2, # Nodes per layer
+  act_fn = 3, # Activation functions: 3 = ReLU
   out_act_fn = 1, # Output activation function: 1 = Identity (for regression)
-  iter = 2e2,
-  warmup = 1e2,
+  iter = 1e1,  # Very low number of iteration is shown, increase to at least 1e3 for meaningful inference
+  warmup = 5,  # Very low number of warmup is shown, increase to at least 2e2 for meaningful inference
   chains = 1
 )
 ```
 
 ### Binary Classification Example
 
-```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide'}
+```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide', eval = FALSE}
 model_bin <- bnns(
   y_bin ~ -1 + x1 + x2,
   data = df,
@@ -105,7 +105,7 @@ model_bin <- bnns(
 
 ### Multiclass Classification Example
 
-```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide'}
+```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide', eval = FALSE}
 model_cat <- bnns(
   y_cat ~ -1 + x1 + x2,
   data = df,
@@ -125,6 +125,9 @@ Use the `summary()` function to view details of the fitted model, including the 
 
 ```{r}
 summary(model_reg)
+```
+
+```{r eval=FALSE}
 summary(model_bin)
 summary(model_cat)
 ```
@@ -141,7 +144,9 @@ test_x <- matrix(runif(10), nrow = 5, ncol = 2) |>
 
 # Regression predictions
 pred_reg <- predict(model_reg, test_x)
+```
 
+```{r eval = FALSE}
 # Binary classification predictions
 pred_bin <- predict(model_bin, test_x)
 
@@ -166,31 +171,29 @@ print(metrics_reg)
 
 ### Binary Classification Evaluation
 
-```{r}
+```{r eval = FALSE}
 # True responses
 test_y_bin <- sample(c(rep(0, 2), rep(1, 3)), 5)
 
 # Evaluate predictions
 metrics_bin <- measure_bin(obs = test_y_bin, pred = pred_bin)
-print(metrics_bin)
 ```
 
 ### Multiclass Classification Evaluation
 
-```{r}
+```{r eval = FALSE}
 # True responses
 test_y_cat <- factor(sample(letters[1:3], 5, replace = TRUE))
 
 # Evaluate predictions
 metrics_cat <- measure_cat(obs = test_y_cat, pred = pred_cat)
-print(metrics_cat)
 ```
 
 ## 7. Customized Prior
 
 Customized priors can be used for weights as well as the `sigma` parameter (for regression).  Here we show an example use of a `Cauchy` prior for weights in multi-classification case.
 
-```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide'}
+```{r message=FALSE, warning=FALSE, echo = TRUE, results = 'hide', eval = FALSE}
 model_cat_cauchy <- bnns(
   y_cat ~ -1 + x1 + x2,
   data = df,
@@ -205,10 +208,9 @@ model_cat_cauchy <- bnns(
 )
 ```
 
-```{r}
+```{r eval = FALSE}
 # Evaluate predictions
 metrics_cat_cauchy <- measure_cat(obs = test_y_cat, pred = predict(model_cat_cauchy, test_x))
-print(metrics_cat_cauchy)
 ```
 
 ## 8. Notes on Bayesian Neural Networks

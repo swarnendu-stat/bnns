@@ -1,17 +1,15 @@
 ---
 title: "Using Bayesian Neural Networks in Clinical Trials"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Using Bayesian Neural Networks in Clinical Trials}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+```
+
+```{r setup}
 library(bnns)
 ```
 
@@ -186,5 +184,3 @@ The `bnns` package empowers clinical trial analysts to leverage Bayesian Neural 
 - Evaluate trial outcomes based on predefined success criteria.
 
 This probabilistic framework is particularly valuable in scenarios where uncertainty plays a critical role in decision-making, such as early-phase clinical trials.
-
-```
