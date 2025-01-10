@@ -20,8 +20,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/benchmarking.html">Benchmarking bnns</a></li>
+    <li><a class="dropdown-item" href="../articles/clin_trial_app.html">Using Bayesian Neural Networks in Clinical Trials</a></li>
     <li><a class="dropdown-item" href="../articles/common_applications.html">Common Application Areas of bnns</a></li>
-    <li><a class="dropdown-item" href="../articles/ct_app.html">Using Bayesian Neural Networks in Clinical Trials</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -98,47 +98,40 @@
 <span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span>,</span></span>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="va">data</span>, L <span class="op">=</span> <span class="fl">1</span>, nodes <span class="op">=</span> <span class="fl">2</span>, act_fn <span class="op">=</span> <span class="fl">2</span>,</span></span>
-<span class="r-in"><span>  iter <span class="op">=</span> <span class="fl">1e2</span>, warmup <span class="op">=</span> <span class="fl">5e1</span>, chains <span class="op">=</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span>  iter <span class="op">=</span> <span class="fl">1e1</span>, warmup <span class="op">=</span> <span class="fl">5</span>, chains <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Gradient evaluation took 1.2e-05 seconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.12 seconds.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Gradient evaluation took 1.1e-05 seconds</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.11 seconds.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Adjust your expectations accordingly!</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: WARNING: There aren't enough warmup iterations to fit the</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:          three stages of adaptation as currently configured.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:          Reducing each adaptation stage to 15%/75%/10% of</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:          the given number of warmup iterations:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:            init_buffer = 7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:            adapt_window = 38</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:            term_buffer = 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: WARNING: No variance estimation is</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:          performed for num_warmup &lt; 20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration:  1 / 100 [  1%]  (Warmup)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 10 / 100 [ 10%]  (Warmup)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 20 / 100 [ 20%]  (Warmup)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 30 / 100 [ 30%]  (Warmup)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 40 / 100 [ 40%]  (Warmup)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 50 / 100 [ 50%]  (Warmup)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 51 / 100 [ 51%]  (Sampling)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 60 / 100 [ 60%]  (Sampling)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 70 / 100 [ 70%]  (Sampling)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 80 / 100 [ 80%]  (Sampling)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 90 / 100 [ 90%]  (Sampling)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 100 / 100 [100%]  (Sampling)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 1 / 10 [ 10%]  (Warmup)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 2 / 10 [ 20%]  (Warmup)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 3 / 10 [ 30%]  (Warmup)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 4 / 10 [ 40%]  (Warmup)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 5 / 10 [ 50%]  (Warmup)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 6 / 10 [ 60%]  (Sampling)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 7 / 10 [ 70%]  (Sampling)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 8 / 10 [ 80%]  (Sampling)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 9 / 10 [ 90%]  (Sampling)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 10 / 10 [100%]  (Sampling)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:  Elapsed Time: 0.005 seconds (Warm-up)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.004 seconds (Sampling)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.009 seconds (Total)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:  Elapsed Time: 0 seconds (Warm-up)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0 seconds (Sampling)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0 seconds (Total)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Get a summary of the model</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> bnns.default(formula = y ~ -1 + x1 + x2, data = data, L = 1, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     nodes = 2, act_fn = 2, iter = 100, warmup = 50, chains = 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     nodes = 2, act_fn = 2, iter = 10, warmup = 5, chains = 1)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data Summary:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of observations: 10 </span>
@@ -151,26 +144,26 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Output activation function: 1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Posterior Summary (Key Parameters):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 mean    se_mean        sd       2.5%        25%         50%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[1] -0.05432372 0.09247250 0.8053585 -1.8116323 -0.5900625 -0.01134891</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[2] -0.20667669 0.11063755 0.8241266 -1.6868328 -0.7247308 -0.15475959</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> b_out     0.22370414 0.08898919 0.6674141 -0.7754468 -0.1774560  0.16644801</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sigma     1.17390514 0.02727134 0.2513531  0.8313935  1.0085272  1.09219326</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                75%    97.5%    n_eff      Rhat</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[1] 0.5618538 1.316687 75.84960 0.9939791</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[2] 0.3165364 1.430570 55.48592 1.0217312</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> b_out    0.6322990 1.604595 56.24919 1.0572413</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sigma    1.3415874 1.736803 84.94850 0.9825971</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mean   se_mean        sd       2.5%        25%        50%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[1] -0.02920604 0.4498424 0.8409587 -1.2951111  0.1162532  0.1162532</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[2]  0.40537358 0.3790576 0.7086300 -0.4680275 -0.1954632  0.7940072</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b_out     0.02176724 0.3815299 0.7132518 -0.5555983 -0.3634601 -0.3634601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sigma     1.25732640 0.1722130 0.3219439  0.9286969  0.9720776  1.3380998</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                75%     97.5%   n_eff      Rhat</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[1] 0.2898188 0.7341984 3.49485 0.7840955</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> w_out[2] 0.7940072 1.0987669 3.49485 0.7482746</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b_out    0.2360634 1.0825822 3.49485 0.7595809</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sigma    1.3380998 1.6768401 3.49485 2.2683878</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Fit Information:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iterations: 100 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Warmup: 50 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iterations: 10 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Warmup: 5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Thinning: 1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chains: 1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Predictive Performance:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> RMSE (training): 1.1672 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> MAE (training): 1.016994 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> RMSE (training): 1.058974 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> MAE (training): 0.8992131 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Notes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Check convergence diagnostics for parameters with high R-hat values.</span>

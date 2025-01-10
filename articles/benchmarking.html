@@ -35,8 +35,8 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/benchmarking.html">Benchmarking bnns</a></li>
+    <li><a class="dropdown-item" href="../articles/clin_trial_app.html">Using Bayesian Neural Networks in Clinical Trials</a></li>
     <li><a class="dropdown-item" href="../articles/common_applications.html">Common Application Areas of bnns</a></li>
-    <li><a class="dropdown-item" href="../articles/ct_app.html">Using Bayesian Neural Networks in Clinical Trials</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -160,8 +160,8 @@ y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000145 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.45 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000135 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.35 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -169,8 +169,8 @@ y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000142 seconds</span></span>
-<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.42 seconds.</span></span>
+<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.00013 seconds</span></span>
+<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.3 seconds.</span></span>
 <span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
@@ -181,8 +181,8 @@ y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 <span><span class="co">#&gt; Chain 1: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
@@ -196,16 +196,16 @@ y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 <span><span class="co">#&gt; Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2:  Elapsed Time: 1.337 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 2:                4.716 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2:                6.053 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 2:  Elapsed Time: 1.407 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 2:                4.769 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2:                6.176 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 1.241 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                5.715 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                6.956 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 1.279 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                5.732 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                7.011 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1:</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -292,52 +292,52 @@ Gaussian noise is added to each data point.</p>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).</span></span>
-<span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.001312 seconds</span></span>
-<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 13.12 seconds.</span></span>
-<span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
-<span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.001698 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 16.98 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.0013 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 13 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)</span></span>
+<span><span class="co">#&gt; Chain 2: </span></span>
+<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.00128 seconds</span></span>
+<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 12.8 seconds.</span></span>
+<span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
+<span><span class="co">#&gt; Chain 2: </span></span>
+<span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2:  Elapsed Time: 161.082 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 2:                686.607 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2:                847.689 seconds (Total)</span></span>
-<span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 160.877 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                686.913 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                847.79 seconds (Total)</span></span>
-<span><span class="co">#&gt; Chain 1:</span></span></code></pre></div>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 160.321 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                684.171 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                844.492 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1: </span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: </span></span>
+<span><span class="co">#&gt; Chain 2:  Elapsed Time: 161.343 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 2:                686.297 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2:                847.64 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 2:</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="model-evaluation-1">Model Evaluation<a class="anchor" aria-label="anchor" href="#model-evaluation-1"></a>
@@ -454,8 +454,8 @@ combination of 2 of 3 “base” waves.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000133 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.33 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000155 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.55 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -463,8 +463,8 @@ combination of 2 of 3 “base” waves.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000152 seconds</span></span>
-<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.52 seconds.</span></span>
+<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000237 seconds</span></span>
+<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 2.37 seconds.</span></span>
 <span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
@@ -480,8 +480,8 @@ combination of 2 of 3 “base” waves.</p>
 <span><span class="co">#&gt; Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
@@ -490,16 +490,16 @@ combination of 2 of 3 “base” waves.</p>
 <span><span class="co">#&gt; Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2:  Elapsed Time: 0.662 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 2:                2.462 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2:                3.124 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 2:  Elapsed Time: 0.673 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 2:                2.465 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2:                3.138 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.792 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                3.177 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                3.969 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.782 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                3.151 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                3.933 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1:</span></span></code></pre></div>
 </div>
 <div class="section level3">
