@@ -1,11 +1,3 @@
 # bnns (development version)
 
-# bnns 0.1.2
-
-# bnns 0.1.1
-
-# bnns 0.1.0
-
-* Initial release of the `bnns` package.
-* Implements Bayesian Neural Networks using 'Stan'.
-* Provides flexible model specification with formula and Bayesian estimation.
+* Added a `NEWS.md` file to track changes to the package.
