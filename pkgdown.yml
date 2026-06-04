@@ -1,12 +1,13 @@
-pandoc: 3.1.11
-pkgdown: 2.1.1
+pandoc: 3.8.3
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   articles/benchmarking: benchmarking.html
   bnns: bnns.html
   articles/clin_trial_app: clin_trial_app.html
   articles/common_applications: common_applications.html
-last_built: 2025-02-02T17:49Z
+  tidymodels: tidymodels.html
+last_built: 2026-06-04T07:24Z
 urls:
   reference: https://swarnendu-stat.github.io/bnns/reference
   article: https://swarnendu-stat.github.io/bnns/articles

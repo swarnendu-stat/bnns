@@ -6,9 +6,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Benchmarking bnns • bnns</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Benchmarking bnns">
 </head>
@@ -31,14 +36,7 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../articles/bnns.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="active nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/benchmarking.html">Benchmarking bnns</a></li>
-    <li><a class="dropdown-item" href="../articles/clin_trial_app.html">Using Bayesian Neural Networks in Clinical Trials</a></li>
-    <li><a class="dropdown-item" href="../articles/common_applications.html">Common Application Areas of bnns</a></li>
-  </ul>
-</li>
+<li class="active nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -119,10 +117,10 @@ regression problem Friedman 1 as described in Friedman (1991) and
 Breiman (1996). Inputs are 10 independent variables uniformly
 distributed on the interval [0,1], only 5 out of these 10 are actually
 used. Outputs are created according to the formula</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mn>10</mn><mo>sin</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>π</mi><msub><mi>x</mi><mn>1</mn></msub><msub><mi>x</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mn>20</mn><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mn>3</mn></msub><mo>−</mo><mn>0.5</mn><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>+</mo><mn>10</mn><msub><mi>x</mi><mn>4</mn></msub><mo>+</mo><mn>5</mn><msub><mi>x</mi><mn>5</mn></msub><mo>+</mo><mi>ϵ</mi></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mn>10</mn><mrow><mi mathvariant="normal">sin</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>π</mi><msub><mi>x</mi><mn>1</mn></msub><msub><mi>x</mi><mn>2</mn></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mn>20</mn><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mn>3</mn></msub><mo>−</mo><mn>0.5</mn><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mo>+</mo><mn>10</mn><msub><mi>x</mi><mn>4</mn></msub><mo>+</mo><mn>5</mn><msub><mi>x</mi><mn>5</mn></msub><mo>+</mo><mi>ϵ</mi></mrow><annotation encoding="application/x-tex">
 y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 </annotation></semantics></math></p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϵ</mi><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">\epsilon \sim N(0, 1).</annotation></semantics></math></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϵ</mi><mo>∼</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">\epsilon \sim N(0, 1).</annotation></semantics></math></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Generating the Friedman1 dataset</span></span>
 <span><span class="va">friedman1_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mlbench/man/mlbench.friedman1.html" class="external-link">mlbench.friedman1</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">100</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
@@ -145,9 +143,9 @@ y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 <span>  out_act_fn <span class="op">=</span> <span class="fl">1</span>, iter <span class="op">=</span> <span class="fl">1e3</span>, warmup <span class="op">=</span> <span class="fl">2e2</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Trying to compile a simple C file</span></span>
-<span><span class="co">#&gt; Running /opt/R/4.4.2/lib/R/bin/R CMD SHLIB foo.c</span></span>
-<span><span class="co">#&gt; using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0’</span></span>
-<span><span class="co">#&gt; gcc -I"/opt/R/4.4.2/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1   -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o</span></span>
+<span><span class="co">#&gt; Running /opt/R/4.6.0/lib/R/bin/R CMD SHLIB foo.c</span></span>
+<span><span class="co">#&gt; using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’</span></span>
+<span><span class="co">#&gt; gcc -std=gnu2x -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1   -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o</span></span>
 <span><span class="co">#&gt; In file included from /home/runner/work/_temp/Library/RcppEigen/include/Eigen/Core:19,</span></span>
 <span><span class="co">#&gt;                  from /home/runner/work/_temp/Library/RcppEigen/include/Eigen/Dense:1,</span></span>
 <span><span class="co">#&gt;                  from /home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:22,</span></span>
@@ -156,12 +154,12 @@ y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 <span><span class="co">#&gt;   679 | #include &lt;cmath&gt;</span></span>
 <span><span class="co">#&gt;       |          ^~~~~~~</span></span>
 <span><span class="co">#&gt; compilation terminated.</span></span>
-<span><span class="co">#&gt; make: *** [/opt/R/4.4.2/lib/R/etc/Makeconf:195: foo.o] Error 1</span></span>
+<span><span class="co">#&gt; make: *** [/opt/R/4.6.0/lib/R/etc/Makeconf:190: foo.o] Error 1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000165 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.65 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000115 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.15 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -169,18 +167,18 @@ y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000129 seconds</span></span>
-<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.29 seconds.</span></span>
+<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000113 seconds</span></span>
+<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.13 seconds.</span></span>
 <span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
@@ -194,18 +192,18 @@ y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 <span><span class="co">#&gt; Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2:  Elapsed Time: 1.336 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 2:                4.685 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2:                6.021 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 2:  Elapsed Time: 0.912 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 2:                4.736 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2:                5.648 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 1.217 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                5.642 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                6.859 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 1.092 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                5.133 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                6.225 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1:</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -213,13 +211,13 @@ y = 10 \sin(\pi x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + \epsilon
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Making predictions on the test set and evaluating model performance</span></span>
-<span><span class="va">friedman1_bnn_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">friedman1_bnn</span>, <span class="va">friedman1_test</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/measure_cont.html">measure_cont</a></span><span class="op">(</span><span class="va">friedman1_test</span><span class="op">$</span><span class="va">y</span>, <span class="va">friedman1_bnn_pred</span><span class="op">)</span>  <span class="co"># Measures like RMSE, MAE</span></span>
+<span><span class="va">friedman1_bnn_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">friedman1_bnn</span>, <span class="va">friedman1_test</span>, type <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
+<span><span class="fu">bnns</span><span class="fu">::</span><span class="fu"><a href="../reference/measure_cont.html">measure_cont</a></span><span class="op">(</span><span class="va">friedman1_test</span><span class="op">$</span><span class="va">y</span>, <span class="va">friedman1_bnn_pred</span><span class="op">)</span>  <span class="co"># Measures like RMSE, MAE</span></span>
 <span><span class="co">#&gt; $rmse</span></span>
-<span><span class="co">#&gt; [1] 2.328514</span></span>
+<span><span class="co">#&gt; [1] 2.331574</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $mae</span></span>
-<span><span class="co">#&gt; [1] 1.894961</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 1.913072</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="model-comparison">Model Comparison<a class="anchor" aria-label="anchor" href="#model-comparison"></a>
@@ -276,9 +274,9 @@ Gaussian noise is added to each data point.</p>
 <span>  out_act_fn <span class="op">=</span> <span class="fl">2</span>, iter <span class="op">=</span> <span class="fl">1e3</span>, warmup <span class="op">=</span> <span class="fl">2e2</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Trying to compile a simple C file</span></span>
-<span><span class="co">#&gt; Running /opt/R/4.4.2/lib/R/bin/R CMD SHLIB foo.c</span></span>
-<span><span class="co">#&gt; using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0’</span></span>
-<span><span class="co">#&gt; gcc -I"/opt/R/4.4.2/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1   -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o</span></span>
+<span><span class="co">#&gt; Running /opt/R/4.6.0/lib/R/bin/R CMD SHLIB foo.c</span></span>
+<span><span class="co">#&gt; using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’</span></span>
+<span><span class="co">#&gt; gcc -std=gnu2x -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1   -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o</span></span>
 <span><span class="co">#&gt; In file included from /home/runner/work/_temp/Library/RcppEigen/include/Eigen/Core:19,</span></span>
 <span><span class="co">#&gt;                  from /home/runner/work/_temp/Library/RcppEigen/include/Eigen/Dense:1,</span></span>
 <span><span class="co">#&gt;                  from /home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:22,</span></span>
@@ -287,20 +285,20 @@ Gaussian noise is added to each data point.</p>
 <span><span class="co">#&gt;   679 | #include &lt;cmath&gt;</span></span>
 <span><span class="co">#&gt;       |          ^~~~~~~</span></span>
 <span><span class="co">#&gt; compilation terminated.</span></span>
-<span><span class="co">#&gt; make: *** [/opt/R/4.4.2/lib/R/etc/Makeconf:195: foo.o] Error 1</span></span>
+<span><span class="co">#&gt; make: *** [/opt/R/4.6.0/lib/R/etc/Makeconf:190: foo.o] Error 1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.001288 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 12.88 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.001948 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 19.48 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.001249 seconds</span></span>
-<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 12.49 seconds.</span></span>
+<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.001972 seconds</span></span>
+<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 19.72 seconds.</span></span>
 <span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
@@ -308,10 +306,10 @@ Gaussian noise is added to each data point.</p>
 <span><span class="co">#&gt; Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
@@ -328,15 +326,15 @@ Gaussian noise is added to each data point.</p>
 <span><span class="co">#&gt; Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 161.827 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                689.247 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                851.074 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 156.121 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                662.712 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                818.833 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2:  Elapsed Time: 162.504 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 2:                690.742 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2:                853.246 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 2:  Elapsed Time: 155.924 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 2:                664.048 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2:                819.972 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 2:</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -344,7 +342,7 @@ Gaussian noise is added to each data point.</p>
 </h3>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Making predictions and calculating binary classification metrics (e.g., AUC)</span></span>
-<span><span class="va">spirals_bnn_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">spirals_bnn</span>, <span class="va">spirals_test</span><span class="op">)</span></span>
+<span><span class="va">spirals_bnn_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">spirals_bnn</span>, <span class="va">spirals_test</span>, type <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/measure_bin.html">measure_bin</a></span><span class="op">(</span><span class="va">spirals_test</span><span class="op">$</span><span class="va">y</span>, <span class="va">spirals_bnn_pred</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Setting levels: control = 0, case = 1</span></span>
 <span><span class="co">#&gt; Setting direction: controls &lt; cases</span></span>
@@ -363,10 +361,10 @@ Gaussian noise is added to each data point.</p>
 <span><span class="co">#&gt; roc.default(response = obs, predictor = pred)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data: pred in 10 controls (obs 0) &lt; 10 cases (obs 1).</span></span>
-<span><span class="co">#&gt; Area under the curve: 0.97</span></span>
+<span><span class="co">#&gt; Area under the curve: 0.98</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $AUC</span></span>
-<span><span class="co">#&gt; [1] 0.97</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.98</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="model-comparison-1">Model Comparison<a class="anchor" aria-label="anchor" href="#model-comparison-1"></a>
@@ -439,9 +437,9 @@ combination of 2 of 3 “base” waves.</p>
 <span>  act_fn <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">3</span>, out_act_fn <span class="op">=</span> <span class="fl">3</span>, iter <span class="op">=</span> <span class="fl">1e3</span>, warmup <span class="op">=</span> <span class="fl">2e2</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Trying to compile a simple C file</span></span>
-<span><span class="co">#&gt; Running /opt/R/4.4.2/lib/R/bin/R CMD SHLIB foo.c</span></span>
-<span><span class="co">#&gt; using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0’</span></span>
-<span><span class="co">#&gt; gcc -I"/opt/R/4.4.2/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1   -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o</span></span>
+<span><span class="co">#&gt; Running /opt/R/4.6.0/lib/R/bin/R CMD SHLIB foo.c</span></span>
+<span><span class="co">#&gt; using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’</span></span>
+<span><span class="co">#&gt; gcc -std=gnu2x -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1   -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o</span></span>
 <span><span class="co">#&gt; In file included from /home/runner/work/_temp/Library/RcppEigen/include/Eigen/Core:19,</span></span>
 <span><span class="co">#&gt;                  from /home/runner/work/_temp/Library/RcppEigen/include/Eigen/Dense:1,</span></span>
 <span><span class="co">#&gt;                  from /home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:22,</span></span>
@@ -450,12 +448,12 @@ combination of 2 of 3 “base” waves.</p>
 <span><span class="co">#&gt;   679 | #include &lt;cmath&gt;</span></span>
 <span><span class="co">#&gt;       |          ^~~~~~~</span></span>
 <span><span class="co">#&gt; compilation terminated.</span></span>
-<span><span class="co">#&gt; make: *** [/opt/R/4.4.2/lib/R/etc/Makeconf:195: foo.o] Error 1</span></span>
+<span><span class="co">#&gt; make: *** [/opt/R/4.6.0/lib/R/etc/Makeconf:190: foo.o] Error 1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000139 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.39 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000177 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.77 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -463,44 +461,44 @@ combination of 2 of 3 “base” waves.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000131 seconds</span></span>
-<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.31 seconds.</span></span>
+<span><span class="co">#&gt; Chain 2: Gradient evaluation took 0.000166 seconds</span></span>
+<span><span class="co">#&gt; Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.66 seconds.</span></span>
 <span><span class="co">#&gt; Chain 2: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: </span></span>
 <span><span class="co">#&gt; Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 201 / 1000 [ 20%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2: </span></span>
-<span><span class="co">#&gt; Chain 2:  Elapsed Time: 0.672 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 2:                2.474 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 2:                3.146 seconds (Total)</span></span>
-<span><span class="co">#&gt; Chain 2: </span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.789 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                3.199 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                3.988 seconds (Total)</span></span>
-<span><span class="co">#&gt; Chain 1:</span></span></code></pre></div>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.768 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                2.4 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                3.168 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1: </span></span>
+<span><span class="co">#&gt; Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2: </span></span>
+<span><span class="co">#&gt; Chain 2:  Elapsed Time: 0.799 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 2:                2.374 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 2:                3.173 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 2:</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="model-evaluation-2">Model Evaluation<a class="anchor" aria-label="anchor" href="#model-evaluation-2"></a>
@@ -510,7 +508,7 @@ combination of 2 of 3 “base” waves.</p>
 <span><span class="va">waveform_bnn_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">waveform_bnn</span>, <span class="va">waveform_test</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/measure_cat.html">measure_cat</a></span><span class="op">(</span><span class="va">waveform_test</span><span class="op">$</span><span class="va">y</span>, <span class="va">waveform_bnn_pred</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $log_loss</span></span>
-<span><span class="co">#&gt; [1] 0.4947723</span></span>
+<span><span class="co">#&gt; [1] 0.5167825</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $ROC</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -518,10 +516,10 @@ combination of 2 of 3 “base” waves.</p>
 <span><span class="co">#&gt; multiclass.roc.default(response = obs, predictor = `colnames&lt;-`(data.frame(pred),     levels(obs)))</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data: multivariate predictor `colnames&lt;-`(data.frame(pred), levels(obs)) with 3 levels of obs: 1, 2, 3.</span></span>
-<span><span class="co">#&gt; Multi-class area under the curve: 0.9767</span></span>
+<span><span class="co">#&gt; Multi-class area under the curve: 0.9777</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $AUC</span></span>
-<span><span class="co">#&gt; [1] 0.9766865</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.9776786</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="model-comparison-2">Model Comparison<a class="anchor" aria-label="anchor" href="#model-comparison-2"></a>
@@ -589,7 +587,7 @@ various domains.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

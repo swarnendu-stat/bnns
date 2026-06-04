@@ -6,9 +6,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>bnns • bnns</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="bnns">
 </head>
@@ -31,14 +36,7 @@
       <ul class="navbar-nav me-auto">
 <li class="active nav-item"><a class="nav-link" href="../articles/bnns.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/benchmarking.html">Benchmarking bnns</a></li>
-    <li><a class="dropdown-item" href="../articles/clin_trial_app.html">Using Bayesian Neural Networks in Clinical Trials</a></li>
-    <li><a class="dropdown-item" href="../articles/common_applications.html">Common Application Areas of bnns</a></li>
-  </ul>
-</li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -191,16 +189,16 @@ predictive performance.</p>
 <span><span class="co">#&gt; Output activation function: 1 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Posterior Summary (Key Parameters):</span></span>
-<span><span class="co">#&gt;                mean    se_mean        sd       2.5%        25%        50%</span></span>
-<span><span class="co">#&gt; w_out[1] -0.2682487 0.19315006 0.3610847 -0.6939969 -0.5144810 -0.2992260</span></span>
-<span><span class="co">#&gt; w_out[2] -0.4426392 0.10830231 0.2024660 -0.7055733 -0.5981513 -0.3399174</span></span>
-<span><span class="co">#&gt; b_out     0.5266503 0.08137059 0.1521184  0.3630533  0.3630533  0.6022671</span></span>
-<span><span class="co">#&gt; sigma     1.1249599 0.26761385 0.5002912  0.8186562  0.8849170  0.9576394</span></span>
-<span><span class="co">#&gt;                  75%       97.5%   n_eff      Rhat</span></span>
-<span><span class="co">#&gt; w_out[1]  0.09320342  0.09320342 3.49485 0.9075369</span></span>
-<span><span class="co">#&gt; w_out[2] -0.27880903 -0.27880903 3.49485 3.7425590</span></span>
-<span><span class="co">#&gt; b_out     0.62355410  0.67554666 3.49485 0.8134989</span></span>
-<span><span class="co">#&gt; sigma     0.95763938  1.90774292 3.49485 0.9124295</span></span>
+<span><span class="co">#&gt;                mean   se_mean        sd        2.5%         25%        50%</span></span>
+<span><span class="co">#&gt; w_out[1] -0.3589859 0.1186981 0.2219003 -0.63192694 -0.54933687 -0.2432431</span></span>
+<span><span class="co">#&gt; w_out[2]  0.2835853 0.1496669 0.2797950 -0.08961911  0.08535584  0.4349304</span></span>
+<span><span class="co">#&gt; b_out[1]  0.2885974 0.2090478 0.3908048 -0.13490958  0.03255030  0.3134945</span></span>
+<span><span class="co">#&gt; sigma     1.1350689 0.1354920 0.2532957  0.85446045  0.89073350  1.1906799</span></span>
+<span><span class="co">#&gt;                 75%      97.5%   n_eff      Rhat</span></span>
+<span><span class="co">#&gt; w_out[1] -0.2259656 -0.1443487 3.49485 1.0850253</span></span>
+<span><span class="co">#&gt; w_out[2]  0.4939612  0.5108619 3.49485 3.3897827</span></span>
+<span><span class="co">#&gt; b_out[1]  0.3776131  0.8233219 3.49485 3.0021945</span></span>
+<span><span class="co">#&gt; sigma     1.3519152  1.3876187 3.49485 0.7888898</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Fit Information:</span></span>
 <span><span class="co">#&gt; Iterations: 10 </span></span>
@@ -209,8 +207,8 @@ predictive performance.</p>
 <span><span class="co">#&gt; Chains: 1 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictive Performance:</span></span>
-<span><span class="co">#&gt; RMSE (training): 0.8624338 </span></span>
-<span><span class="co">#&gt; MAE (training): 0.6994271 </span></span>
+<span><span class="co">#&gt; RMSE (training): 0.7120133 </span></span>
+<span><span class="co">#&gt; MAE (training): 0.576182 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; Check convergence diagnostics for parameters with high R-hat values.</span></span></code></pre></div>
@@ -256,10 +254,10 @@ function.</p>
 <span><span class="va">metrics_reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measure_cont.html">measure_cont</a></span><span class="op">(</span>obs <span class="op">=</span> <span class="va">test_y</span>, pred <span class="op">=</span> <span class="va">pred_reg</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">metrics_reg</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $rmse</span></span>
-<span><span class="co">#&gt; [1] 0.8597093</span></span>
+<span><span class="co">#&gt; [1] 0.8633352</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $mae</span></span>
-<span><span class="co">#&gt; [1] 0.7284594</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.7396594</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="binary-classification-evaluation">Binary Classification Evaluation<a class="anchor" aria-label="anchor" href="#binary-classification-evaluation"></a>
@@ -333,7 +331,7 @@ weights.</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
