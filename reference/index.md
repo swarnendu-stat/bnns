@@ -8,6 +8,14 @@
 - [`bnns(`*`<default>`*`)`](https://swarnendu-stat.github.io/bnns/reference/bnns.default.md)
   : Bayesian Neural Network Model Using Formula(default) Interface
 
+- [`L()`](https://swarnendu-stat.github.io/bnns/reference/bnns_params.md)
+  [`warmup()`](https://swarnendu-stat.github.io/bnns/reference/bnns_params.md)
+  [`chains()`](https://swarnendu-stat.github.io/bnns/reference/bnns_params.md)
+  [`iter()`](https://swarnendu-stat.github.io/bnns/reference/bnns_params.md)
+  [`nodes()`](https://swarnendu-stat.github.io/bnns/reference/bnns_params.md)
+  [`act_fn()`](https://swarnendu-stat.github.io/bnns/reference/bnns_params.md)
+  : Parameter functions for Bayesian Neural Networks
+
 - [`load_bnns()`](https://swarnendu-stat.github.io/bnns/reference/load_bnns.md)
   : Load a fitted bnns model from disk
 
