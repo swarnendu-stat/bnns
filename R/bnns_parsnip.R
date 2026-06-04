@@ -32,6 +32,10 @@ post_pred_prob <- function(results, object) {
 #'
 #' @param force Logical. Force registration even if already registered.
 #' @param model Character. The parsnip model name to register. Default is `"mlp"`.
+if (getRversion() >= "2.15.1") {
+  utils::globalVariables(c("object", "new_data"))
+}
+
 #' @keywords internal
 #' @noRd
 register_bnns_parsnip <- function(force = FALSE, model = "mlp") {

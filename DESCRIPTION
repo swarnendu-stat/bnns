@@ -13,16 +13,21 @@ Suggests:
     cmdstanr,
     covr,
     dials,
+    dplyr,
     ggplot2,
     knitr,
     mlbench,
     OpenCL,
     parsnip (>= 1.0.0),
     ranger,
+    recipes,
     rlang,
     rmarkdown,
     rsample,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tidymodels,
+    tune,
+    workflows
 Config/testthat/edition: 3
 Imports: 
     BH,
