@@ -35,9 +35,8 @@ jobs:
           extra-packages: any::rcmdcheck, any::devtools
           needs: check
 
-      - name: Install cmdstanr and CmdStan
+      - name: Install CmdStan
         run: |
-          install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
           cmdstanr::install_cmdstan(cores = 2)
         shell: Rscript {0}
 

@@ -38,3 +38,4 @@ BugReports: https://github.com/swarnendu-stat/bnns/issues
 VignetteBuilder: knitr
 Config/Needs/website: rmarkdown
 Config/roxygen2/version: 8.0.0
+Additional_repositories: https://mc-stan.org/r-packages/
