@@ -43,7 +43,6 @@ For each dataset, we:
 3. Evaluate the model's predictive performance.
 4. To compare, show the performance of the randomforest algorithm from `ranger` package with default settings.
 
----
 
 ## Regression: Friedman1 Dataset
 
@@ -101,7 +100,6 @@ friedman1_rf_pred <- predict(
 measure_cont(friedman1_test$y, friedman1_rf_pred$predictions)
 ```
 
----
 
 ## Binary Classification: Spirals  Dataset
 
@@ -134,8 +132,8 @@ spirals_bnn <- bnns(y ~ -1 + .,
 ### Model Evaluation
 ```{r binary-evaluation}
 # Making predictions and calculating binary classification metrics (e.g., AUC)
-spirals_bnn_pred <- predict(spirals_bnn, spirals_test, type = "mean")
-measure_bin(spirals_test$y, spirals_bnn_pred)
+spirals_bnn_pred <- predict(spirals_bnn, spirals_test)
+bnns::measure_bin(spirals_test$y, spirals_bnn_pred)
 ```
 
 ### Model Comparison
@@ -186,7 +184,7 @@ waveform_bnn <- bnns(y ~ -1 + .,
 ```{r multi-evaluation}
 # Making predictions and evaluating multi-class classification metrics
 waveform_bnn_pred <- predict(waveform_bnn, waveform_test)
-measure_cat(waveform_test$y, waveform_bnn_pred)
+bnns::measure_cat(waveform_test$y, waveform_bnn_pred)
 ```
 
 ### Model Comparison

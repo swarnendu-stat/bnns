@@ -1,577 +1,278 @@
-#' Internal function to generate Stan Code Based on Output Activation Function
+#' Generate Stan code for a Bayesian Neural Network
 #'
-#' This function serves as a wrapper to generate Stan code for Bayesian neural networks
-#' tailored to different types of response variables. Based on the specified output
-#' activation function (`out_act_fn`), it delegates the code generation to the
-#' appropriate function for continuous, binary, or categorical response models.
+#' This function dynamically generates the Stan code for a BNN based on the
+#' specified architecture and priors.
 #'
-#' @param num_layers An integer specifying the number of hidden layers in the neural network.
-#' @param nodes A vector of integers, where each element specifies the number of nodes
-#'   in the corresponding hidden layer. The length of the vector must match `num_layers`.
-#' @param out_act_fn An integer specifying the output activation function, determining
-#'   the type of response variable. Supported values are:
-#'   - `1`: Continuous response (identity function as output layer).
-#'   - `2`: Binary response (sigmoid function as output layer).
-#'   - `3`: Categorical response (softmax function as output layer).
-#'
-#' @return A character string containing the Stan code for the specified Bayesian neural network model.
-#'   The Stan model includes data, parameters, transformed parameters, and model blocks,
-#'   adjusted based on the specified response type.
-#'
-#' @details
-#' This function dynamically calls one of the following functions based on the value of `out_act_fn`:
-#' - **Continuous response:** Calls `generate_stan_code_cont`.
-#' - **Binary response:** Calls `generate_stan_code_bin`.
-#' - **Categorical response:** Calls `generate_stan_code_cat`.
-#'
-#' If an unsupported value is provided for `out_act_fn`, the function throws an error.
-#' The generated Stan code is adapted for the response type, including appropriate
-#' likelihood functions and transformations.
-#'
-#' @examples
-#' # Generate Stan code for a continuous response model
-#' stan_code <- generate_stan_code(num_layers = 2, nodes = c(10, 5), out_act_fn = 1)
-#' cat(stan_code)
-#'
-#' # Generate Stan code for a binary response model
-#' stan_code <- generate_stan_code(num_layers = 2, nodes = c(10, 5), out_act_fn = 2)
-#' cat(stan_code)
-#'
-#' # Generate Stan code for a categorical response model
-#' stan_code <- generate_stan_code(num_layers = 2, nodes = c(10, 5), out_act_fn = 3)
-#' cat(stan_code)
-#'
-#' @seealso
-#' - [generate_stan_code_cont]: For continuous response models.
-#' - [generate_stan_code_bin]: For binary response models.
-#' - [generate_stan_code_cat]: For categorical response models.
-#'
-#' @export
+#' @param num_layers Number of hidden layers.
+#' @param nodes Vector of nodes for each hidden layer.
+#' @param out_act_fn Integer code for the output activation function.
+#' @param prior_weights_dist Character string for the weight prior distribution.
+#' @return A character string containing the full Stan model code.
 #' @keywords internal
-
-generate_stan_code <- function(num_layers, nodes, out_act_fn = 1) {
-  if (out_act_fn == 1) {
-    return(generate_stan_code_cont(num_layers = num_layers, nodes = nodes))
+#' @noRd
+generate_stan_code <- function(num_layers, nodes, out_act_fn, prior_weights_dist = "normal") {
+  # --- Data Block ---
+  data_block <- "
+data {
+  int<lower=1> n; // Number of observations
+  int<lower=1> m; // Number of features
+  int<lower=1> L; // Number of hidden layers
+  array[L] int nodes; // Nodes per layer
+  matrix[n, m] X; // Input matrix
+  "
+  if (out_act_fn == 3) {
+    data_block <- paste0(data_block, "  array[n] int y; // Output vector for multiclass\n")
+    data_block <- paste0(data_block, "  int<lower=1> K; // Number of classes\n")
   } else if (out_act_fn == 2) {
-    return(generate_stan_code_bin(num_layers = num_layers, nodes = nodes))
-  } else if (out_act_fn == 3) {
-    return(generate_stan_code_cat(num_layers = num_layers, nodes = nodes))
+    data_block <- paste0(data_block, "  array[n] int y; // Output vector for binary\n")
   } else {
-    stop("This output activation layer is not currently supported")
+    data_block <- paste0(data_block, "  vector[n] y; // Output vector for regression\n")
   }
+  data_block <- paste0(data_block, "  array[L] int act_fn; // Activation functions\n")
+  data_block <- paste0(data_block, "  int out_act_fn; // Output activation function\n")
+  data_block <- paste0(data_block, "}\n")
+
+  # --- Parameters Block ---
+  params_block <- "parameters {\n"
+  # Hidden layer parameters
+  for (l in 1:num_layers) {
+    rows <- ifelse(l == 1, "m", paste0("nodes[", l - 1, "]"))
+    cols <- paste0("nodes[", l, "]")
+    if (prior_weights_dist == "horseshoe") {
+      params_block <- paste0(params_block, sprintf("  vector[%s * %s] w%d_raw;\n", rows, cols, l))
+      params_block <- paste0(params_block, sprintf("  vector<%s=0>[%s * %s] lambda_w%d;\n", "lower", rows, cols, l))
+      params_block <- paste0(params_block, sprintf("  real<%s=0> tau_w%d;\n", "lower", l))
+    } else {
+      params_block <- paste0(params_block, sprintf("  matrix[%s, %s] w%d;\n", rows, cols, l))
+    }
+    params_block <- paste0(params_block, sprintf("  vector[%s] b%d;\n", cols, l))
+  }
+  # Output layer parameters
+  rows_out <- paste0("nodes[", num_layers, "]")
+  cols_out <- ifelse(out_act_fn == 3, "K", "1")
+  if (prior_weights_dist == "horseshoe") {
+    params_block <- paste0(params_block, sprintf("  vector[%s * %s] w_out_raw;\n", rows_out, cols_out))
+    params_block <- paste0(params_block, sprintf("  vector<%s=0>[%s * %s] lambda_w_out;\n", "lower", rows_out, cols_out))
+    params_block <- paste0(params_block, "  real<lower=0> tau_w_out;\n")
+  } else {
+    if (out_act_fn == 3) {
+      params_block <- paste0(params_block, sprintf("  matrix[%s, %s] w_out;\n", rows_out, cols_out))
+    } else {
+      params_block <- paste0(params_block, sprintf("  vector[%s] w_out;\n", rows_out))
+    }
+  }
+  params_block <- paste0(params_block, sprintf("  vector[%s] b_out;\n", cols_out))
+  # Sigma for regression
+  if (out_act_fn == 1) {
+    params_block <- paste0(params_block, "  real<lower=0> sigma;\n")
+  }
+  params_block <- paste0(params_block, "}\n")
+
+  # --- Transformed Parameters Block ---
+  tparams_block <- ""
+  if (prior_weights_dist == "horseshoe") {
+    tparams_block <- "transformed parameters {\n"
+    # Reconstruct hidden layer weights
+    for (l in 1:num_layers) {
+      rows <- ifelse(l == 1, "m", paste0("nodes[", l - 1, "]"))
+      cols <- paste0("nodes[", l, "]")
+      tparams_block <- paste0(tparams_block, sprintf("  matrix[%s, %s] w%d = to_matrix(w%d_raw .* lambda_w%d * tau_w%d, %s, %s);\n", rows, cols, l, l, l, l, rows, cols))
+    }
+    # Reconstruct output layer weights
+    rows_out <- paste0("nodes[", num_layers, "]")
+    cols_out <- ifelse(out_act_fn == 3, "K", "1")
+    if (out_act_fn == 3) {
+      tparams_block <- paste0(tparams_block, sprintf("  matrix[%s, %s] w_out = to_matrix(w_out_raw .* lambda_w_out * tau_w_out, %s, %s);\n", rows_out, cols_out, rows_out, cols_out))
+    } else {
+      tparams_block <- paste0(tparams_block, sprintf("  vector[%s] w_out = w_out_raw .* lambda_w_out * tau_w_out;\n", rows_out))
+    }
+    tparams_block <- paste0(tparams_block, "}\n")
+  }
+
+  # --- Model Block ---
+  model_block <- "model {\n"
+  # Priors
+  for (l in 1:num_layers) {
+    if (prior_weights_dist == "horseshoe") {
+      model_block <- paste0(model_block, sprintf("  w%d_raw ~ normal(0, 1);\n", l))
+      model_block <- paste0(model_block, sprintf("  lambda_w%d ~ cauchy(0, 1);\n", l))
+      model_block <- paste0(model_block, sprintf("  tau_w%d ~ cauchy(0, 1);\n", l))
+    } else {
+      model_block <- paste0(model_block, sprintf("  to_vector(w%d) ~ PRIOR_WEIGHT;\n", l))
+    }
+    model_block <- paste0(model_block, sprintf("  b%d ~ PRIOR_BIAS;\n", l))
+  }
+  if (prior_weights_dist == "horseshoe") {
+    model_block <- paste0(model_block, "  w_out_raw ~ normal(0, 1);\n")
+    model_block <- paste0(model_block, "  lambda_w_out ~ cauchy(0, 1);\n")
+    model_block <- paste0(model_block, "  tau_w_out ~ cauchy(0, 1);\n")
+  } else {
+    if (out_act_fn == 3) {
+      model_block <- paste0(model_block, "  to_vector(w_out) ~ PRIOR_WEIGHT;\n")
+    } else {
+      model_block <- paste0(model_block, "  w_out ~ PRIOR_WEIGHT;\n")
+    }
+  }
+  model_block <- paste0(model_block, "  b_out ~ PRIOR_BIAS;\n")
+
+  if (out_act_fn == 1) {
+    model_block <- paste0(model_block, "  sigma ~ PRIOR_SIGMA;\n")
+  }
+
+  # Forward pass logic
+  model_block <- paste0(model_block, "
+  // Forward pass
+  matrix[n, nodes[1]] z1 = X * w1 + rep_matrix(b1', n);
+  matrix[n, nodes[1]] a1 = z1; // Placeholder
+  ")
+
+  # Activation function logic for first layer
+  model_block <- paste0(model_block, "
+  if (act_fn[1] == 1) a1 = tanh(z1);
+  if (act_fn[1] == 2) a1 = inv_logit(z1);
+  if (act_fn[1] == 3) a1 = log1p_exp(z1);
+  if (act_fn[1] == 4) a1 = fmax(0, z1);
+  // if act_fn[1] == 5, it remains linear (a1=z1)
+  ")
+
+  # Subsequent hidden layers
+  if (num_layers > 1) {
+    for (l in 2:num_layers) {
+      model_block <- paste0(model_block, sprintf("
+  matrix[n, nodes[%d]] z%d = a%d * w%d + rep_matrix(b%d', n);
+  matrix[n, nodes[%d]] a%d = z%d; // Placeholder
+      ", l, l, l - 1, l, l, l, l, l))
+      model_block <- paste0(model_block, sprintf("
+  if (act_fn[%d] == 1) a%d = tanh(z%d);
+  if (act_fn[%d] == 2) a%d = inv_logit(z%d);
+  if (act_fn[%d] == 3) a%d = log1p_exp(z%d);
+  if (act_fn[%d] == 4) a%d = fmax(0, z%d);
+      ", l, l, l, l, l, l, l, l, l, l, l, l))
+    }
+  }
+
+  # Output layer and likelihood
+  last_a <- paste0("a", num_layers)
+  if (out_act_fn == 3) { # Multiclass
+    model_block <- paste0(model_block, sprintf("
+  matrix[n, K] out_layer = %s * w_out + rep_matrix(b_out', n);
+  for (i in 1:n) {
+    y[i] ~ categorical_logit(out_layer[i]');
+  }
+", last_a))
+  } else { # Regression or Binary
+    model_block <- paste0(model_block, sprintf("
+  vector[n] out_layer = %s * w_out + rep_vector(b_out[1], n);
+", last_a))
+    if (out_act_fn == 1) { # Regression
+      model_block <- paste0(model_block, "  y ~ normal(out_layer, sigma);\n")
+    } else { # Binary
+      model_block <- paste0(model_block, "  y ~ bernoulli_logit(out_layer);\n")
+    }
+  }
+  model_block <- paste0(model_block, "}\n")
+
+  # --- Generated Quantities Block ---
+  gq_block <- "
+generated quantities {
+  vector[n] log_lik;
+"
+  gq_block <- paste0(gq_block, if (out_act_fn == 1) "  vector[n] y_rep;\n" else "  array[n] int y_rep;\n")
+  gq_block <- paste0(gq_block, "
+  {
+    // Re-calculate forward pass to get final predictions
+    matrix[n, nodes[1]] z1 = X * w1 + rep_matrix(b1', n);
+    matrix[n, nodes[1]] a1 = z1;
+    if (act_fn[1] == 1) a1 = tanh(z1);
+    if (act_fn[1] == 2) a1 = inv_logit(z1);
+    if (act_fn[1] == 3) a1 = log1p_exp(z1);
+    if (act_fn[1] == 4) a1 = fmax(0, z1);
+")
+
+  if (num_layers > 1) {
+    for (l in 2:num_layers) {
+      gq_block <- paste0(gq_block, sprintf("
+    matrix[n, nodes[%d]] z%d = a%d * w%d + rep_matrix(b%d', n);
+    matrix[n, nodes[%d]] a%d = z%d;
+    if (act_fn[%d] == 1) a%d = tanh(z%d);
+    if (act_fn[%d] == 2) a%d = inv_logit(z%d);
+    if (act_fn[%d] == 3) a%d = log1p_exp(z%d);
+    if (act_fn[%d] == 4) a%d = fmax(0, z%d);
+", l, l, l - 1, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l))
+    }
+  }
+
+  if (out_act_fn == 3) { # Multiclass
+    gq_block <- paste0(gq_block, sprintf("
+    matrix[n, K] y_hat_mat = %s * w_out + rep_matrix(b_out', n);
+    for (i in 1:n) {
+      log_lik[i] = categorical_logit_lpmf(y[i] | y_hat_mat[i]');
+      y_rep[i] = categorical_rng(softmax(y_hat_mat[i]'));
+    }
+", last_a))
+  } else { # Regression or Binary
+    gq_block <- paste0(gq_block, sprintf("
+    vector[n] y_hat = %s * w_out + rep_vector(b_out[1], n);
+", last_a))
+    if (out_act_fn == 1) { # Regression
+      gq_block <- paste0(gq_block, "
+    for (i in 1:n) {
+      log_lik[i] = normal_lpdf(y[i] | y_hat[i], sigma);
+      y_rep[i] = normal_rng(y_hat[i], sigma);
+    }
+")
+    } else { # Binary
+      gq_block <- paste0(gq_block, "
+    for (i in 1:n) {
+      log_lik[i] = bernoulli_logit_lpmf(y[i] | y_hat[i]);
+      y_rep[i] = bernoulli_rng(inv_logit(y_hat[i]));
+    }
+")
+    }
+  }
+  gq_block <- paste0(gq_block, "  }\n}\n")
+
+  # --- Combine Blocks ---
+  full_model_code <- paste0(data_block, params_block, tparams_block, model_block, gq_block)
+
+  return(full_model_code)
 }
 
-#' Internal function to generate Stan Code for Continuous Response Models
-#'
-#' This function generates Stan code for a Bayesian neural network model
-#' designed to predict continuous response variables. The Stan code is dynamically
-#' constructed based on the specified number of hidden layers and nodes per layer.
-#' It supports various activation functions for the hidden layers, including
-#' tanh, sigmoid, softplus and relu.
-#'
-#' @param num_layers An integer specifying the number of hidden layers in the neural network.
-#' @param nodes A vector of integers, where each element specifies the number of nodes
-#'   in the corresponding hidden layer. The length of the vector must match `num_layers`.
-#'
-#' @return A character string containing the Stan code for the specified Bayesian neural network model.
-#'   The Stan model includes data, parameters, transformed parameters, and model blocks.
-#'   The code is adjusted based on whether the network has one or multiple hidden layers.
-#'
-#' @details
-#' The generated Stan code models a continuous response variable using a neural network.
-#' The hidden layers apply the specified activation functions, while the output layer
-#' performs a linear transformation to predict the response. The likelihood assumes
-#' normally distributed residuals.
-#'
-#' - **For one hidden layer:** The function simplifies the Stan code structure.
-#' - **For multiple hidden layers:** The code dynamically includes additional layers
-#'   based on the input arguments.
-#'
-#' Supported activation functions for the hidden layers:
-#' - 1: Tanh
-#' - 2: Sigmoid
-#' - 3: Softplus
-#' - 4: ReLU
-#' - 5: linear
-#'
-#' @examples
-#' # Generate Stan code for a single hidden layer with 10 nodes
-#' stan_code <- generate_stan_code_cont(1, c(10))
-#' cat(stan_code)
-#'
-#' # Generate Stan code for two hidden layers with 8 and 4 nodes
-#' stan_code <- generate_stan_code_cont(2, c(8, 4))
-#' cat(stan_code)
-#'
-#' @export
+#' Generate Stan code for regression
 #' @keywords internal
-
+#' @noRd
 generate_stan_code_cont <- function(num_layers, nodes) {
-  if (length(nodes) != num_layers || any(nodes <= 0)) {
-    stop("Ensure 'nodes' length matches 'num_layers' and all values are positive")
+  if (length(nodes) != num_layers) {
+    stop("The length of 'nodes' must match the number of hidden layers 'num_layers'.")
   }
-
-  if (num_layers == 1) {
-    return("data {
-  int<lower=1> n;
-  int<lower=1> m;
-  int<lower=1> L;
-  int<lower=1> nodes;
-  matrix[n, m] X;
-  vector[n] y;
-  int<lower=1> act_fn;
-}
-
-parameters {
-  matrix[m, nodes] w1;
-  vector[nodes] b1;
-  vector[nodes] w_out;
-  real b_out;
-  real<lower=0> sigma;
-}
-
-transformed parameters {
-  matrix[n, nodes] z1;
-  matrix[n, nodes] a1;
-  vector[n] y_hat;
-
-  z1 = X * w1 + rep_matrix(b1', n);
-  if (act_fn == 1) a1 = tanh(z1);
-  else if (act_fn == 2) a1 = inv_logit(z1);
-  else if (act_fn == 3) a1 = log(1 + exp(z1));
-  else if (act_fn == 4) a1 = fmax(rep_matrix(0, n, nodes), z1);
-  else a1 = z1;
-
-  y_hat = a1 * w_out + b_out;
-}
-
-model {
-  to_vector(w1) ~ PRIOR_WEIGHT;
-  b1 ~ PRIOR_BIAS;
-  w_out ~ PRIOR_WEIGHT;
-  b_out ~ PRIOR_BIAS;
-  sigma ~ PRIOR_SIGMA;
-  y ~ normal(y_hat, sigma);
-}
-")
-  } else {
-    # Initialize sections
-    sections <- list()
-
-    # Data block
-    sections$data <- "
-data {
-  int<lower=1> n;
-  int<lower=1> m;
-  int<lower=1> L;
-  int<lower=1> nodes[L];
-  matrix[n, m] X;
-  vector[n] y;
-  int<lower=1> act_fn[L];
-}"
-
-    # Parameters block
-    params <- c("parameters {", "  matrix[m, nodes[1]] w1;", "  vector[nodes[1]] b1;")
-    for (l in seq(2, num_layers)) {
-      params <- c(
-        params,
-        paste0("  matrix[nodes[", l - 1, "], nodes[", l, "]] w", l, ";"),
-        paste0("  vector[nodes[", l, "]] b", l, ";")
-      )
-    }
-    params <- c(params, "  vector[nodes[L]] w_out;", "  real b_out;", "  real<lower=0> sigma;", "}")
-    sections$params <- paste(params, collapse = "\n")
-
-    # Transformed parameters block
-    transformed <- c("transformed parameters {", "  matrix[n, nodes[1]] z1;", "  matrix[n, nodes[1]] a1;")
-
-    for (l in seq(2, num_layers)) {
-      transformed <- c(
-        transformed,
-        paste0("  matrix[n, nodes[", l, "]] z", l, ";"),
-        paste0("  matrix[n, nodes[", l, "]] a", l, ";")
-      )
-    }
-
-    transformed <- c(transformed, "  vector[n] y_hat;", "  z1 = X * w1 + rep_matrix(b1', n);")
-    for (l in seq(1, num_layers)) {
-      transformed <- c(
-        transformed,
-        paste0("  if (act_fn[", l, "] == 1) a", l, " = tanh(z", l, ");"),
-        paste0("  else if (act_fn[", l, "] == 2) a", l, " = inv_logit(z", l, ");"),
-        paste0("  else if (act_fn[", l, "] == 3) a", l, " = log(1 + exp(z", l, "));"),
-        paste0("  else if (act_fn[", l, "] == 4) a", l, " = fmax(rep_matrix(0, n, nodes[", l, "]), z", l, ");"),
-        paste0("  else a", l, " = z", l, ";")
-      )
-      if (l < num_layers) {
-        transformed <- c(
-          transformed,
-          paste0("  z", l + 1, " = a", l, " * w", l + 1, " + rep_matrix(b", l + 1, "', n);")
-        )
-      }
-    }
-    transformed <- c(transformed, paste0("  y_hat = a", num_layers, " * w_out + b_out;"), "}")
-    sections$transformed <- paste(transformed, collapse = "\n")
-
-    # Model block
-    model <- c("model {", "  to_vector(w1) ~ PRIOR_WEIGHT;", "  b1 ~ PRIOR_BIAS;")
-    for (l in seq(2, num_layers)) {
-      model <- c(
-        model,
-        paste0("  to_vector(w", l, ") ~ PRIOR_WEIGHT;"),
-        paste0("  b", l, " ~ PRIOR_BIAS;")
-      )
-    }
-
-    model <- c(model, "  w_out ~ PRIOR_WEIGHT;", "  b_out ~ PRIOR_BIAS;", "  sigma ~ PRIOR_SIGMA;", "  y ~ normal(y_hat, sigma);", "}")
-    sections$model <- paste(model, collapse = "\n")
-
-    # Combine all sections
-    stan_code <- paste(sections, collapse = "\n\n")
-    return(stan_code)
+  if (any(nodes < 1)) {
+    stop("The number of nodes in each hidden layer must be at least 1.")
   }
+  generate_stan_code(num_layers = num_layers, nodes = nodes, out_act_fn = 1)
 }
 
-#' Internal function to generate Stan Code for Binary Response Models
-#'
-#' This function generates Stan code for a Bayesian neural network model
-#' designed to predict binary response variables. The Stan code is dynamically
-#' constructed based on the specified number of hidden layers and nodes per layer.
-#' It supports various activation functions for the hidden layers, including
-#' tanh, sigmoid, softplus and relu. The model uses a Bernoulli likelihood for binary outcomes.
-#'
-#' @param num_layers An integer specifying the number of hidden layers in the neural network.
-#' @param nodes A vector of integers, where each element specifies the number of nodes
-#'   in the corresponding hidden layer. The length of the vector must match `num_layers`.
-#'
-#' @return A character string containing the Stan code for the specified Bayesian neural network model.
-#'   The Stan model includes data, parameters, transformed parameters, and model blocks.
-#'   The code is adjusted based on whether the network has one or multiple hidden layers.
-#'
-#' @details
-#' The generated Stan code models a binary response variable using a neural network.
-#' The hidden layers apply the specified activation functions, while the output layer
-#' applies the logistic function to predict the probability of the binary outcome.
-#'
-#' - **For one hidden layer:** The function simplifies the Stan code structure.
-#' - **For multiple hidden layers:** The code dynamically includes additional layers
-#'   based on the input arguments.
-#'
-#' Supported activation functions for the hidden layers:
-#' - 1: Tanh
-#' - 2: Sigmoid
-#' - 3: Softplus
-#' - 4: ReLU
-#' - 5: linear
-#'
-#' The output layer uses a logistic transformation (`inv_logit`) to constrain
-#' predictions between 0 and 1, which aligns with the Bernoulli likelihood.
-#'
-#' @examples
-#' # Generate Stan code for a single hidden layer with 10 nodes
-#' stan_code <- generate_stan_code_bin(1, c(10))
-#' cat(stan_code)
-#'
-#' # Generate Stan code for two hidden layers with 8 and 4 nodes
-#' stan_code <- generate_stan_code_bin(2, c(8, 4))
-#' cat(stan_code)
-#'
-#' @export
+#' Generate Stan code for binary classification
 #' @keywords internal
-
+#' @noRd
 generate_stan_code_bin <- function(num_layers, nodes) {
-  if (length(nodes) != num_layers || any(nodes <= 0)) {
-    stop("Ensure 'nodes' length matches 'num_layers' and all values are positive")
+  if (length(nodes) != num_layers) {
+    stop("The length of 'nodes' must match the number of hidden layers 'num_layers'.")
   }
-
-  if (num_layers == 1) {
-    return("data {
-  int<lower=1> n;
-  int<lower=1> m;
-  int<lower=1> L;
-  int<lower=1> nodes;
-  matrix[n, m] X;
-  array[n] int<lower=0, upper=1> y;
-  int<lower=1> act_fn;
-}
-
-parameters {
-  matrix[m, nodes] w1;
-  vector[nodes] b1;
-  vector[nodes] w_out;
-  real b_out;
-}
-
-transformed parameters {
-  matrix[n, nodes] z1;
-  matrix[n, nodes] a1;
-  vector[n] y_hat;
-
-  z1 = X * w1 + rep_matrix(b1', n);
-  if (act_fn == 1) a1 = tanh(z1);
-  else if (act_fn == 2) a1 = inv_logit(z1);
-  else if (act_fn == 3) a1 = log(1 + exp(z1));
-  else if (act_fn == 4) a1 = fmax(rep_matrix(0, n, nodes), z1);
-  else a1 = z1;
-
-  y_hat = a1 * w_out + b_out;
-}
-
-model {
-  to_vector(w1) ~ PRIOR_WEIGHT;
-  b1 ~ PRIOR_BIAS;
-  w_out ~ PRIOR_WEIGHT;
-  b_out ~ PRIOR_BIAS;
-  y ~ bernoulli_logit(y_hat);
-}
-")
-  } else {
-    # Initialize sections
-    sections <- list()
-
-    # Data block
-    sections$data <- "
-data {
-  int<lower=1> n;
-  int<lower=1> m;
-  int<lower=1> L;
-  int<lower=1> nodes[L];
-  matrix[n, m] X;
-  array[n] int<lower=0, upper=1> y;
-  int<lower=1> act_fn[L];
-}"
-
-    # Parameters block
-    params <- c("parameters {", "  matrix[m, nodes[1]] w1;", "  vector[nodes[1]] b1;")
-    for (l in seq(2, num_layers)) {
-      params <- c(
-        params,
-        paste0("  matrix[nodes[", l - 1, "], nodes[", l, "]] w", l, ";"),
-        paste0("  vector[nodes[", l, "]] b", l, ";")
-      )
-    }
-    params <- c(params, "  vector[nodes[L]] w_out;", "  real b_out;", "}")
-    sections$params <- paste(params, collapse = "\n")
-
-    # Transformed parameters block
-    transformed <- c("transformed parameters {", "  matrix[n, nodes[1]] z1;", "  matrix[n, nodes[1]] a1;")
-
-    for (l in seq(2, num_layers)) {
-      transformed <- c(
-        transformed,
-        paste0("  matrix[n, nodes[", l, "]] z", l, ";"),
-        paste0("  matrix[n, nodes[", l, "]] a", l, ";")
-      )
-    }
-
-    transformed <- c(transformed, "  vector[n] y_hat;", "  z1 = X * w1 + rep_matrix(b1', n);")
-    for (l in seq(1, num_layers)) {
-      transformed <- c(
-        transformed,
-        paste0("  if (act_fn[", l, "] == 1) a", l, " = tanh(z", l, ");"),
-        paste0("  else if (act_fn[", l, "] == 2) a", l, " = inv_logit(z", l, ");"),
-        paste0("  else if (act_fn[", l, "] == 3) a", l, " = log(1 + exp(z", l, "));"),
-        paste0("  else if (act_fn[", l, "] == 4) a", l, " = fmax(rep_matrix(0, n, nodes[", l, "]), z", l, ");"),
-        paste0("  else a", l, " = z", l, ";")
-      )
-      if (l < num_layers) {
-        transformed <- c(
-          transformed,
-          paste0("  z", l + 1, " = a", l, " * w", l + 1, " + rep_matrix(b", l + 1, "', n);")
-        )
-      }
-    }
-    transformed <- c(transformed, paste0("  y_hat = a", num_layers, " * w_out + b_out;"), "}")
-    sections$transformed <- paste(transformed, collapse = "\n")
-
-    # Model block
-    model <- c("model {", "  to_vector(w1) ~ PRIOR_WEIGHT;", "  b1 ~ PRIOR_BIAS;")
-    for (l in seq(2, num_layers)) {
-      model <- c(
-        model,
-        paste0("  to_vector(w", l, ") ~ PRIOR_WEIGHT;"),
-        paste0("  b", l, " ~ PRIOR_BIAS;")
-      )
-    }
-
-    model <- c(model, "  w_out ~ PRIOR_WEIGHT;", "  b_out ~ PRIOR_BIAS;", "  y ~ bernoulli_logit(y_hat);", "}")
-    sections$model <- paste(model, collapse = "\n")
-
-    # Combine all sections
-    stan_code <- paste(sections, collapse = "\n\n")
-    return(stan_code)
+  if (any(nodes < 1)) {
+    stop("The number of nodes in each hidden layer must be at least 1.")
   }
+  generate_stan_code(num_layers = num_layers, nodes = nodes, out_act_fn = 2)
 }
 
-#' Internal function to generate Stan Code for Neural Networks with Categorical Response
-#'
-#' This function generates Stan code for modeling a categorical response using
-#' neural networks with multiple layers. The generated code supports customizable
-#' activation functions for each layer and softmax-based prediction for the categorical output.
-#'
-#' @param num_layers Integer. Number of layers in the neural network.
-#' @param nodes Integer vector. Number of nodes in each layer. The length of
-#'   this vector must match `num_layers`, and all values must be positive.
-#'
-#' @return A string containing the Stan code for the specified neural network
-#'   architecture and categorical response model.
-#'
-#' @details
-#' The Stan code includes the following components:
-#' - **Data Block**: Defines inputs, response variable, layer configurations, and activation functions.
-#' - **Parameters Block**: Declares weights and biases for all layers and the output layer.
-#' - **Transformed Parameters Block**: Computes intermediate outputs (`z` and `a`) for each layer
-#'   and calculates the final predictions (`y_hat`) using the softmax function.
-#' - **Model Block**: Specifies priors for parameters and models the categorical response
-#'   using `categorical_logit`.
-#'
-#' Supported activation functions for the hidden layers:
-#' - 1: Tanh
-#' - 2: Sigmoid
-#' - 3: Softplus
-#' - 4: ReLU
-#' - 5: linear
-#'
-#' The categorical response (`y`) is assumed to take integer values from 1 to `K`,
-#' where `K` is the total number of categories.
-#'
-#' @examples
-#' # Generate Stan code for a neural network with 3 layers
-#' num_layers <- 3
-#' nodes <- c(10, 8, 6) # 10 nodes in the first layer, 8 in the second, 6 in the third
-#' stan_code <- generate_stan_code_cat(num_layers, nodes)
-#' cat(stan_code)
-#'
-#' @seealso [generate_stan_code_bin()], [generate_stan_code_cont()]
-#'
-#' @export
+#' Generate Stan code for multiclass classification
 #' @keywords internal
-
+#' @noRd
 generate_stan_code_cat <- function(num_layers, nodes) {
-  if (length(nodes) != num_layers || any(nodes <= 0)) {
-    stop("Ensure 'nodes' length matches 'num_layers' and all values are positive")
+  if (length(nodes) != num_layers) {
+    stop("The length of 'nodes' must match the number of hidden layers 'num_layers'.")
   }
-
-  if (num_layers == 1) {
-    return("data {
-  int<lower=1> n;
-  int<lower=1> m;
-  int<lower=1> L;
-  int<lower=1> nodes;
-  matrix[n, m] X;
-  array[n] int<lower=1> y;
-  int<lower=2> K; // Number of categories
-  int<lower=1> act_fn;
-}
-
-parameters {
-  matrix[m, nodes] w1;
-  vector[nodes] b1;
-  matrix[nodes, K] w_out;
-  vector[K] b_out;
-}
-
-transformed parameters {
-  matrix[n, nodes] z1;
-  matrix[n, nodes] a1;
-  matrix[n, K] y_hat;
-
-  z1 = X * w1 + rep_matrix(b1', n);
-  if (act_fn == 1) a1 = tanh(z1);
-  else if (act_fn == 2) a1 = inv_logit(z1);
-  else if (act_fn == 3) a1 = log(1 + exp(z1));
-  else if (act_fn == 4) a1 = fmax(rep_matrix(0, n, nodes), z1);
-  else a1 = z1;
-
-  y_hat = a1 * w_out + rep_matrix(b_out', n);
-}
-
-model {
-  to_vector(w1) ~ PRIOR_WEIGHT;
-  b1 ~ PRIOR_BIAS;
-  to_vector(w_out) ~ PRIOR_WEIGHT;
-  b_out ~ PRIOR_BIAS;
-  for (i in 1:n) y[i] ~ categorical_logit(y_hat[i]');
-}
-")
-  } else {
-    # Initialize sections
-    sections <- list()
-
-    # Data block
-    sections$data <- "
-data {
-  int<lower=1> n;
-  int<lower=1> m;
-  int<lower=1> L;
-  int<lower=1> nodes[L];
-  matrix[n, m] X;
-  array[n] int<lower=1> y;
-  int<lower=1> act_fn[L];
-  int<lower=2> K; // Number of categories
-}"
-
-    # Parameters block
-    params <- c("parameters {", "  matrix[m, nodes[1]] w1;", "  vector[nodes[1]] b1;")
-    for (l in seq(2, num_layers)) {
-      params <- c(
-        params,
-        paste0("  matrix[nodes[", l - 1, "], nodes[", l, "]] w", l, ";"),
-        paste0("  vector[nodes[", l, "]] b", l, ";")
-      )
-    }
-    params <- c(params, "  matrix[nodes[L], K] w_out;", "  vector[K] b_out;", "}")
-    sections$params <- paste(params, collapse = "\n")
-
-    # Transformed parameters block
-    transformed <- c("transformed parameters {", "  matrix[n, nodes[1]] z1;", "  matrix[n, nodes[1]] a1;")
-
-    for (l in seq(2, num_layers)) {
-      transformed <- c(
-        transformed,
-        paste0("  matrix[n, nodes[", l, "]] z", l, ";"),
-        paste0("  matrix[n, nodes[", l, "]] a", l, ";")
-      )
-    }
-
-    transformed <- c(transformed, "  matrix[n, K] y_hat;", "  z1 = X * w1 + rep_matrix(b1', n);")
-    for (l in seq(1, num_layers)) {
-      transformed <- c(
-        transformed,
-        paste0("  if (act_fn[", l, "] == 1) a", l, " = tanh(z", l, ");"),
-        paste0("  else if (act_fn[", l, "] == 2) a", l, " = inv_logit(z", l, ");"),
-        paste0("  else if (act_fn[", l, "] == 3) a", l, " = log(1 + exp(z", l, "));"),
-        paste0("  else if (act_fn[", l, "] == 4) a", l, " = fmax(rep_matrix(0, n, nodes[", l, "]), z", l, ");"),
-        paste0("  else a", l, " = z", l, ";")
-      )
-      if (l < num_layers) {
-        transformed <- c(
-          transformed,
-          paste0("  z", l + 1, " = a", l, " * w", l + 1, " + rep_matrix(b", l + 1, "', n);")
-        )
-      }
-    }
-    transformed <- c(transformed, paste0("  y_hat = a", num_layers, " * w_out + rep_matrix(b_out', n);"), "}")
-    sections$transformed <- paste(transformed, collapse = "\n")
-
-    # Model block
-    model <- c("model {", "  to_vector(w1) ~ PRIOR_WEIGHT;", "  b1 ~ PRIOR_BIAS;")
-    for (l in seq(2, num_layers)) {
-      model <- c(
-        model,
-        paste0("  to_vector(w", l, ") ~ PRIOR_WEIGHT;"),
-        paste0("  b", l, " ~ PRIOR_BIAS;")
-      )
-    }
-
-    model <- c(
-      model, "  to_vector(w_out) ~ PRIOR_WEIGHT;", "  b_out ~ PRIOR_BIAS;",
-      "  for (i in 1:n) y[i] ~ categorical_logit(y_hat[i]');", "}"
-    )
-    sections$model <- paste(model, collapse = "\n")
-
-    # Combine all sections
-    stan_code <- paste(sections, collapse = "\n\n")
-    return(stan_code)
+  if (any(nodes < 1)) {
+    stop("The number of nodes in each hidden layer must be at least 1.")
   }
+  generate_stan_code(num_layers = num_layers, nodes = nodes, out_act_fn = 3)
 }

@@ -30,7 +30,7 @@
 #'   The list must include two components:
 #'   \itemize{
 #'     \item \code{dist}: A character string specifying the distribution type. Supported values are
-#'       \code{"normal"}, \code{"uniform"}, and \code{"cauchy"}.
+#'       \code{"normal"}, \code{"uniform"}, \code{"cauchy"}, and \code{"horseshoe"}.
 #'     \item \code{params}: A named list specifying the parameters for the chosen distribution:
 #'       \itemize{
 #'         \item For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
@@ -38,6 +38,7 @@
 #'         \item For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
 #'       }
 #'   }
+#'   For the \code{"horseshoe"} prior, `params` is not needed as it uses a standard half-Cauchy setup.
 #'   If \code{prior_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
 #'   For example:
 #'   \itemize{
@@ -49,7 +50,7 @@
 #'   The list must include two components:
 #'   \itemize{
 #'     \item \code{dist}: A character string specifying the distribution type. Supported values are
-#'       \code{"normal"}, \code{"uniform"}, and \code{"cauchy"}.
+#'       \code{"normal"}, \code{"uniform"}, \code{"cauchy"}, and \code{"horseshoe"}.
 #'     \item \code{params}: A named list specifying the parameters for the chosen distribution:
 #'       \itemize{
 #'         \item For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
@@ -90,6 +91,9 @@
 #'   the input scale, which is particularly beneficial for neural network training.
 #'   If `FALSE`, no normalization is applied, and it is assumed that the input data
 #'   is already pre-processed appropriately.
+#' @param backend A character string specifying the Stan backend to use. Options are \code{"rstan"} (default) or \code{"cmdstanr"}.
+#' @param use_gpu Logical. If \code{TRUE}, enables OpenCL for GPU acceleration. Default is \code{FALSE}. (Requires the \code{"cmdstanr"} backend).
+#' @param opencl_ids A vector of two integers specifying the OpenCL platform and device IDs. Default is \code{c(0, 0)}.
 #' @param ... Currently not in use.
 #'
 #' @return The result of the method dispatched by the class of the input data. Typically, this would be an object of class \code{"bnns"} containing the fitted model and associated information.
@@ -120,8 +124,57 @@ bnns <- function(formula, data, L = 1, nodes = rep(2, L),
                  act_fn = rep(2, L), out_act_fn = 1, iter = 1e3, warmup = 2e2,
                  thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
                  prior_bias = NULL, prior_sigma = NULL, verbose = FALSE,
-                 refresh = max(iter / 10, 1), normalize = TRUE, ...) {
+                 refresh = max(iter / 10, 1), normalize = TRUE, 
+                 backend = c("rstan", "cmdstanr"),
+                 use_gpu = FALSE, opencl_ids = c(0, 0), ...) {
   UseMethod("bnns")
+}
+
+# Environment to cache compiled Stan models for the duration of the R session
+.stan_model_cache <- new.env(parent = emptyenv())
+
+#' Get or compile a Stan model
+#' @keywords internal
+#' @noRd
+get_or_compile_stan_model <- function(stan_code) {
+  code_hash <- digest::digest(stan_code, algo = "md5")
+  
+  if (!is.null(.stan_model_cache[[code_hash]])) {
+    return(.stan_model_cache[[code_hash]])
+  }
+  
+  model <- rstan::stan_model(model_code = stan_code)
+  .stan_model_cache[[code_hash]] <- model
+  return(model)
+}
+
+#' Get or compile a CmdStan model
+#' @keywords internal
+#' @noRd
+get_or_compile_cmdstan_model <- function(stan_code, use_gpu = FALSE) {
+  hash_input <- list(code = stan_code, use_gpu = use_gpu)
+  code_hash <- digest::digest(hash_input, algo = "md5")
+  
+  if (!is.null(.stan_model_cache[[code_hash]])) {
+    return(.stan_model_cache[[code_hash]])
+  }
+  
+  cache_dir <- tools::R_user_dir("bnns", which = "cache")
+  if (!dir.exists(cache_dir)) dir.create(cache_dir, recursive = TRUE)
+  
+  stan_file <- file.path(cache_dir, paste0("model_", code_hash, ".stan"))
+  if (!file.exists(stan_file)) {
+    writeLines(stan_code, stan_file)
+  }
+  
+  cpp_options <- list()
+  if (use_gpu) {
+    cpp_options$stan_opencl <- TRUE
+  }
+
+  # cmdstanr automatically reuses the compiled executable if it exists next to the .stan file
+  .stan_model_cache[[code_hash]] <- cmdstanr::cmdstan_model(stan_file = stan_file, cpp_options = cpp_options)
+  return(.stan_model_cache[[code_hash]])
 }
 
 #' Internal function for training the BNN
@@ -165,6 +218,7 @@ bnns <- function(formula, data, L = 1, nodes = rep(2, L),
 #'         \item For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
 #'       }
 #'   }
+#'   For the \code{"horseshoe"} prior, `params` is not needed as it uses a standard half-Cauchy setup.
 #'   If \code{prior_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
 #'   For example:
 #'   \itemize{
@@ -217,6 +271,9 @@ bnns <- function(formula, data, L = 1, nodes = rep(2, L),
 #'   the input scale, which is particularly beneficial for neural network training.
 #'   If `FALSE`, no normalization is applied, and it is assumed that the input data
 #'   is already pre-processed appropriately.
+#' @param backend A character string specifying the Stan backend to use. Options are \code{"rstan"} (default) or \code{"cmdstanr"}.
+#' @param use_gpu Logical. If \code{TRUE}, enables OpenCL for GPU acceleration. Default is \code{FALSE}. (Requires the \code{"cmdstanr"} backend).
+#' @param opencl_ids A vector of two integers specifying the OpenCL platform and device IDs. Default is \code{c(0, 0)}.
 #' @param ... Currently not in use.
 #'
 #' @return An object of class \code{"bnns"} containing the following components:
@@ -250,7 +307,22 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
                        act_fn = rep(2, L), out_act_fn = 1, iter = 1e3, warmup = 2e2,
                        thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
                        prior_bias = NULL, prior_sigma = NULL, verbose = FALSE,
-                       refresh = max(iter / 10, 1), normalize = TRUE, ...) {
+                       refresh = max(iter / 10, 1), normalize = TRUE, 
+                       backend = c("rstan", "cmdstanr"),
+                       use_gpu = FALSE, opencl_ids = c(0, 0), ...) {
+  backend <- match.arg(backend)
+  if (use_gpu && backend != "cmdstanr") {
+    warning("GPU acceleration is only supported with the 'cmdstanr' backend. Switching backend to 'cmdstanr'.", call. = FALSE)
+    backend <- "cmdstanr"
+  }
+
+  if (use_gpu && backend == "cmdstanr" && requireNamespace("OpenCL", quietly = TRUE)) {
+    has_opencl <- tryCatch(length(OpenCL::oclPlatforms()) > 0, error = function(e) FALSE)
+    if (!has_opencl) {
+      warning("No OpenCL platforms found on this system. Falling back to CPU.", call. = FALSE)
+      use_gpu <- FALSE
+    }
+  }
   stopifnot("Argument train_x is missing" = !missing(train_x))
   stopifnot("Argument train_y is missing" = !missing(train_y))
   stopifnot("L must be a positive integer" = ((L %% 1 == 0) & (sign(L) == 1)))
@@ -272,7 +344,7 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
     stop("'prior_weights' must be a list with elements 'dist' and 'params'.")
   }
 
-  supported_distributions <- c("normal", "uniform", "cauchy")
+  supported_distributions <- c("normal", "uniform", "cauchy", "horseshoe")
   if (!(prior_weights$dist %in% supported_distributions)) {
     stop(paste(
       "Unsupported distribution for weights:", prior_weights$dist,
@@ -303,6 +375,9 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
 
   # Validate parameters for the chosen distribution
   validate_prior <- function(dist, params) {
+    if (dist == "horseshoe") {
+      return() # No params to validate for horseshoe
+    }
     switch(dist,
       normal = {
         if (!all(c("mean", "sd") %in% names(params))) {
@@ -335,12 +410,15 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
   validate_prior(prior_weights$dist, prior_weights$params)
   validate_prior(prior_bias$dist, prior_bias$params)
 
-  # Replace PRIOR_SPECIFICATION with the appropriate Stan syntax
-  prior_specification_weights <- switch(prior_weights$dist,
-    normal = sprintf("normal(%f, %f)", prior_weights$params$mean, prior_weights$params$sd),
-    uniform = sprintf("uniform(%f, %f)", prior_weights$params$alpha, prior_weights$params$beta),
-    cauchy = sprintf("cauchy(%f, %f)", prior_weights$params$mu, prior_weights$params$sigma)
-  )
+  prior_specification_weights <- ""
+  if (prior_weights$dist != "horseshoe") {
+    # Replace PRIOR_SPECIFICATION with the appropriate Stan syntax
+    prior_specification_weights <- switch(prior_weights$dist,
+      normal = sprintf("normal(%f, %f)", prior_weights$params$mean, prior_weights$params$sd),
+      uniform = sprintf("uniform(%f, %f)", prior_weights$params$alpha, prior_weights$params$beta),
+      cauchy = sprintf("cauchy(%f, %f)", prior_weights$params$mu, prior_weights$params$sigma)
+    )
+  }
 
   prior_specification_bias <- switch(prior_bias$dist,
     normal = sprintf("normal(%f, %f)", prior_bias$params$mean, prior_bias$params$sd),
@@ -362,11 +440,11 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
       n = nrow(train_x), # Number of observations
       m = ncol(train_x), # Number of features
       L = L,
-      nodes = nodes, # Number of layers
+      nodes = as.array(nodes), # Number of layers
       X = train_x, # Input matrix
       y = as.numeric(train_y), # Output vector
       K = length(unique(train_y)),
-      act_fn = act_fn, # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
+      act_fn = as.array(act_fn), # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
       out_act_fn = out_act_fn # Activation function for the output layer (1 = linear, 2 = sigmoid, 3 = softmax)
     )
   } else if (out_act_fn == 2) {
@@ -375,10 +453,10 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
       n = nrow(train_x), # Number of observations
       m = ncol(train_x), # Number of features
       L = L,
-      nodes = nodes, # Number of layers
+      nodes = as.array(nodes), # Number of layers
       X = train_x, # Input matrix
       y = train_y, # Output vector
-      act_fn = act_fn, # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
+      act_fn = as.array(act_fn), # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
       out_act_fn = out_act_fn # Activation function for the output layer (1 = linear, 2 = sigmoid, 3 = softmax)
     )
   } else {
@@ -386,22 +464,25 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
       n = nrow(train_x), # Number of observations
       m = ncol(train_x), # Number of features
       L = L,
-      nodes = nodes, # Number of layers
+      nodes = as.array(nodes), # Number of layers
       X = train_x, # Input matrix
       y = train_y, # Output vector
-      act_fn = act_fn, # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
+      act_fn = as.array(act_fn), # Activation functions (1 = tanh, 2 = sigmoid, 3 = ReLU, 4 = softplus)
       out_act_fn = out_act_fn # Activation function for the output layer (1 = linear, 2 = sigmoid, 3 = softmax)
     )
   }
 
   est <- list()
-  pars <- c(paste0("w", 1:L), paste0("b", 1:L), "w_out", "b_out")
+  pars <- c(paste0("w", 1:L), paste0("b", 1:L), "w_out", "b_out", "log_lik", "y_rep")
   if (out_act_fn == 1) {
     pars <- c(pars, "sigma")
   }
 
-  stan_model <- gsub("PRIOR_WEIGHT", prior_specification_weights, generate_stan_code(num_layers = L, nodes = nodes, out_act_fn = out_act_fn)) |>
-    gsub(x = _, pattern = "PRIOR_BIAS", replacement = prior_specification_bias)
+  stan_model <- generate_stan_code(num_layers = L, nodes = nodes, out_act_fn = out_act_fn, prior_weights_dist = prior_weights$dist)
+  if (prior_weights$dist != "horseshoe") {
+    stan_model <- gsub("PRIOR_WEIGHT", prior_specification_weights, stan_model)
+  }
+  stan_model <- gsub(x = stan_model, pattern = "PRIOR_BIAS", replacement = prior_specification_bias)
 
   # Check prior_sigma (only relevant for regression models)
   if (out_act_fn == 1) {
@@ -427,13 +508,62 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
 
     stan_model <- gsub(x = stan_model, pattern = "PRIOR_SIGMA", replacement = prior_sigma)
   }
-
-  est$fit <- suppressWarnings(rstan::stan(
-    model_code = stan_model, data = stan_data, include = TRUE,
-    pars = pars,
-    iter = iter, warmup = warmup, thin = thin, chains = chains, cores = cores,
-    init = 0, seed = seed, verbose = verbose, refresh = refresh
-  ))
+  
+  if (backend == "cmdstanr") {
+    if (!has_namespace("cmdstanr")) {
+      stop("The 'cmdstanr' package is required for the cmdstanr backend. Install it using: install.packages('cmdstanr', repos = c('https://mc-stan.org/r-packages/', getOption('repos')))", call. = FALSE)
+    }
+    
+    compiled_model <- NULL
+    if (use_gpu) {
+      tryCatch({
+        compiled_model <- get_or_compile_cmdstan_model(stan_model, TRUE)
+      }, error = function(e) {
+        warning("GPU compilation failed. Falling back to CPU. Reason: ", conditionMessage(e), call. = FALSE)
+      })
+    }
+    
+    if (is.null(compiled_model)) {
+      use_gpu <- FALSE
+      compiled_model <- get_or_compile_cmdstan_model(stan_model, FALSE)
+    }
+    
+    sample_args <- list(
+      data = stan_data,
+      seed = seed,
+      chains = chains,
+      parallel_chains = cores,
+      iter_warmup = warmup,
+      iter_sampling = iter - warmup,
+      thin = thin,
+      refresh = refresh,
+      show_messages = verbose
+    )
+    
+    if (use_gpu) {
+      sample_args$opencl_ids <- opencl_ids
+      cmd_fit <- tryCatch({
+        do.call(compiled_model$sample, sample_args)
+      }, error = function(e) {
+        warning("GPU sampling failed. Falling back to CPU. Reason: ", conditionMessage(e), call. = FALSE)
+        sample_args$opencl_ids <- NULL
+        compiled_model_cpu <- get_or_compile_cmdstan_model(stan_model, FALSE)
+        do.call(compiled_model_cpu$sample, sample_args)
+      })
+    } else {
+      cmd_fit <- do.call(compiled_model$sample, sample_args)
+    }
+    
+    est$fit <- rstan::read_stan_csv(cmd_fit$output_files())
+  } else {
+    compiled_model <- get_or_compile_stan_model(stan_model)
+    est$fit <- suppressWarnings(rstan::sampling(
+      object = compiled_model, data = stan_data, include = TRUE,
+      pars = pars,
+      iter = iter, warmup = warmup, thin = thin, chains = chains, cores = cores,
+      init = 0, seed = seed, verbose = verbose, refresh = refresh
+    ))
+  }
 
   est$call <- match.call()
   est$data <- stan_data
@@ -479,7 +609,7 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
 #'   The list must include two components:
 #'   \itemize{
 #'     \item \code{dist}: A character string specifying the distribution type. Supported values are
-#'       \code{"normal"}, \code{"uniform"}, and \code{"cauchy"}.
+#'       \code{"normal"}, \code{"uniform"}, \code{"cauchy"}, and \code{"horseshoe"}.
 #'     \item \code{params}: A named list specifying the parameters for the chosen distribution:
 #'       \itemize{
 #'         \item For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
@@ -487,6 +617,7 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
 #'         \item For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
 #'       }
 #'   }
+#'   For the \code{"horseshoe"} prior, `params` is not needed as it uses a standard half-Cauchy setup.
 #'   If \code{prior_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
 #'   For example:
 #'   \itemize{
@@ -539,6 +670,9 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
 #'   the input scale, which is particularly beneficial for neural network training.
 #'   If `FALSE`, no normalization is applied, and it is assumed that the input data
 #'   is already pre-processed appropriately.
+#' @param backend A character string specifying the Stan backend to use. Options are \code{"rstan"} (default) or \code{"cmdstanr"}.
+#' @param use_gpu Logical. If \code{TRUE}, enables OpenCL for GPU acceleration. Default is \code{FALSE}. (Requires the \code{"cmdstanr"} backend).
+#' @param opencl_ids A vector of two integers specifying the OpenCL platform and device IDs. Default is \code{c(0, 0)}.
 #' @param ... Currently not in use.
 #'
 #' @return An object of class \code{"bnns"} containing the fitted model and associated information, including:
@@ -566,7 +700,9 @@ bnns.default <- function(formula, data, L = 1, nodes = rep(2, L),
                          act_fn = rep(2, L), out_act_fn = 1, iter = 1e3, warmup = 2e2,
                          thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
                          prior_bias = NULL, prior_sigma = NULL, verbose = FALSE,
-                         refresh = max(iter / 10, 1), normalize = TRUE, ...) {
+                         refresh = max(iter / 10, 1), normalize = TRUE, 
+                         backend = c("rstan", "cmdstanr"),
+                         use_gpu = FALSE, opencl_ids = c(0, 0), ...) {
   if (missing(formula) || missing(data)) {
     stop("Both 'formula' and 'data' must be provided.")
   }
@@ -586,15 +722,228 @@ bnns.default <- function(formula, data, L = 1, nodes = rep(2, L),
   mf <- stats::model.frame(formula = formula, data = data)
   train_x <- stats::model.matrix(attr(mf, "terms"), data = mf)
   train_y <- stats::model.response(mf)
+
+  # Translate character activations (e.g., from parsnip)
+  if (is.character(act_fn)) act_fn <- translate_activation(act_fn)
+
+  # Auto-correct out_act_fn if it's default 1 but y is a factor
+  if (out_act_fn == 1 && is.factor(train_y)) {
+    out_act_fn <- detect_output_activation(train_y)
+  }
+
+  levels_y <- NULL
+  if (is.factor(train_y)) {
+    levels_y <- levels(train_y)
+    # Automatically convert binary factors to 0/1 to prevent bnns_train errors
+    if (out_act_fn == 2) {
+      train_y <- as.numeric(train_y) - 1
+    }
+  }
   est <- bnns_train(
     train_x = train_x, train_y = train_y, L = L, nodes = nodes,
     act_fn = act_fn, out_act_fn = out_act_fn, iter = iter,
     warmup = warmup, thin = thin, chains = chains,
     cores = cores, seed = seed, prior_weights = prior_weights,
     prior_bias = prior_bias, prior_sigma = prior_sigma,
-    verbose = verbose, refresh = refresh, normalize = normalize, ...
+    verbose = verbose, refresh = refresh, normalize = normalize, 
+    backend = backend, use_gpu = use_gpu, opencl_ids = opencl_ids, ...
   )
   est$call <- match.call()
   est$formula <- formula
+  est$terms <- attr(mf, "terms")
+  est$levels <- levels_y
   return(est)
+}
+
+
+#' Leave-One-Out Cross-Validation (LOO) for bnns models
+#'
+#' @param x A fitted \code{bnns} model object.
+#' @param ... Additional arguments passed to \code{loo::loo()}.
+#' @return A \code{loo} object containing model comparison metrics.
+#' @export
+#' @importFrom loo loo
+loo.bnns <- function(x, ...) {
+  # The loo package directly supports stanfit objects if 'log_lik' is present
+  loo::loo(x$fit, ...)
+}
+
+#' Watanabe-Akaike Information Criterion (WAIC) for bnns models
+#'
+#' @param x A fitted \code{bnns} model object.
+#' @param ... Additional arguments passed to \code{loo::waic()}.
+#' @return A \code{waic} object containing model comparison metrics.
+#' @export
+#' @importFrom loo waic
+waic.bnns <- function(x, ...) {
+  # Extract the pointwise log-likelihood matrix from the stanfit object
+  # and pass it to loo::waic()
+  log_lik_mat <- loo::extract_log_lik(x$fit, merge_chains = FALSE)
+  loo::waic(log_lik_mat, ...)
+}
+
+#' Plot diagnostics for a fitted Bayesian Neural Network
+#'
+#' Generates Markov Chain Monte Carlo (MCMC) trace plots, posterior density plots,
+#' Posterior Predictive Checks (PPC), or predicted probability distributions for the fitted model.
+#'
+#' @param x A fitted \code{bnns} model object.
+#' @param type Character string indicating the type of plot. 
+#'   Options are \code{"trace"} for MCMC trace plots, \code{"density"} for posterior density plots,
+#'   \code{"posterior_predictive"} for Posterior Predictive Checks, and \code{"pred_prob"} for
+#'   visualizing the predicted class probability distributions (classification only).
+#' @param pars A character vector of parameter names to include in the plot. 
+#'   By default, this focuses on the output layer (\code{"w_out"}, \code{"b_out"}, and \code{"sigma"}) 
+#'   to avoid cluttering the plot device with hundreds of hidden layer weights.
+#' @param ... Additional arguments passed to \code{\link[rstan]{stan_trace}}, \code{\link[rstan]{stan_dens}}, 
+#'   or \code{\link[bayesplot]{ppc_dens_overlay}}.
+#'
+#' @return A \code{ggplot} object containing the requested diagnostic plots.
+#' @export
+plot.bnns <- function(x, type = c("trace", "density", "posterior_predictive", "pred_prob"), pars = NULL, ...) {
+  type <- match.arg(type)
+  
+  if (type == "pred_prob") {
+    if (x$data$out_act_fn == 1) {
+      stop("type = 'pred_prob' is only applicable for classification models.", call. = FALSE)
+    }
+    
+    if (!requireNamespace("ggplot2", quietly = TRUE)) {
+      stop("The 'ggplot2' package is required for this plot. Please install it.", call. = FALSE)
+    }
+    
+    # Avoid R CMD check notes for undefined global variables
+    Probability <- Class <- True_Class <- Predicted_Class <- NULL
+    
+    probs <- predict(x, type = "prob")
+    y_true <- as.factor(x$data$y)
+    if (!is.null(x$levels)) {
+      levels(y_true) <- x$levels
+    }
+    
+    if (x$data$out_act_fn == 2) {
+      pos_class <- colnames(probs)[2]
+      if (is.null(pos_class)) pos_class <- "1"
+      
+      plot_data <- data.frame(
+        Probability = probs[, 2], 
+        Class = y_true
+      )
+      
+      p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = Probability, fill = Class)) +
+        ggplot2::geom_density(alpha = 0.5) +
+        ggplot2::labs(
+          title = paste("Predicted Probabilities for Class:", pos_class),
+          x = "Posterior Mean Probability",
+          y = "Density"
+        ) +
+        ggplot2::theme_minimal()
+      return(p)
+    } else {
+      pred_classes <- colnames(probs)
+      if (is.null(pred_classes)) pred_classes <- paste0("Class_", seq_len(ncol(probs)))
+      
+      plot_data <- data.frame(
+        True_Class = rep(y_true, times = ncol(probs)),
+        Predicted_Class = rep(pred_classes, each = nrow(probs)),
+        Probability = as.vector(as.matrix(probs))
+      )
+      
+      p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = Probability, fill = Predicted_Class)) +
+        ggplot2::geom_density(alpha = 0.5) +
+        ggplot2::facet_wrap(~ True_Class, labeller = ggplot2::label_both) +
+        ggplot2::labs(
+          title = "Predicted Probabilities by True Class",
+          x = "Posterior Mean Probability",
+          y = "Density",
+          fill = "Predicted Class"
+        ) +
+        ggplot2::theme_minimal()
+      return(p)
+    }
+  }
+
+  if (type == "posterior_predictive") {
+    if (!requireNamespace("bayesplot", quietly = TRUE)) {
+      stop("The 'bayesplot' package is required for posterior predictive checks. Please install it.", call. = FALSE)
+    }
+    
+    y <- x$data$y
+    yrep <- rstan::extract(x$fit, pars = "y_rep")$y_rep
+    
+    if (is.null(yrep)) {
+      stop("y_rep was not found in the Stan model fit. Ensure your Stan code generates 'y_rep'.", call. = FALSE)
+    }
+    
+    if (x$data$out_act_fn == 1) {
+      return(bayesplot::ppc_dens_overlay(y, yrep, ...))
+    } else {
+      return(bayesplot::ppc_bars(y, yrep, ...))
+    }
+  }
+  
+  # Smart defaults to avoid plotting thousands of parameters
+  if (is.null(pars)) {
+    pars <- c("w_out", "b_out")
+    if (x$data$out_act_fn == 1) {
+      pars <- c(pars, "sigma")
+    }
+  }
+  
+  # Route to rstan plotting functions
+  if (type == "trace") {
+    return(rstan::stan_trace(x$fit, pars = pars, ...))
+  } else {
+    return(rstan::stan_dens(x$fit, pars = pars, ...))
+  }
+}
+
+# Internal helpers to allow mocking in testthat
+sys_which <- function(x) base::Sys.which(x)
+has_namespace <- function(x) base::requireNamespace(x, quietly = TRUE)
+ocl_platforms <- function() OpenCL::oclPlatforms()
+ocl_devices <- function(p) OpenCL::oclDevices(p)
+sys_system2 <- function(...) base::system2(...)
+
+#' OpenCL Diagnostic Information
+#'
+#' This helper function lists the available OpenCL platforms and devices
+#' on your system. It is useful for determining the correct \code{opencl_ids}
+#' to pass to \code{bnns()} when using GPU acceleration.
+#'
+#' @details The function first checks if the \code{clinfo} system command is available.
+#' If not, it falls back to looking for the \code{OpenCL} R package to retrieve the
+#' platforms and devices.
+#'
+#' @return Invoked for its side effect of printing OpenCL diagnostic information.
+#' @export
+opencl_diagnostics <- function() {
+  clinfo_path <- sys_which("clinfo")
+  if (nchar(clinfo_path) > 0) {
+    cat("Found 'clinfo' system command at:", clinfo_path, "\n\n")
+    sys_system2(clinfo_path, args = "-l")
+  } else if (has_namespace("OpenCL")) {
+    cat("Using 'OpenCL' R package for diagnostics:\n\n")
+    platforms <- ocl_platforms()
+    if (length(platforms) == 0) {
+      message("No OpenCL platforms found.")
+    } else {
+      for (p in seq_along(platforms)) {
+        cat(sprintf("Platform #%d:\n", p - 1))
+        print(platforms[[p]])
+        
+        devices <- tryCatch(ocl_devices(platforms[[p]]), error = function(e) list())
+        for (d in seq_along(devices)) {
+          cat(sprintf("  `-- Device #%d:\n", d - 1))
+          print(devices[[d]])
+        }
+      }
+    }
+  } else {
+    message("Both the 'clinfo' system command and 'OpenCL' R package are missing.\n",
+            "To view your OpenCL devices from R, please run:\n\n",
+            "  install.packages('OpenCL')\n\n",
+            "Or install 'clinfo' on your system.")
+  }
+  invisible()
 }

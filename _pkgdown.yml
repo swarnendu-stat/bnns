@@ -2,3 +2,11 @@ url: https://swarnendu-stat.github.io/bnns/
 template:
   bootstrap: 5
 
+articles:
+- title: Tutorials and Guides
+  desc: "Learn how to use `bnns` in practice."
+  contents:
+  - tidymodels
+  - articles/common_applications
+  - articles/clin_trial_app
+  - articles/benchmarking

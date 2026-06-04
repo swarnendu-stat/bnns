@@ -7,18 +7,27 @@ Description: Offers a flexible formula-based interface for building and training
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
 Suggests: 
+    bayesplot,
+    cmdstanr,
+    covr,
+    dials,
     ggplot2,
     knitr,
     mlbench,
+    OpenCL,
+    parsnip (>= 1.0.0),
     ranger,
+    rlang,
     rmarkdown,
     rsample,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tibble
 Config/testthat/edition: 3
 Imports: 
     BH,
+    digest,
+    loo,
     pROC,
     RcppEigen,
     rstan,
@@ -27,3 +36,4 @@ URL: https://github.com/swarnendu-stat/bnns, https://swarnendu-stat.github.io/bn
 BugReports: https://github.com/swarnendu-stat/bnns/issues
 VignetteBuilder: knitr
 Config/Needs/website: rmarkdown
+Config/roxygen2/version: 8.0.0

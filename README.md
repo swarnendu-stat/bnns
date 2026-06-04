@@ -13,11 +13,9 @@ coverage](https://codecov.io/gh/swarnendu-stat/bnns/graph/badge.svg)](https://ap
 [![rhub](https://github.com/swarnendu-stat/bnns/actions/workflows/rhub.yaml/badge.svg)](https://github.com/swarnendu-stat/bnns/actions/workflows/rhub.yaml)
 <!-- badges: end -->
 
-The `bnns` package provides tools to fit Bayesian Neural Networks (BNNs)
-for regression and classification problems. It is designed to be
-flexible, supporting various network architectures, activation
-functions, and output types, making it suitable for both simple and
-complex data analysis tasks.
+The **`bnns`** package brings the predictive power of deep learning to the rigorous probabilistic framework of Bayesian inference. By fitting Bayesian Neural Networks (BNNs) using Stan, `bnns` allows you to automatically capture complex, non-linear patterns in your data while seamlessly quantifying predictive uncertainty.
+
+Whether you are working on regression, binary classification, or multi-class problems, `bnns` provides a flexible, easy-to-use interface to build customizable network architectures that output full posterior predictive distributions. This makes it ideal for high-stakes domains—like clinical trials, predictive modeling, or finance—where knowing what your model *doesn't* know is just as important as the prediction itself.
 
 ## Features
 
@@ -30,8 +28,22 @@ complex data analysis tasks.
   regression).
 - Bayesian inference, providing posterior distributions for predictions
   and parameters.
+- GPU acceleration support for heavy network architectures via OpenCL.
 - Applications in domains such as clinical trials, predictive modeling,
   and more.
+
+## Why `bnns`? (vs. `brms`)
+
+While `brms` is the gold standard for traditional Bayesian statistical modeling in R, **`bnns`** serves a highly complementary purpose: **combining the predictive power of deep learning with the rigorous uncertainty quantification of Bayesian inference.**
+
+* **Purpose-Built for Neural Networks:** Automatically learns complex, high-dimensional interactions and non-linearities without manually specifying splines or Gaussian processes.
+* **Native Machine Learning Integration:** Built with modern ML pipelines in mind, featuring a fully integrated `parsnip` engine (`set_engine("bnns")`) for seamless use within `tidymodels`.
+* **GPU Acceleration:** Neural networks are computationally expensive. `bnns` exposes OpenCL GPU acceleration out-of-the-box (`use_gpu = TRUE`) for drastically faster training.
+* **Streamlined Classification:** Built-in output activations (softmax, logistic sigmoid) and evaluation metrics make probabilistic multi-class and binary boundaries straightforward.
+
+**When to Choose Which?**
+* Choose **`brms`** for **inference and interpretability** (e.g., understanding specific predictor effect sizes or hierarchical random effects).
+* Choose **`bnns`** for **predictive accuracy with uncertainty** (e.g., complex data with unknown non-linear interactions in high-stakes domains like clinical trials or finance).
 
 ## Installation (stable CRAN version)
 
@@ -150,6 +162,27 @@ abline(0, 1, col = "red")
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+
+## GPU Acceleration
+
+The `bnns` package natively supports GPU acceleration for Bayesian sampling using OpenCL. This can significantly reduce training time for deep or wide network architectures.
+
+To use your GPU, ensure you have the appropriate OpenCL drivers installed, then set `use_gpu = TRUE` and use the `cmdstanr` backend. You may also need to specify the `opencl_ids` for your hardware.
+
+You can check your system's available OpenCL platforms and device IDs by running:
+```r
+opencl_diagnostics()
+```
+
+```r
+# Fit a Bayesian Neural Network on the GPU
+model_gpu <- bnns(y ~ ., 
+  data = your_data, 
+  backend = "cmdstanr",
+  use_gpu = TRUE,
+  opencl_ids = c(0, 0) # Format is c(platform_id, device_id)
+)
+```
 
 ## Applications
 

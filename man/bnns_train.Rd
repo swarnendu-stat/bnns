@@ -23,6 +23,9 @@ bnns_train(
   verbose = FALSE,
   refresh = max(iter/10, 1),
   normalize = TRUE,
+  backend = c("rstan", "cmdstanr"),
+  use_gpu = FALSE,
+  opencl_ids = c(0, 0),
   ...
 )
 }
@@ -75,6 +78,7 @@ The list must include two components:
 \item For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
 }
 }
+For the \code{"horseshoe"} prior, \code{params} is not needed as it uses a standard half-Cauchy setup.
 If \code{prior_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
 For example:
 \itemize{
@@ -132,6 +136,12 @@ Normalization ensures stable and efficient Bayesian sampling by standardizing
 the input scale, which is particularly beneficial for neural network training.
 If \code{FALSE}, no normalization is applied, and it is assumed that the input data
 is already pre-processed appropriately.}
+
+\item{backend}{A character string specifying the Stan backend to use. Options are \code{"rstan"} (default) or \code{"cmdstanr"}.}
+
+\item{use_gpu}{Logical. If \code{TRUE}, enables OpenCL for GPU acceleration. Default is \code{FALSE}. (Requires the \code{"cmdstanr"} backend).}
+
+\item{opencl_ids}{A vector of two integers specifying the OpenCL platform and device IDs. Default is \code{c(0, 0)}.}
 
 \item{...}{Currently not in use.}
 }
