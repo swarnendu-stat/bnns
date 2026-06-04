@@ -17,7 +17,7 @@ test_that("predict.bnns works for regression", {
 test_that("predict.bnns works for binary classification", {
   skip_on_cran()
   
-  df <- data.frame(x = runif(20), y = factor(sample(c("A", "B"), 20, replace = TRUE)))
+  df <- data.frame(x = runif(20), y = factor(c("A", "B", sample(c("A", "B"), 18, replace = TRUE))))
   fit <- bnns(y ~ x, data = df, L = 1, nodes = 2, out_act_fn = 2, iter = 20, warmup = 10, chains = 1, refresh = 0)
   
   pred_prob <- predict(fit, type = "prob")
@@ -30,7 +30,7 @@ test_that("predict.bnns works for binary classification", {
 test_that("predict.bnns works for multiclass classification", {
   skip_on_cran()
   
-  df <- data.frame(x = runif(30), y = factor(sample(c("A", "B", "C"), 30, replace = TRUE)))
+  df <- data.frame(x = runif(30), y = factor(c("A", "B", "C", sample(c("A", "B", "C"), 27, replace = TRUE))))
   fit <- bnns(y ~ x, data = df, L = 1, nodes = 2, out_act_fn = 3, iter = 20, warmup = 10, chains = 1, refresh = 0)
   
   pred_prob <- predict(fit, type = "prob")

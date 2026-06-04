@@ -110,7 +110,7 @@ test_that("parsnip models can be fitted and predicted", {
   expect_true(is.matrix(pred_raw) || is.array(pred_raw))
   
   # 2. Classification (Binary)
-  df_bin <- data.frame(x1 = rnorm(5), x2 = rnorm(5), y = factor(sample(c("A", "B"), 5, replace = TRUE)))
+  df_bin <- data.frame(x1 = rnorm(5), x2 = rnorm(5), y = factor(c("A", "B", sample(c("A", "B"), 3, replace = TRUE))))
   
   spec_class <- parsnip::set_engine(
     parsnip::mlp(
@@ -133,7 +133,7 @@ test_that("parsnip models can be fitted and predicted", {
   expect_equal(names(pred_prob_bin), c(".pred_A", ".pred_B"))
   
   # 3. Classification (Multiclass)
-  df_multi <- data.frame(x1 = rnorm(10), x2 = rnorm(10), y = factor(sample(c("A", "B", "C"), 10, replace = TRUE)))
+  df_multi <- data.frame(x1 = rnorm(10), x2 = rnorm(10), y = factor(c("A", "B", "C", sample(c("A", "B", "C"), 7, replace = TRUE))))
   
   fit_multi <- suppressWarnings(parsnip::fit(spec_class, y ~ x1 + x2, data = df_multi))
   

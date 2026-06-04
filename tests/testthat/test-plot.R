@@ -5,7 +5,7 @@ test_that("plot.bnns with type='pred_prob' works for classification", {
   df_bin <- data.frame(
     x1 = runif(20), 
     x2 = runif(20),
-    y = factor(sample(c("Class_A", "Class_B"), 20, replace = TRUE))
+    y = factor(c("Class_A", "Class_B", sample(c("Class_A", "Class_B"), 18, replace = TRUE)))
   )
   
   fit_bin <- bnns(y ~ x1 + x2, data = df_bin, out_act_fn = 2, 
@@ -18,7 +18,7 @@ test_that("plot.bnns with type='pred_prob' works for classification", {
   df_multi <- data.frame(
     x1 = runif(30), 
     x2 = runif(30),
-    y = factor(sample(c("Class_A", "Class_B", "Class_C"), 30, replace = TRUE))
+    y = factor(c("Class_A", "Class_B", "Class_C", sample(c("Class_A", "Class_B", "Class_C"), 27, replace = TRUE)))
   )
   
   fit_multi <- bnns(y ~ x1 + x2, data = df_multi, out_act_fn = 3, 

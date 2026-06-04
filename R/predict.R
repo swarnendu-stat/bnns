@@ -95,7 +95,7 @@ predict.bnns <- function(object, newdata = NULL,
 #' @param object A fitted `bnns` model
 #' @param newdata A data frame containing new features
 #' @param ... Additional arguments (unused)
-#' @return A matrix of predictions [obs, samples] or 3D array [obs, samples, classes]
+#' @return A matrix of predictions `[obs, samples]` or 3D array `[obs, samples, classes]`
 #' @keywords internal
 #' @noRd
 .predict_raw <- function(object, newdata = NULL, ...) {

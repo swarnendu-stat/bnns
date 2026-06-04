@@ -56,7 +56,7 @@ register_bnns_parsnip <- function(force = FALSE, model = "mlp") {
     model = model, eng = "bnns",
     parsnip = "hidden_units",
     original = "nodes",
-    func = list(pkg = "bnns", fun = "bnns"),
+    func = list(pkg = "dials", fun = "hidden_units"),
     has_submodel = FALSE
   )
   
@@ -64,7 +64,7 @@ register_bnns_parsnip <- function(force = FALSE, model = "mlp") {
     model = model, eng = "bnns",
     parsnip = "epochs",
     original = "iter",
-    func = list(pkg = "bnns", fun = "bnns"),
+    func = list(pkg = "dials", fun = "epochs"),
     has_submodel = FALSE
   )
   
@@ -72,7 +72,7 @@ register_bnns_parsnip <- function(force = FALSE, model = "mlp") {
     model = model, eng = "bnns",
     parsnip = "activation",
     original = "act_fn",
-    func = list(pkg = "bnns", fun = "bnns"),
+    func = list(pkg = "dials", fun = "activation"),
     has_submodel = FALSE
   )
   
@@ -141,7 +141,7 @@ register_bnns_parsnip <- function(force = FALSE, model = "mlp") {
     model = model, eng = "bnns",
     parsnip = "hidden_units",
     original = "nodes",
-    func = list(pkg = "bnns", fun = "bnns"),
+    func = list(pkg = "dials", fun = "hidden_units"),
     has_submodel = FALSE
   )
   
@@ -149,7 +149,7 @@ register_bnns_parsnip <- function(force = FALSE, model = "mlp") {
     model = model, eng = "bnns",
     parsnip = "epochs",
     original = "iter",
-    func = list(pkg = "bnns", fun = "bnns"),
+    func = list(pkg = "dials", fun = "epochs"),
     has_submodel = FALSE
   )
   
@@ -157,7 +157,7 @@ register_bnns_parsnip <- function(force = FALSE, model = "mlp") {
     model = model, eng = "bnns",
     parsnip = "activation",
     original = "act_fn",
-    func = list(pkg = "bnns", fun = "bnns"),
+    func = list(pkg = "dials", fun = "activation"),
     has_submodel = FALSE
   )
   

@@ -303,13 +303,29 @@ get_or_compile_cmdstan_model <- function(stan_code, use_gpu = FALSE) {
 #' @export
 #' @keywords internal
 
-bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
-                       act_fn = rep(2, L), out_act_fn = 1, iter = 1e3, warmup = 2e2,
-                       thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
-                       prior_bias = NULL, prior_sigma = NULL, verbose = FALSE,
-                       refresh = max(iter / 10, 1), normalize = TRUE, 
+bnns_train <- function(train_x,
+                       train_y,
+                       L = 1,
+                       nodes = rep(2, L),
+                       act_fn = rep(2, L),
+                       out_act_fn = 1,
+                       iter = 1000,
+                       warmup = 200,
+                       thin = 1,
+                       chains = 2,
+                       cores = 2,
+                       seed = 123,
+                       prior_weights = NULL,
+                       prior_bias = NULL,
+                       prior_sigma = NULL,
+                       verbose = FALSE,
+                       refresh = max(iter/10, 1),
+                       normalize = TRUE,
                        backend = c("rstan", "cmdstanr"),
-                       use_gpu = FALSE, opencl_ids = c(0, 0), ...) {
+                       use_gpu = FALSE,
+                       opencl_ids = c(0, 0),
+                       ...) {
+  
   backend <- match.arg(backend)
   if (use_gpu && backend != "cmdstanr") {
     warning("GPU acceleration is only supported with the 'cmdstanr' backend. Switching backend to 'cmdstanr'.", call. = FALSE)
@@ -326,10 +342,20 @@ bnns_train <- function(train_x, train_y, L = 1, nodes = rep(2, L),
   stopifnot("Argument train_x is missing" = !missing(train_x))
   stopifnot("Argument train_y is missing" = !missing(train_y))
   stopifnot("L must be a positive integer" = ((L %% 1 == 0) & (sign(L) == 1)))
-  stopifnot("nodes must be of length L" = length(nodes) == L)
+  
   stopifnot("nodes must be positive integer(s)" = (all(nodes %% 1 == 0) & all(sign(nodes) == 1)))
-  stopifnot("act_fn must be of length L" = length(act_fn) == L)
   stopifnot("act_fn must be a sequence of 1/2/3/4/5" = all(act_fn %in% 1:5))
+
+  # Validate that the length of nodes matches the number of layers L
+  if (length(nodes) != L) {
+    stop("nodes must be of length L", call. = FALSE)
+  }
+  
+  # Validate that the length of act_fn matches the number of layers L
+  if (length(act_fn) != L) {
+    stop("act_fn must be of length L", call. = FALSE)
+  }
+  
 
   # Default priors: Normal(0, 1)
   if (is.null(prior_weights)) {
@@ -703,6 +729,9 @@ bnns.default <- function(formula, data, L = 1, nodes = rep(2, L),
                          refresh = max(iter / 10, 1), normalize = TRUE, 
                          backend = c("rstan", "cmdstanr"),
                          use_gpu = FALSE, opencl_ids = c(0, 0), ...) {
+  if (missing(formula) && missing(data)) {
+    return(invisible(NULL))
+  }
   if (missing(formula) || missing(data)) {
     stop("Both 'formula' and 'data' must be provided.")
   }
@@ -724,20 +753,37 @@ bnns.default <- function(formula, data, L = 1, nodes = rep(2, L),
   train_y <- stats::model.response(mf)
 
   # Translate character activations (e.g., from parsnip)
-  if (is.character(act_fn)) act_fn <- translate_activation(act_fn)
-
-  # Auto-correct out_act_fn if it's default 1 but y is a factor
-  if (out_act_fn == 1 && is.factor(train_y)) {
-    out_act_fn <- detect_output_activation(train_y)
+  if (is.character(act_fn)) {
+    act_fn <- unname(sapply(act_fn, function(x) {
+      switch(tolower(x),
+        "tanh" = 1,
+        "sigmoid" = 2,
+        "softplus" = 3,
+        "relu" = 4,
+        "linear" = 5,
+        stop(paste("Unsupported activation function:", x))
+      )
+    }))
   }
+
+  if (length(nodes) == 1 && L > 1) nodes <- rep(nodes, L)
+  if (length(act_fn) == 1 && L > 1) act_fn <- rep(act_fn, L)
 
   levels_y <- NULL
   if (is.factor(train_y)) {
     levels_y <- levels(train_y)
+    
+    # Auto-correct out_act_fn if it's default 1 but y is a factor
+    if (out_act_fn == 1) {
+      out_act_fn <- if (length(levels_y) == 2) 2 else 3
+    }
+    
     # Automatically convert binary factors to 0/1 to prevent bnns_train errors
     if (out_act_fn == 2) {
       train_y <- as.numeric(train_y) - 1
     }
+  } else if (!is.numeric(train_y)) {
+    stop("The response variable must be a numeric vector or a factor.")
   }
   est <- bnns_train(
     train_x = train_x, train_y = train_y, L = L, nodes = nodes,
@@ -898,6 +944,64 @@ plot.bnns <- function(x, type = c("trace", "density", "posterior_predictive", "p
   }
 }
 
+#' @importFrom tibble as_tibble
+#' @keywords internal
+predict_prob_bnns <- function(object, new_data) {
+  # object is the parsnip fit object, object$fit is the bnns object
+  preds <- predict(object$fit, newdata = new_data)
+
+  out_act_fn <- object$fit$data$out_act_fn
+
+  # Multiclass Classification (out_act_fn = 3)
+  if (out_act_fn == 3) {
+    if (length(dim(preds)) != 3) stop("Expected a 3D array for multiclass predictions.", call. = FALSE)
+
+    # Average across the posterior samples (dimension 2)
+    prob_matrix <- apply(preds, c(1, 3), mean)
+    colnames(prob_matrix) <- object$lvl # Use levels from parsnip object
+    return(tibble::as_tibble(prob_matrix))
+  }
+
+  # Binary Classification (out_act_fn = 2)
+  if (out_act_fn == 2) {
+    if (length(dim(preds)) != 2) stop("Expected a 2D array for binary classification predictions.", call. = FALSE)
+
+    # Average across posterior samples to get P(class = 1)
+    prob_class_1 <- rowMeans(preds)
+    prob_class_0 <- 1 - prob_class_1
+
+    prob_matrix <- cbind(prob_class_0, prob_class_1)
+    colnames(prob_matrix) <- object$lvl # Use levels from parsnip object
+    return(tibble::as_tibble(prob_matrix))
+  }
+
+  stop("`predict_prob_bnns` called for a model that is not a classification model.", call. = FALSE)
+}
+
+#' @importFrom tibble tibble
+#' @keywords internal
+predict_class_bnns <- function(object, new_data) {
+  # Leverage the probability wrapper to get class probabilities
+  prob_tbl <- predict_prob_bnns(object, new_data)
+  
+  # Find the index of the maximum probability for each observation
+  max_idx <- max.col(prob_tbl, ties.method = "random")
+  
+  # Extract corresponding factor levels
+  pred_classes <- factor(colnames(prob_tbl)[max_idx], levels = object$lvl)
+  tibble::tibble(.pred_class = pred_classes)
+}
+
+#' @importFrom tibble tibble
+#' @keywords internal
+predict_numeric_bnns <- function(object, new_data) {
+  preds <- predict(object$fit, newdata = new_data)
+  
+  # Average across the posterior samples to get a single point estimate
+  mean_preds <- rowMeans(preds)
+  tibble::tibble(.pred = mean_preds)
+}
+
 # Internal helpers to allow mocking in testthat
 sys_which <- function(x) base::Sys.which(x)
 has_namespace <- function(x) base::requireNamespace(x, quietly = TRUE)
@@ -946,4 +1050,109 @@ opencl_diagnostics <- function() {
             "Or install 'clinfo' on your system.")
   }
   invisible()
+}
+
+#' Parameter functions for Bayesian Neural Networks
+#'
+#' These functions provide \code{dials} parameter objects for tuning
+#' the hyperparameters of Bayesian Neural Networks.
+#'
+#' @param range A two-element vector holding the defaults for the smallest and largest possible values.
+#' @param trans A \code{trans} object from the \code{scales} package, could be \code{NULL}.
+#' @param values A character vector of possible values.
+#' @return A \code{quant_param} or \code{qual_param} object from the \code{dials} package.
+#' @name bnns_params
+NULL
+
+#' @rdname bnns_params
+#' @export
+L <- function(range = c(1L, 5L), trans = NULL) {
+  if (!requireNamespace("dials", quietly = TRUE)) {
+    stop("The 'dials' package is required for this parameter function.", call. = FALSE)
+  }
+  dials::new_quant_param(
+    type = "integer",
+    range = range,
+    inclusive = c(TRUE, TRUE),
+    trans = trans,
+    label = c(L = "Number of Hidden Layers"),
+    finalize = NULL
+  )
+}
+
+#' @rdname bnns_params
+#' @export
+warmup <- function(range = c(100L, 1000L), trans = NULL) {
+  if (!requireNamespace("dials", quietly = TRUE)) {
+    stop("The 'dials' package is required for this parameter function.", call. = FALSE)
+  }
+  dials::new_quant_param(
+    type = "integer",
+    range = range,
+    inclusive = c(TRUE, TRUE),
+    trans = trans,
+    label = c(warmup = "Warmup Iterations"),
+    finalize = NULL
+  )
+}
+
+#' @rdname bnns_params
+#' @export
+chains <- function(range = c(1L, 4L), trans = NULL) {
+  if (!requireNamespace("dials", quietly = TRUE)) {
+    stop("The 'dials' package is required for this parameter function.", call. = FALSE)
+  }
+  dials::new_quant_param(
+    type = "integer",
+    range = range,
+    inclusive = c(TRUE, TRUE),
+    trans = trans,
+    label = c(chains = "Number of Chains"),
+    finalize = NULL
+  )
+}
+
+#' @rdname bnns_params
+#' @export
+iter <- function(range = c(500L, 2000L), trans = NULL) {
+  if (!requireNamespace("dials", quietly = TRUE)) {
+    stop("The 'dials' package is required for this parameter function.", call. = FALSE)
+  }
+  dials::new_quant_param(
+    type = "integer",
+    range = range,
+    inclusive = c(TRUE, TRUE),
+    trans = trans,
+    label = c(iter = "Total Iterations"),
+    finalize = NULL
+  )
+}
+
+#' @rdname bnns_params
+#' @export
+nodes <- function(range = c(1L, 64L), trans = NULL) {
+  if (!requireNamespace("dials", quietly = TRUE)) {
+    stop("The 'dials' package is required for this parameter function.", call. = FALSE)
+  }
+  dials::new_quant_param(
+    type = "integer",
+    range = range,
+    inclusive = c(TRUE, TRUE),
+    trans = trans,
+    label = c(nodes = "Nodes per Layer"),
+    finalize = NULL
+  )
+}
+
+#' @rdname bnns_params
+#' @export
+act_fn <- function(values = c("tanh", "sigmoid", "softplus", "relu", "linear")) {
+  if (!requireNamespace("dials", quietly = TRUE)) {
+    stop("The 'dials' package is required for this parameter function.", call. = FALSE)
+  }
+  dials::new_qual_param(
+    type = "character",
+    values = values,
+    label = c(act_fn = "Activation Function")
+  )
 }

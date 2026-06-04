@@ -84,7 +84,7 @@ test_that("bnns throws appropriate error for missing formula or data", {
 
 test_that("bnns works for binary classification (sigmoid output)", {
   set.seed(123)
-  df <- data.frame(x1 = runif(10), x2 = runif(10), y = sample(0:1, 10, replace = TRUE))
+  df <- data.frame(x1 = runif(10), x2 = runif(10), y = c(0, 1, sample(0:1, 8, replace = TRUE)))
   new_data <- data.frame(x1 = runif(5), x2 = runif(5))
 
   result <- bnns(y ~ -1 + x1 + x2, data = df, L = 1, nodes = 2, act_fn = 5, out_act_fn = 2, iter = 1e1, warmup = 5, chains = 1)
@@ -131,7 +131,7 @@ test_that("bnns works for binary classification (sigmoid output)", {
 
 test_that("bnns works for multiclass classification (softmax output)", {
   set.seed(123)
-  df <- data.frame(x1 = runif(10), x2 = runif(10), y = factor(sample(letters[1:3], 10, replace = TRUE)))
+  df <- data.frame(x1 = runif(10), x2 = runif(10), y = factor(c("a", "b", "c", sample(letters[1:3], 7, replace = TRUE))))
   new_data <- data.frame(x1 = runif(5), x2 = runif(5))
 
   result <- bnns(y ~ -1 + x1 + x2, data = df, L = 1, nodes = 2, act_fn = 5, out_act_fn = 3, iter = 1e1, warmup = 5, chains = 1)
@@ -183,13 +183,13 @@ test_that("bnns throws errors for incorrect inputs", {
   )
 
   # Test for multiclass classification with non-factor labels
-  df$y <- sample(1:3, 10, replace = TRUE)
+  df$y <- c(1, 2, 3, sample(1:3, 7, replace = TRUE))
   expect_error(
     bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 3),
     "train_y must be a factor"
   )
 
-  df$y <- factor(sample(1:2, 10, replace = TRUE))
+  df$y <- factor(c(1, 2, sample(1:2, 8, replace = TRUE)))
   expect_error(
     bnns(y ~ -1 + x1 + x2, data = df, out_act_fn = 3),
     "train_y must have at least 3 levels"
