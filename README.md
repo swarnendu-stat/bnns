@@ -5,12 +5,10 @@
 
 <!-- badges: start -->
 
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R-CMD-check](https://github.com/swarnendu-stat/bnns/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/swarnendu-stat/bnns/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/swarnendu-stat/bnns/graph/badge.svg)](https://app.codecov.io/gh/swarnendu-stat/bnns)
-[![rhub](https://github.com/swarnendu-stat/bnns/actions/workflows/rhub.yaml/badge.svg)](https://github.com/swarnendu-stat/bnns/actions/workflows/rhub.yaml)
 <!-- badges: end -->
 
 The **`bnns`** package brings the predictive power of deep learning to the rigorous probabilistic framework of Bayesian inference. By fitting Bayesian Neural Networks (BNNs) using Stan, `bnns` allows you to automatically capture complex, non-linear patterns in your data while seamlessly quantifying predictive uncertainty.
