@@ -22,8 +22,7 @@ Suggests:
     rlang,
     rmarkdown,
     rsample,
-    testthat (>= 3.0.0),
-    tibble
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
     BH,
@@ -32,7 +31,8 @@ Imports:
     pROC,
     RcppEigen,
     rstan,
-    stats
+    stats,
+    tibble
 URL: https://github.com/swarnendu-stat/bnns, https://swarnendu-stat.github.io/bnns/
 BugReports: https://github.com/swarnendu-stat/bnns/issues
 VignetteBuilder: knitr
