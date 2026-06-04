@@ -56,6 +56,20 @@ bnn_reg_spec <- mlp(
   )
 
 bnn_reg_spec
+#> Single Layer Neural Network Model Specification (regression)
+#> 
+#> Main Arguments:
+#>   hidden_units = 5
+#>   epochs = 500
+#>   activation = relu
+#> 
+#> Engine-Specific Arguments:
+#>   chains = 2
+#>   warmup = 250
+#>   refresh = 0
+#>   seed = 123
+#> 
+#> Computational engine: bnns
 ```
 
 ### 2. Create a Workflow and Fit
