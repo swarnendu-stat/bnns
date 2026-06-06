@@ -1,1 +1,9 @@
 ^CODE_OF_CONDUCT\.md$
+^\.github$
+^_pkgdown\.yml$
+^bnns\.Rproj$
+^cran-comments\.md$
+^docs$
+^pkgdown$
+^README\.Rmd$
+^LICENSE\.md$

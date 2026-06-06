@@ -55,6 +55,8 @@ bnns(
 \item \code{3} for softmax
 }}
 
+\item{algorithm}{A character string specifying the MCMC algorithm. Options are \code{"NUTS"} (default) or \code{"HMC"}.}
+
 \item{iter}{An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.}
 
 \item{warmup}{An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.}

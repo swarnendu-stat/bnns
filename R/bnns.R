@@ -20,6 +20,7 @@
 #'     \item \code{2} for sigmoid
 #'     \item \code{3} for softmax
 #'   }
+#' @param algorithm A character string specifying the MCMC algorithm. Options are \code{"NUTS"} (default) or \code{"HMC"}.
 #' @param iter An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.
 #' @param warmup An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.
 #' @param thin An integer specifying the thinning interval for Stan samples. Default is 1.
@@ -117,6 +118,9 @@
 #' # See the documentation for bnns.default for more details on the default implementation.
 #'
 #' @seealso \code{\link{bnns.default}}
+#' @importFrom stats median predict
+#' @import BH
+#' @import RcppEigen
 #'
 #' @export
 
@@ -201,6 +205,7 @@ get_or_compile_cmdstan_model <- function(stan_code, use_gpu = FALSE) {
 #'     \item \code{2} for sigmoid
 #'     \item \code{3} for softmax
 #'   }
+#' @param algorithm A character string specifying the MCMC algorithm. Options are \code{"NUTS"} (default) or \code{"HMC"}.
 #' @param iter An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.
 #' @param warmup An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.
 #' @param thin An integer specifying the thinning interval for Stan samples. Default is 1.
@@ -642,6 +647,7 @@ bnns_train <- function(train_x,
 #'     \item \code{2} for sigmoid
 #'     \item \code{3} for softmax
 #'   }
+#' @param algorithm A character string specifying the MCMC algorithm. Options are \code{"NUTS"} (default) or \code{"HMC"}.
 #' @param iter An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.
 #' @param warmup An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.
 #' @param thin An integer specifying the thinning interval for Stan samples. Default is 1.
