@@ -11,6 +11,7 @@
   nodes = rep(2, L),
   act_fn = rep(2, L),
   out_act_fn = 1,
+  algorithm = c("NUTS", "HMC"),
   iter = 1000,
   warmup = 200,
   thin = 1,

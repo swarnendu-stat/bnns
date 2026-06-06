@@ -21,6 +21,27 @@ translate_activation <- function(activation) {
   as.integer(activation)
 }
 
+#' Translate output activation name to bnns code
+#' @keywords internal
+translate_out_activation <- function(out_act_fn) {
+  mapping <- c(
+    "linear"  = 1L,
+    "sigmoid" = 2L,
+    "softmax" = 3L
+  )
+  if (is.character(out_act_fn)) {
+    out_act_fn <- tolower(out_act_fn)
+    if (any(!out_act_fn %in% names(mapping))) {
+      rlang::abort(paste0(
+        "Unknown out_act_fn. ",
+        "bnns supports: ", paste(names(mapping), collapse = ", ")
+      ))
+    }
+    return(unname(mapping[out_act_fn]))
+  }
+  as.integer(out_act_fn)
+}
+
 #' Auto-detect out_act_fn from response variable
 #' @keywords internal
 detect_output_activation <- function(y) {

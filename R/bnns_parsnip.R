@@ -28,14 +28,14 @@ post_pred_prob <- function(results, object) {
   tibble::as_tibble(out)
 }
 
-#' Register bnns parsnip engine
-#'
-#' @param force Logical. Force registration even if already registered.
-#' @param model Character. The parsnip model name to register. Default is `"mlp"`.
 if (getRversion() >= "2.15.1") {
   utils::globalVariables(c("object", "new_data"))
 }
 
+#' Register bnns parsnip engine
+#'
+#' @param force Logical. Force registration even if already registered.
+#' @param model Character. The parsnip model name to register. Default is `"mlp"`.
 #' @keywords internal
 #' @noRd
 register_bnns_parsnip <- function(force = FALSE, model = "mlp") {

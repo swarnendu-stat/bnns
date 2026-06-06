@@ -121,7 +121,8 @@
 #' @export
 
 bnns <- function(formula, data, L = 1, nodes = rep(2, L),
-                 act_fn = rep(2, L), out_act_fn = 1, iter = 1e3, warmup = 2e2,
+                 act_fn = rep(2, L), out_act_fn = 1, algorithm = c("NUTS", "HMC"),
+                 iter = 1e3, warmup = 2e2,
                  thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
                  prior_bias = NULL, prior_sigma = NULL, verbose = FALSE,
                  refresh = max(iter / 10, 1), normalize = TRUE, 
@@ -309,6 +310,7 @@ bnns_train <- function(train_x,
                        nodes = rep(2, L),
                        act_fn = rep(2, L),
                        out_act_fn = 1,
+                       algorithm = c("NUTS", "HMC"),
                        iter = 1000,
                        warmup = 200,
                        thin = 1,
@@ -327,9 +329,15 @@ bnns_train <- function(train_x,
                        ...) {
   
   backend <- match.arg(backend)
+  algorithm <- match.arg(toupper(algorithm[1]), c("NUTS", "HMC"))
+  
   if (use_gpu && backend != "cmdstanr") {
     warning("GPU acceleration is only supported with the 'cmdstanr' backend. Switching backend to 'cmdstanr'.", call. = FALSE)
     backend <- "cmdstanr"
+  }
+
+  if (backend == "cmdstanr" && algorithm == "HMC") {
+    warning("The 'cmdstanr' backend does not natively expose static HMC via the sample method. Using the default NUTS engine instead.", call. = FALSE)
   }
 
   if (use_gpu && backend == "cmdstanr" && requireNamespace("OpenCL", quietly = TRUE)) {
@@ -339,12 +347,21 @@ bnns_train <- function(train_x,
       use_gpu <- FALSE
     }
   }
-  stopifnot("Argument train_x is missing" = !missing(train_x))
-  stopifnot("Argument train_y is missing" = !missing(train_y))
-  stopifnot("L must be a positive integer" = ((L %% 1 == 0) & (sign(L) == 1)))
+  if (missing(train_x)) stop("Argument train_x is missing")
+  if (missing(train_y)) stop("Argument train_y is missing")
+  if (!((L %% 1 == 0) & (sign(L) == 1))) stop("L must be a positive integer")
   
-  stopifnot("nodes must be positive integer(s)" = (all(nodes %% 1 == 0) & all(sign(nodes) == 1)))
-  stopifnot("act_fn must be a sequence of 1/2/3/4/5" = all(act_fn %in% 1:5))
+  if (!(all(nodes %% 1 == 0) & all(sign(nodes) == 1))) stop("nodes must be positive integer(s)")
+  
+  if (is.character(act_fn)) {
+    act_fn <- translate_activation(act_fn)
+  }
+  if (is.character(out_act_fn)) {
+    out_act_fn <- translate_out_activation(out_act_fn)
+  }
+
+  if (!all(act_fn %in% 1:5)) stop("act_fn must be a sequence of 1/2/3/4/5")
+  if (!out_act_fn %in% 1:3) stop("out_act_fn must be 1, 2, or 3")
 
   # Validate that the length of nodes matches the number of layers L
   if (length(nodes) != L) {
@@ -585,7 +602,7 @@ bnns_train <- function(train_x,
     compiled_model <- get_or_compile_stan_model(stan_model)
     est$fit <- suppressWarnings(rstan::sampling(
       object = compiled_model, data = stan_data, include = TRUE,
-      pars = pars,
+      pars = pars, algorithm = algorithm,
       iter = iter, warmup = warmup, thin = thin, chains = chains, cores = cores,
       init = 0, seed = seed, verbose = verbose, refresh = refresh
     ))
@@ -723,7 +740,8 @@ bnns_train <- function(train_x,
 #' @export
 
 bnns.default <- function(formula, data, L = 1, nodes = rep(2, L),
-                         act_fn = rep(2, L), out_act_fn = 1, iter = 1e3, warmup = 2e2,
+                         act_fn = rep(2, L), out_act_fn = 1, algorithm = c("NUTS", "HMC"),
+                         iter = 1e3, warmup = 2e2,
                          thin = 1, chains = 2, cores = 2, seed = 123, prior_weights = NULL,
                          prior_bias = NULL, prior_sigma = NULL, verbose = FALSE,
                          refresh = max(iter / 10, 1), normalize = TRUE, 
@@ -752,18 +770,12 @@ bnns.default <- function(formula, data, L = 1, nodes = rep(2, L),
   train_x <- stats::model.matrix(attr(mf, "terms"), data = mf)
   train_y <- stats::model.response(mf)
 
-  # Translate character activations (e.g., from parsnip)
+  # Translate character activations
   if (is.character(act_fn)) {
-    act_fn <- unname(sapply(act_fn, function(x) {
-      switch(tolower(x),
-        "tanh" = 1,
-        "sigmoid" = 2,
-        "softplus" = 3,
-        "relu" = 4,
-        "linear" = 5,
-        stop(paste("Unsupported activation function:", x))
-      )
-    }))
+    act_fn <- translate_activation(act_fn)
+  }
+  if (is.character(out_act_fn)) {
+    out_act_fn <- translate_out_activation(out_act_fn)
   }
 
   if (length(nodes) == 1 && L > 1) nodes <- rep(nodes, L)
@@ -787,7 +799,7 @@ bnns.default <- function(formula, data, L = 1, nodes = rep(2, L),
   }
   est <- bnns_train(
     train_x = train_x, train_y = train_y, L = L, nodes = nodes,
-    act_fn = act_fn, out_act_fn = out_act_fn, iter = iter,
+    act_fn = act_fn, out_act_fn = out_act_fn, algorithm = algorithm, iter = iter,
     warmup = warmup, thin = thin, chains = chains,
     cores = cores, seed = seed, prior_weights = prior_weights,
     prior_bias = prior_bias, prior_sigma = prior_sigma,
