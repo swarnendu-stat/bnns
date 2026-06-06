@@ -6,12 +6,13 @@
 stopifnot("mlbench not installed" = requireNamespace("mlbench", quietly = TRUE))
 stopifnot("rsample not installed" = requireNamespace("rsample", quietly = TRUE))
 stopifnot("ranger not installed" = requireNamespace("ranger", quietly = TRUE))
+stopifnot("parsnip not installed" = requireNamespace("parsnip", quietly = TRUE))
 
 # Loading the necessary libraries
 library(bnns)    # For Bayesian Neural Networks
+library(parsnip) # For unified modeling interface
 library(mlbench) # For benchmark datasets
 library(rsample) # For data splitting
-library(ranger)  # For random forest model comparison
 set.seed(123)    # Setting seed for reproducibility
 ```
 
@@ -24,13 +25,16 @@ datasets from the `mlbench` package:
 - **Binary Classification**: `mlbench.spirals` dataset  
 - **Multi-class Classification**: `mlbench.waveform` dataset
 
-For each dataset, we:
+We utilize the `parsnip` framework from the `tidymodels` ecosystem to
+provide a unified interface for model training and prediction. For each
+dataset, we:
 
 1.  Prepare the data for training and testing.
-2.  Build a Bayesian Neural Network using the `bnns` package.
+2.  Build a Bayesian Neural Network using the `bnns` engine via
+    [`parsnip::mlp()`](https://parsnip.tidymodels.org/reference/mlp.html).
 3.  Evaluate the model’s predictive performance.
-4.  To compare, show the performance of the randomforest algorithm from
-    `ranger` package with default settings.
+4.  To compare, show the performance of the random forest algorithm
+    using the `ranger` engine.
 
 ------------------------------------------------------------------------
 
@@ -54,12 +58,11 @@ $`\epsilon \sim N(0, 1).`$
 
 # Generating the Friedman1 dataset
 friedman1_data <- mlbench.friedman1(n = 100, sd = 1)
+friedman1_df <- cbind.data.frame(y = friedman1_data$y, friedman1_data$x)
+colnames(friedman1_df) <- c("y", paste0("x", 1:10))
 
 # Splitting the data into training (80%) and testing (20%) sets
-friedman1_split <- initial_split(
-  cbind.data.frame(y = friedman1_data$y, friedman1_data$x),
-  prop = 0.8
-)
+friedman1_split <- initial_split(friedman1_df, prop = 0.8)
 friedman1_train <- training(friedman1_split)  # Training data
 friedman1_test <- testing(friedman1_split)   # Testing data
 ```
@@ -68,11 +71,18 @@ friedman1_test <- testing(friedman1_split)   # Testing data
 
 ``` r
 
-# Training a Bayesian Neural Network with a single hidden layer and 4 nodes
-friedman1_bnn <- bnns(y ~ -1 + .,
-  data = friedman1_train, L = 1, nodes = 4, act_fn = 3,
-  out_act_fn = 1, iter = 1e3, warmup = 2e2
-)
+# Specifying a Bayesian Neural Network with a single hidden layer and 4 nodes
+friedman1_bnn_spec <- mlp(
+  mode = "regression",
+  hidden_units = 4,
+  epochs = 1000,
+  activation = "softplus"
+) |> 
+  set_engine("bnns", warmup = 200)
+
+# Training the model
+friedman1_bnn_fit <- friedman1_bnn_spec |> 
+  fit(y ~ ., data = friedman1_train)
 #> Trying to compile a simple C file
 #> Running /opt/R/4.6.0/lib/R/bin/R CMD SHLIB foo.c
 #> using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
@@ -89,8 +99,8 @@ friedman1_bnn <- bnns(y ~ -1 + .,
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.000125 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.25 seconds.
+#> Chain 1: Gradient evaluation took 0.000141 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.41 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -98,8 +108,8 @@ friedman1_bnn <- bnns(y ~ -1 + .,
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 0.000104 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.04 seconds.
+#> Chain 2: Gradient evaluation took 0.00013 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.3 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -112,30 +122,30 @@ friedman1_bnn <- bnns(y ~ -1 + .,
 #> Chain 1: Iteration: 201 / 1000 [ 20%]  (Sampling)
 #> Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)
 #> Chain 1: Iteration: 300 / 1000 [ 30%]  (Sampling)
-#> Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)
 #> Chain 1: Iteration: 400 / 1000 [ 40%]  (Sampling)
-#> Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)
+#> Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)
 #> Chain 1: Iteration: 500 / 1000 [ 50%]  (Sampling)
-#> Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)
+#> Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)
 #> Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)
-#> Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)
+#> Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)
 #> Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)
-#> Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)
+#> Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)
 #> Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)
-#> Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)
+#> Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)
 #> Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)
-#> Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)
-#> Chain 2: 
-#> Chain 2:  Elapsed Time: 1.024 seconds (Warm-up)
-#> Chain 2:                5.358 seconds (Sampling)
-#> Chain 2:                6.382 seconds (Total)
-#> Chain 2: 
+#> Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 1.213 seconds (Warm-up)
-#> Chain 1:                5.677 seconds (Sampling)
-#> Chain 1:                6.89 seconds (Total)
-#> Chain 1:
+#> Chain 1:  Elapsed Time: 0.798 seconds (Warm-up)
+#> Chain 1:                2.93 seconds (Sampling)
+#> Chain 1:                3.728 seconds (Total)
+#> Chain 1: 
+#> Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)
+#> Chain 2: 
+#> Chain 2:  Elapsed Time: 0.664 seconds (Warm-up)
+#> Chain 2:                3.258 seconds (Sampling)
+#> Chain 2:                3.922 seconds (Total)
+#> Chain 2:
 ```
 
 ### Model Evaluation
@@ -143,13 +153,13 @@ friedman1_bnn <- bnns(y ~ -1 + .,
 ``` r
 
 # Making predictions on the test set and evaluating model performance
-friedman1_bnn_pred <- predict(friedman1_bnn, friedman1_test, type = "mean")
-bnns::measure_cont(friedman1_test$y, friedman1_bnn_pred)  # Measures like RMSE, MAE
+friedman1_bnn_pred <- predict(friedman1_bnn_fit, new_data = friedman1_test)
+bnns::measure_cont(friedman1_test$y, friedman1_bnn_pred$.pred)  # Measures like RMSE, MAE
 #> $rmse
-#> [1] 2.331574
+#> [1] 2.471236
 #> 
 #> $mae
-#> [1] 1.913072
+#> [1] 2.047809
 ```
 
 ### Model Comparison
@@ -157,22 +167,20 @@ bnns::measure_cont(friedman1_test$y, friedman1_bnn_pred)  # Measures like RMSE, 
 ``` r
 
 # Training a random forest model for comparison
-friedman1_rf <- ranger(
-  y ~ -1 + .,
-  data = friedman1_train |> `colnames<-`(c("y", paste0("x", 1:10)))
-)
+friedman1_rf_spec <- rand_forest(mode = "regression") |> 
+  set_engine("ranger")
+
+friedman1_rf_fit <- friedman1_rf_spec |> 
+  fit(y ~ ., data = friedman1_train)
 
 # Making predictions with random forest and evaluating performance
-friedman1_rf_pred <- predict(
-  friedman1_rf,
-  friedman1_test |> `colnames<-`(c("y", paste0("x", 1:10)))
-)
-measure_cont(friedman1_test$y, friedman1_rf_pred$predictions)
+friedman1_rf_pred <- predict(friedman1_rf_fit, new_data = friedman1_test)
+measure_cont(friedman1_test$y, friedman1_rf_pred$.pred)
 #> $rmse
-#> [1] 3.099387
+#> [1] 3.060285
 #> 
 #> $mae
-#> [1] 2.517299
+#> [1] 2.489923
 ```
 
 ------------------------------------------------------------------------
@@ -189,11 +197,11 @@ data point.
 
 # Generating the Spirals dataset with Gaussian noise
 spirals_data <- mlbench.spirals(100, 1.5, 0.05)
-spirals_data <- cbind.data.frame(y = spirals_data$classes, spirals_data$x) |>
-  transform(y = as.numeric(y) - 1)  # Converting to binary 0/1
+spirals_df <- cbind.data.frame(y = spirals_data$classes, spirals_data$x)
+colnames(spirals_df) <- c("y", "x1", "x2")
 
 # Splitting the data into training and testing sets (stratified by class)
-spirals_split <- initial_split(spirals_data, prop = 0.8, strata = "y")
+spirals_split <- initial_split(spirals_df, prop = 0.8, strata = "y")
 spirals_train <- training(spirals_split)  # Training data
 spirals_test <- testing(spirals_split)   # Testing data
 ```
@@ -203,11 +211,16 @@ spirals_test <- testing(spirals_split)   # Testing data
 ``` r
 
 # Training a Bayesian Neural Network with three hidden layers
-spirals_bnn <- bnns(y ~ -1 + .,
-  data = spirals_train, L = 3,
-  nodes = c(64, 64, 16), act_fn = c(1, 4, 4),
-  out_act_fn = 2, iter = 1e3, warmup = 2e2
-)
+spirals_bnn_spec <- mlp(
+  mode = "classification", 
+  hidden_units = c(64, 64, 16),
+  epochs = 1000,
+  activation = c("tanh", "relu", "relu")
+) |> 
+  set_engine("bnns", L = 3, warmup = 200)
+
+spirals_bnn_fit <- spirals_bnn_spec |> 
+  fit(y ~ ., data = spirals_train)
 #> Trying to compile a simple C file
 #> Running /opt/R/4.6.0/lib/R/bin/R CMD SHLIB foo.c
 #> using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
@@ -226,29 +239,29 @@ spirals_bnn <- bnns(y ~ -1 + .,
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.002092 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 20.92 seconds.
+#> Chain 1: Gradient evaluation took 0.001938 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 19.38 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 0.002079 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 20.79 seconds.
+#> Chain 2: Gradient evaluation took 0.001912 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 19.12 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
 #> Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)
 #> Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)
-#> Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)
 #> Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)
-#> Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)
+#> Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)
 #> Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)
-#> Chain 2: Iteration: 201 / 1000 [ 20%]  (Sampling)
+#> Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)
 #> Chain 1: Iteration: 201 / 1000 [ 20%]  (Sampling)
-#> Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)
+#> Chain 2: Iteration: 201 / 1000 [ 20%]  (Sampling)
 #> Chain 1: Iteration: 300 / 1000 [ 30%]  (Sampling)
-#> Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)
+#> Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)
 #> Chain 1: Iteration: 400 / 1000 [ 40%]  (Sampling)
+#> Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)
 #> Chain 1: Iteration: 500 / 1000 [ 50%]  (Sampling)
 #> Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)
 #> Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)
@@ -261,15 +274,15 @@ spirals_bnn <- bnns(y ~ -1 + .,
 #> Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 172.462 seconds (Warm-up)
-#> Chain 1:                723.421 seconds (Sampling)
-#> Chain 1:                895.883 seconds (Total)
+#> Chain 1:  Elapsed Time: 167.774 seconds (Warm-up)
+#> Chain 1:                706.7 seconds (Sampling)
+#> Chain 1:                874.474 seconds (Total)
 #> Chain 1: 
 #> Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 171.792 seconds (Warm-up)
-#> Chain 2:                725.935 seconds (Sampling)
-#> Chain 2:                897.727 seconds (Total)
+#> Chain 2:  Elapsed Time: 168.19 seconds (Warm-up)
+#> Chain 2:                708.255 seconds (Sampling)
+#> Chain 2:                876.445 seconds (Total)
 #> Chain 2:
 ```
 
@@ -278,18 +291,19 @@ spirals_bnn <- bnns(y ~ -1 + .,
 ``` r
 
 # Making predictions and calculating binary classification metrics (e.g., AUC)
-spirals_bnn_pred <- predict(spirals_bnn, spirals_test, type = "mean")
-measure_bin(spirals_test$y, spirals_bnn_pred)
+spirals_bnn_pred <- predict(spirals_bnn_fit, new_data = spirals_test, type = "prob")
+# Convert factor to numeric 0/1 for measure_bin
+measure_bin(as.numeric(spirals_test$y) - 1, spirals_bnn_pred$.pred_2)
 #> Setting levels: control = 0, case = 1
 #> Setting direction: controls < cases
 #> $conf_mat
 #>    pred_label
-#> obs  0  1
-#>   0 10  0
-#>   1  1  9
+#> obs 0 1
+#>   0 5 5
+#>   1 1 9
 #> 
 #> $accuracy
-#> [1] 0.95
+#> [1] 0.7
 #> 
 #> $ROC
 #> 
@@ -297,10 +311,10 @@ measure_bin(spirals_test$y, spirals_bnn_pred)
 #> roc.default(response = obs, predictor = pred)
 #> 
 #> Data: pred in 10 controls (obs 0) < 10 cases (obs 1).
-#> Area under the curve: 0.98
+#> Area under the curve: 0.78
 #> 
 #> $AUC
-#> [1] 0.98
+#> [1] 0.78
 ```
 
 ### Model Comparison
@@ -308,17 +322,15 @@ measure_bin(spirals_test$y, spirals_bnn_pred)
 ``` r
 
 # Training a random forest model for comparison
-spirals_rf <- ranger(
-  y ~ -1 + .,
-  data = spirals_train |> `colnames<-`(c("y", paste0("x", 1:2)))
-)
+spirals_rf_spec <- rand_forest(mode = "classification") |> 
+  set_engine("ranger")
+
+spirals_rf_fit <- spirals_rf_spec |> 
+  fit(y ~ ., data = spirals_train)
 
 # Evaluating the random forest model
-spirals_rf_pred <- predict(
-  spirals_rf,
-  spirals_test |> `colnames<-`(c("y", paste0("x", 1:2)))
-)
-measure_bin(spirals_test$y, spirals_rf_pred$predictions)
+spirals_rf_pred <- predict(spirals_rf_fit, new_data = spirals_test, type = "prob")
+measure_bin(as.numeric(spirals_test$y) - 1, spirals_rf_pred$.pred_2)
 #> Setting levels: control = 0, case = 1
 #> Setting direction: controls < cases
 #> $conf_mat
@@ -336,10 +348,10 @@ measure_bin(spirals_test$y, spirals_rf_pred$predictions)
 #> roc.default(response = obs, predictor = pred)
 #> 
 #> Data: pred in 10 controls (obs 0) < 10 cases (obs 1).
-#> Area under the curve: 0.64
+#> Area under the curve: 0.68
 #> 
 #> $AUC
-#> [1] 0.64
+#> [1] 0.68
 ```
 
 ------------------------------------------------------------------------
@@ -357,11 +369,11 @@ each of 3 classes). Each class is generated from a combination of 2 of 3
 
 # Generating the Waveform dataset
 waveform_data <- mlbench.waveform(100)
-waveform_data <- cbind.data.frame(y = waveform_data$classes, waveform_data$x) |>
-  transform(y = as.factor(y))  # Converting the target to a factor
+waveform_df <- cbind.data.frame(y = waveform_data$classes, waveform_data$x)
+colnames(waveform_df) <- c("y", paste0("x", 1:21))
 
 # Splitting the data into training and testing sets (stratified by class)
-waveform_split <- initial_split(waveform_data, prop = 0.8, strata = "y")
+waveform_split <- initial_split(waveform_df, prop = 0.8, strata = "y")
 waveform_train <- training(waveform_split)  # Training data
 waveform_test <- testing(waveform_split)   # Testing data
 ```
@@ -371,10 +383,16 @@ waveform_test <- testing(waveform_split)   # Testing data
 ``` r
 
 # Training a Bayesian Neural Network with two hidden layers
-waveform_bnn <- bnns(y ~ -1 + .,
-  data = waveform_train, L = 2, nodes = c(2, 2),
-  act_fn = 2:3, out_act_fn = 3, iter = 1e3, warmup = 2e2
-)
+waveform_bnn_spec <- mlp(
+  mode = "classification", 
+  hidden_units = c(2, 2),
+  epochs = 1000,
+  activation = c("sigmoid", "softplus")
+) |> 
+  set_engine("bnns", L = 2, warmup = 200)
+
+waveform_bnn_fit <- waveform_bnn_spec |> 
+  fit(y ~ ., data = waveform_train)
 #> Trying to compile a simple C file
 #> Running /opt/R/4.6.0/lib/R/bin/R CMD SHLIB foo.c
 #> using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
@@ -391,8 +409,8 @@ waveform_bnn <- bnns(y ~ -1 + .,
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.000195 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.95 seconds.
+#> Chain 1: Gradient evaluation took 0.000213 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.13 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -400,8 +418,8 @@ waveform_bnn <- bnns(y ~ -1 + .,
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 0.000192 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.92 seconds.
+#> Chain 2: Gradient evaluation took 0.00031 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 3.1 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -415,29 +433,29 @@ waveform_bnn <- bnns(y ~ -1 + .,
 #> Chain 1: Iteration: 300 / 1000 [ 30%]  (Sampling)
 #> Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)
 #> Chain 1: Iteration: 400 / 1000 [ 40%]  (Sampling)
-#> Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)
 #> Chain 1: Iteration: 500 / 1000 [ 50%]  (Sampling)
-#> Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)
+#> Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)
 #> Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)
-#> Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)
+#> Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)
 #> Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)
-#> Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)
-#> Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)
 #> Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)
+#> Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)
 #> Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)
+#> Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)
+#> Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
+#> Chain 1: 
+#> Chain 1:  Elapsed Time: 0.723 seconds (Warm-up)
+#> Chain 1:                2.466 seconds (Sampling)
+#> Chain 1:                3.189 seconds (Total)
+#> Chain 1: 
+#> Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)
 #> Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)
-#> Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 0.855 seconds (Warm-up)
-#> Chain 2:                2.527 seconds (Sampling)
-#> Chain 2:                3.382 seconds (Total)
-#> Chain 2: 
-#> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.825 seconds (Warm-up)
-#> Chain 1:                2.57 seconds (Sampling)
-#> Chain 1:                3.395 seconds (Total)
-#> Chain 1:
+#> Chain 2:  Elapsed Time: 0.719 seconds (Warm-up)
+#> Chain 2:                3.89 seconds (Sampling)
+#> Chain 2:                4.609 seconds (Total)
+#> Chain 2:
 ```
 
 ### Model Evaluation
@@ -445,10 +463,11 @@ waveform_bnn <- bnns(y ~ -1 + .,
 ``` r
 
 # Making predictions and evaluating multi-class classification metrics
-waveform_bnn_pred <- predict(waveform_bnn, waveform_test)
-measure_cat(waveform_test$y, waveform_bnn_pred)
+waveform_bnn_pred <- predict(waveform_bnn_fit, new_data = waveform_test, type = "prob")
+measure_cat(waveform_test$y, as.matrix(waveform_bnn_pred))
 #> $log_loss
-#> [1] 0.5167825
+#>  .pred_1 
+#> 0.552479 
 #> 
 #> $ROC
 #> 
@@ -456,10 +475,10 @@ measure_cat(waveform_test$y, waveform_bnn_pred)
 #> multiclass.roc.default(response = obs, predictor = `colnames<-`(data.frame(pred),     levels(obs)))
 #> 
 #> Data: multivariate predictor `colnames<-`(data.frame(pred), levels(obs)) with 3 levels of obs: 1, 2, 3.
-#> Multi-class area under the curve: 0.9777
+#> Multi-class area under the curve: 0.9395
 #> 
 #> $AUC
-#> [1] 0.9776786
+#> [1] 0.9394841
 ```
 
 ### Model Comparison
@@ -467,21 +486,18 @@ measure_cat(waveform_test$y, waveform_bnn_pred)
 ``` r
 
 # Training a random forest model with probability outputs for comparison
-waveform_rf <- ranger(
-  y ~ -1 + .,
-  data = waveform_train |> `colnames<-`(c("y", paste0("x", 1:21))),
-  probability = TRUE
-)
+waveform_rf_spec <- rand_forest(mode = "classification") |> 
+  set_engine("ranger")
+
+waveform_rf_fit <- waveform_rf_spec |> 
+  fit(y ~ ., data = waveform_train)
 
 # Evaluating the random forest model
-waveform_rf_pred <- predict(
-  waveform_rf,
-  waveform_test |> `colnames<-`(c("y", paste0("x", 1:21)))
-)
-measure_cat(waveform_test$y, waveform_rf_pred$predictions)
+waveform_rf_pred <- predict(waveform_rf_fit, new_data = waveform_test, type = "prob")
+measure_cat(waveform_test$y, as.matrix(waveform_rf_pred))
 #> $log_loss
-#>         1 
-#> 0.5073519 
+#>   .pred_1 
+#> 0.5057007 
 #> 
 #> $ROC
 #> 
@@ -489,10 +505,10 @@ measure_cat(waveform_test$y, waveform_rf_pred$predictions)
 #> multiclass.roc.default(response = obs, predictor = `colnames<-`(data.frame(pred),     levels(obs)))
 #> 
 #> Data: multivariate predictor `colnames<-`(data.frame(pred), levels(obs)) with 3 levels of obs: 1, 2, 3.
-#> Multi-class area under the curve: 0.9742
+#> Multi-class area under the curve: 0.9365
 #> 
 #> $AUC
-#> [1] 0.9742063
+#> [1] 0.9365079
 ```
 
 ------------------------------------------------------------------------
@@ -514,4 +530,6 @@ distributions, enabling:
     Bayesian inference.
 
 Overall, `bnns` is a powerful tool for tasks requiring both predictive
-accuracy and interpretability, making it suitable for various domains.
+accuracy and interpretability, making it suitable for various domains,
+and its integration with the `tidymodels` framework via `parsnip` makes
+it easy to integrate into modern R modeling workflows.

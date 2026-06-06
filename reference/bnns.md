@@ -13,6 +13,7 @@ bnns(
   nodes = rep(2, L),
   act_fn = rep(2, L),
   out_act_fn = 1,
+  algorithm = c("NUTS", "HMC"),
   iter = 1000,
   warmup = 200,
   thin = 1,
@@ -282,8 +283,8 @@ model <- bnns(y ~ -1 + x1 + x2,
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 2.6e-05 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.26 seconds.
+#> Chain 1: Gradient evaluation took 2.9e-05 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.29 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 

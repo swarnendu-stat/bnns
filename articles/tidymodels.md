@@ -6,12 +6,13 @@ The `bnns` package provides a fully integrated `parsnip` engine,
 allowing you to fit Bayesian Neural Networks (BNNs) seamlessly within
 the tidymodels ecosystem.
 
-By registering the `"bnns"` engine for the `mlp()` (Multi-Layer
-Perceptron) model specification, you can leverage the powerful data
-preprocessing capabilities of `recipes`, manage modeling pipelines with
-`workflows`, and evaluate performance using `yardstick`, all while
-benefiting from the robust probabilistic inference provided by `bnns`
-and Stan.
+By registering the `"bnns"` engine for the
+[`mlp()`](https://parsnip.tidymodels.org/reference/mlp.html)
+(Multi-Layer Perceptron) model specification, you can leverage the
+powerful data preprocessing capabilities of `recipes`, manage modeling
+pipelines with `workflows`, and evaluate performance using `yardstick`,
+all while benefiting from the robust probabilistic inference provided by
+`bnns` and Stan.
 
 ### Setup
 
@@ -31,13 +32,15 @@ to predict miles per gallon (`mpg`).
 
 ### 1. Specify the Model
 
-We use the `mlp()` function to define a neural network. We map the
-standard `parsnip` arguments to `bnns` parameters: - `hidden_units` maps
-to `nodes`. - `epochs` maps to `iter` (total Stan iterations). -
-`activation` maps to `act_fn` (e.g., `"relu"`, `"tanh"`, `"sigmoid"`).
+We use the [`mlp()`](https://parsnip.tidymodels.org/reference/mlp.html)
+function to define a neural network. We map the standard `parsnip`
+arguments to `bnns` parameters: - `hidden_units` maps to `nodes`. -
+`epochs` maps to `iter` (total Stan iterations). - `activation` maps to
+`act_fn` (e.g., `"relu"`, `"tanh"`, `"sigmoid"`).
 
 Additional Stan-specific arguments, like `chains`, `warmup`, and
-`cores`, can be passed directly to `set_engine()`.
+`cores`, can be passed directly to
+[`set_engine()`](https://parsnip.tidymodels.org/reference/set_engine.html).
 
 ``` r
 
