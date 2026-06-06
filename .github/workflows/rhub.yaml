@@ -81,6 +81,13 @@ jobs:
         with:
           job-config: ${{ matrix.config.job-config }}
           token: ${{ secrets.RHUB_TOKEN }}
+      - name: Install OpenCL SDK (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/KhronosGroup/OpenCL-SDK/releases/download/v2023.04.17/OpenCL-SDK-v2023.04.17-Win-x64.zip" -OutFile "OpenCL-SDK.zip"
+          Expand-Archive -Path "OpenCL-SDK.zip" -DestinationPath "C:\OpenCL-SDK"
+          Add-Content -Path $env:GITHUB_ENV -Value "OCL=C:\OpenCL-SDK"
       - uses: r-hub/actions/platform-info@v1
         with:
           token: ${{ secrets.RHUB_TOKEN }}
