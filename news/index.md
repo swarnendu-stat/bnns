@@ -1,6 +1,6 @@
 # Changelog
 
-## bnns 0.1.3
+## bnns 1.0.0
 
 - **New Feature**: Added full support for the `tidymodels` ecosystem,
   including integration with `parsnip`, `recipes`, `workflows`, and
@@ -20,6 +20,8 @@
 - **New Feature**: Added a
   [`plot.bnns()`](https://swarnendu-stat.github.io/bnns/reference/plot.bnns.md)
   method for visualizing posterior distributions and model convergence.
+- **New Feature**: Added option to provide character input for `act_fn`
+  and `out_act_fn` arguments.
 - Changed the package to stable lifecycle and prepared for CRAN
   submission.
 - Added `Additional_repositories: https://mc-stan.org/r-packages/` to
