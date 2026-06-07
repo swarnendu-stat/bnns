@@ -27,10 +27,12 @@ The `bnns` package provides tools to fit Bayesian Neural Networks (BNNs) for reg
 ## Features
 
 - Support for multi-layer neural networks with customizable architecture.
-- Choice of activation functions (e.g., sigmoid, ReLU, tanh).
-- Outputs for regression (continuous response) and classification (binary and multiclass).
+- Choice of activation functions (e.g., sigmoid, ReLU, tanh) and output types for regression (continuous) and classification (binary and multiclass).
 - Choice of prior distributions for weights, biases and sigma (for regression).
-- Bayesian inference, providing posterior distributions for predictions and parameters.
+- Seamless integration with the `tidymodels` ecosystem (`parsnip`, `recipes`, `workflows`, `tune`).
+- GPU acceleration support via OpenCL for significantly faster model training.
+- Built-in functions for model evaluation (`loo.bnns()`, `waic.bnns()`), plotting (`plot.bnns()`), and saving/loading (`save_bnns()`, `load_bnns()`).
+- Bayesian inference, providing rigorous uncertainty quantification via posterior distributions for predictions and parameters.
 - Applications in domains such as clinical trials, predictive modeling, and more.
 
 ## Installation (stable CRAN version)
@@ -150,4 +152,4 @@ Contributions are welcome! Please raise issues or submit pull requests on [GitHu
 
 ## License
 
-This package is licensed under the Apache License. See `LICENSE` for details.
+This package is licensed under the MIT License. See `LICENSE` for details.
