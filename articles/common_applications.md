@@ -70,18 +70,18 @@ model_reg <- bnns(
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.000388 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 3.88 seconds.
+#> Chain 1: Gradient evaluation took 0.000382 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 3.82 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
-#> Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 0.00037 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 3.7 seconds.
+#> Chain 2: Gradient evaluation took 0.000359 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 3.59 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
+#> Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)
 #> Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)
 #> Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)
 #> Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)
@@ -90,30 +90,30 @@ model_reg <- bnns(
 #> Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)
 #> Chain 2: Iteration: 201 / 1000 [ 20%]  (Sampling)
 #> Chain 1: Iteration: 300 / 1000 [ 30%]  (Sampling)
-#> Chain 1: Iteration: 400 / 1000 [ 40%]  (Sampling)
 #> Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)
+#> Chain 1: Iteration: 400 / 1000 [ 40%]  (Sampling)
 #> Chain 1: Iteration: 500 / 1000 [ 50%]  (Sampling)
 #> Chain 2: Iteration: 400 / 1000 [ 40%]  (Sampling)
 #> Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)
 #> Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)
 #> Chain 2: Iteration: 500 / 1000 [ 50%]  (Sampling)
 #> Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)
-#> Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)
+#> Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 14.847 seconds (Warm-up)
-#> Chain 1:                45.478 seconds (Sampling)
-#> Chain 1:                60.325 seconds (Total)
+#> Chain 1:  Elapsed Time: 14.533 seconds (Warm-up)
+#> Chain 1:                45.243 seconds (Sampling)
+#> Chain 1:                59.776 seconds (Total)
 #> Chain 1: 
 #> Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)
 #> Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)
 #> Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 15.858 seconds (Warm-up)
-#> Chain 2:                78.182 seconds (Sampling)
-#> Chain 2:                94.04 seconds (Total)
+#> Chain 2:  Elapsed Time: 15.442 seconds (Warm-up)
+#> Chain 2:                76.263 seconds (Sampling)
+#> Chain 2:                91.705 seconds (Total)
 #> Chain 2:
 ```
 
@@ -177,15 +177,15 @@ model_bin <- bnns(
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.000554 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 5.54 seconds.
+#> Chain 1: Gradient evaluation took 0.000579 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 5.79 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
 #> Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 0.000546 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 5.46 seconds.
+#> Chain 2: Gradient evaluation took 0.000539 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 5.39 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -206,9 +206,9 @@ model_bin <- bnns(
 #> Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 18.686 seconds (Warm-up)
-#> Chain 2:                26.857 seconds (Sampling)
-#> Chain 2:                45.543 seconds (Total)
+#> Chain 2:  Elapsed Time: 18.829 seconds (Warm-up)
+#> Chain 2:                27.022 seconds (Sampling)
+#> Chain 2:                45.851 seconds (Total)
 #> Chain 2: 
 #> Chain 1: Iteration: 400 / 1000 [ 40%]  (Sampling)
 #> Chain 1: Iteration: 500 / 1000 [ 50%]  (Sampling)
@@ -218,9 +218,9 @@ model_bin <- bnns(
 #> Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 21.701 seconds (Warm-up)
-#> Chain 1:                115.669 seconds (Sampling)
-#> Chain 1:                137.37 seconds (Total)
+#> Chain 1:  Elapsed Time: 21.73 seconds (Warm-up)
+#> Chain 1:                116.015 seconds (Sampling)
+#> Chain 1:                137.745 seconds (Total)
 #> Chain 1:
 ```
 
@@ -301,8 +301,8 @@ model_multi <- bnns(
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.000409 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.09 seconds.
+#> Chain 1: Gradient evaluation took 0.000418 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.18 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -310,8 +310,8 @@ model_multi <- bnns(
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 0.000398 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 3.98 seconds.
+#> Chain 2: Gradient evaluation took 0.0004 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 4 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -319,8 +319,8 @@ model_multi <- bnns(
 #> Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)
 #> Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)
 #> Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)
-#> Chain 1: Iteration: 201 / 1000 [ 20%]  (Sampling)
 #> Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)
+#> Chain 1: Iteration: 201 / 1000 [ 20%]  (Sampling)
 #> Chain 2: Iteration: 201 / 1000 [ 20%]  (Sampling)
 #> Chain 1: Iteration: 300 / 1000 [ 30%]  (Sampling)
 #> Chain 2: Iteration: 300 / 1000 [ 30%]  (Sampling)
@@ -336,17 +336,17 @@ model_multi <- bnns(
 #> Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)
 #> Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 16.465 seconds (Warm-up)
-#> Chain 1:                55.312 seconds (Sampling)
-#> Chain 1:                71.777 seconds (Total)
+#> Chain 1:  Elapsed Time: 16.514 seconds (Warm-up)
+#> Chain 1:                55.466 seconds (Sampling)
+#> Chain 1:                71.98 seconds (Total)
 #> Chain 1: 
 #> Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)
 #> Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 16.64 seconds (Warm-up)
-#> Chain 2:                81.282 seconds (Sampling)
-#> Chain 2:                97.922 seconds (Total)
+#> Chain 2:  Elapsed Time: 16.595 seconds (Warm-up)
+#> Chain 2:                81.161 seconds (Sampling)
+#> Chain 2:                97.756 seconds (Total)
 #> Chain 2:
 ```
 

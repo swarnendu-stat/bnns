@@ -125,44 +125,6 @@ posterior distributions, and predictive performance.
 ``` r
 
 summary(model_reg)
-#> Call:
-#> bnns.default(formula = y ~ -1 + x1 + x2, data = df, L = 1, nodes = 2, 
-#>     act_fn = 3, out_act_fn = 1, iter = 10, warmup = 5, chains = 1)
-#> 
-#> Data Summary:
-#> Number of observations: 10 
-#> Number of features: 2 
-#> 
-#> Network Architecture:
-#> Number of hidden layers: 1 
-#> Nodes per layer: 2 
-#> Activation functions: 3 
-#> Output activation function: 1 
-#> 
-#> Posterior Summary (Key Parameters):
-#>                mean   se_mean        sd        2.5%         25%        50%
-#> w_out[1] -0.3589859 0.1186981 0.2219003 -0.63192694 -0.54933687 -0.2432431
-#> w_out[2]  0.2835853 0.1496669 0.2797950 -0.08961911  0.08535584  0.4349304
-#> b_out[1]  0.2885974 0.2090478 0.3908048 -0.13490958  0.03255030  0.3134945
-#> sigma     1.1350689 0.1354920 0.2532957  0.85446045  0.89073350  1.1906799
-#>                 75%      97.5%   n_eff      Rhat
-#> w_out[1] -0.2259656 -0.1443487 3.49485 1.0850253
-#> w_out[2]  0.4939612  0.5108619 3.49485 3.3897827
-#> b_out[1]  0.3776131  0.8233219 3.49485 3.0021945
-#> sigma     1.3519152  1.3876187 3.49485 0.7888898
-#> 
-#> Model Fit Information:
-#> Iterations: 10 
-#> Warmup: 5 
-#> Thinning: 1 
-#> Chains: 1 
-#> 
-#> Predictive Performance:
-#> RMSE (training): 0.7120133 
-#> MAE (training): 0.576182 
-#> 
-#> Notes:
-#> Check convergence diagnostics for parameters with high R-hat values.
 ```
 
 ``` r
@@ -212,11 +174,6 @@ test_y <- rnorm(5)
 # Evaluate predictions
 metrics_reg <- measure_cont(obs = test_y, pred = pred_reg)
 print(metrics_reg)
-#> $rmse
-#> [1] 0.8633352
-#> 
-#> $mae
-#> [1] 0.7396594
 ```
 
 ### Binary Classification Evaluation

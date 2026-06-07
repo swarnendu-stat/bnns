@@ -173,45 +173,7 @@ activation functions (<code>act_fn</code>).</p>
 model, including the network architecture, posterior distributions, and
 predictive performance.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_reg</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; bnns.default(formula = y ~ -1 + x1 + x2, data = df, L = 1, nodes = 2, </span></span>
-<span><span class="co">#&gt;     act_fn = 3, out_act_fn = 1, iter = 10, warmup = 5, chains = 1)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Data Summary:</span></span>
-<span><span class="co">#&gt; Number of observations: 10 </span></span>
-<span><span class="co">#&gt; Number of features: 2 </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Network Architecture:</span></span>
-<span><span class="co">#&gt; Number of hidden layers: 1 </span></span>
-<span><span class="co">#&gt; Nodes per layer: 2 </span></span>
-<span><span class="co">#&gt; Activation functions: 3 </span></span>
-<span><span class="co">#&gt; Output activation function: 1 </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Posterior Summary (Key Parameters):</span></span>
-<span><span class="co">#&gt;                mean   se_mean        sd        2.5%         25%        50%</span></span>
-<span><span class="co">#&gt; w_out[1] -0.3589859 0.1186981 0.2219003 -0.63192694 -0.54933687 -0.2432431</span></span>
-<span><span class="co">#&gt; w_out[2]  0.2835853 0.1496669 0.2797950 -0.08961911  0.08535584  0.4349304</span></span>
-<span><span class="co">#&gt; b_out[1]  0.2885974 0.2090478 0.3908048 -0.13490958  0.03255030  0.3134945</span></span>
-<span><span class="co">#&gt; sigma     1.1350689 0.1354920 0.2532957  0.85446045  0.89073350  1.1906799</span></span>
-<span><span class="co">#&gt;                 75%      97.5%   n_eff      Rhat</span></span>
-<span><span class="co">#&gt; w_out[1] -0.2259656 -0.1443487 3.49485 1.0850253</span></span>
-<span><span class="co">#&gt; w_out[2]  0.4939612  0.5108619 3.49485 3.3897827</span></span>
-<span><span class="co">#&gt; b_out[1]  0.3776131  0.8233219 3.49485 3.0021945</span></span>
-<span><span class="co">#&gt; sigma     1.3519152  1.3876187 3.49485 0.7888898</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model Fit Information:</span></span>
-<span><span class="co">#&gt; Iterations: 10 </span></span>
-<span><span class="co">#&gt; Warmup: 5 </span></span>
-<span><span class="co">#&gt; Thinning: 1 </span></span>
-<span><span class="co">#&gt; Chains: 1 </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Predictive Performance:</span></span>
-<span><span class="co">#&gt; RMSE (training): 0.7120133 </span></span>
-<span><span class="co">#&gt; MAE (training): 0.576182 </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Notes:</span></span>
-<span><span class="co">#&gt; Check convergence diagnostics for parameters with high R-hat values.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_reg</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_bin</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model_cat</span><span class="op">)</span></span></code></pre></div>
@@ -252,12 +214,7 @@ function.</p>
 <span></span>
 <span><span class="co"># Evaluate predictions</span></span>
 <span><span class="va">metrics_reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measure_cont.html">measure_cont</a></span><span class="op">(</span>obs <span class="op">=</span> <span class="va">test_y</span>, pred <span class="op">=</span> <span class="va">pred_reg</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">metrics_reg</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $rmse</span></span>
-<span><span class="co">#&gt; [1] 0.8633352</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $mae</span></span>
-<span><span class="co">#&gt; [1] 0.7396594</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">metrics_reg</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="binary-classification-evaluation">Binary Classification Evaluation<a class="anchor" aria-label="anchor" href="#binary-classification-evaluation"></a>

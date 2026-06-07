@@ -24,8 +24,8 @@
   and `out_act_fn` arguments.
 - Changed the package to stable lifecycle and prepared for CRAN
   submission.
-- Added `Additional_repositories: https://mc-stan.org/r-packages/` to
-  fix `cmdstanr` package resolution.
+- Removed `cmdstanr` from package dependencies. It is now accessed
+  dynamically to comply with CRAN policies.
 - Removed the manual rhub GitHub Actions badge from the README.
 - Added `CODE_OF_CONDUCT.md`.
 

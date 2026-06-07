@@ -18,7 +18,7 @@ complex data analysis tasks.
 - Seamless integration with the `tidymodels` ecosystem (`parsnip`,
   `recipes`, `workflows`, `tune`).
 - GPU acceleration support via OpenCL for significantly faster model
-  training.
+  training (requires `cmdstanr` to be installed separately).
 - Built-in functions for model evaluation
   ([`loo.bnns()`](https://swarnendu-stat.github.io/bnns/reference/loo.bnns.md),
   [`waic.bnns()`](https://swarnendu-stat.github.io/bnns/reference/waic.bnns.md)),

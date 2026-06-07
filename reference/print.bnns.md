@@ -114,7 +114,7 @@ print(model)
 #> sigma        1.25    0.06 0.12   1.16   1.17   1.17  1.38  1.38     3  Inf
 #> lp__        -9.64    0.69 1.28 -11.28 -10.00 -10.00 -8.38 -8.38     3  Inf
 #> 
-#> Samples were drawn using NUTS(diag_e) at Sun Jun  7 16:07:19 2026.
+#> Samples were drawn using NUTS(diag_e) at Sun Jun  7 18:20:22 2026.
 #> For each parameter, n_eff is a crude measure of effective sample size,
 #> and Rhat is the potential scale reduction factor on split chains (at 
 #> convergence, Rhat=1).
