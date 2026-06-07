@@ -74,14 +74,14 @@ bnns(
 
 - out_act_fn:
 
-  An integer specifying the activation function for the output layer.
-  Options are:
+  An integer or character string specifying the activation function for
+  the output layer. Options are:
 
-  - `1` for linear (default)
+  - `1` or `"linear"` for linear (default)
 
-  - `2` for sigmoid
+  - `2` or `"sigmoid"` for sigmoid
 
-  - `3` for softmax
+  - `3` or `"softmax"` for softmax
 
 - algorithm:
 
@@ -275,8 +275,8 @@ model <- bnns(y ~ -1 + x1 + x2,
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 2.3e-05 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.23 seconds.
+#> Chain 1: Gradient evaluation took 2.2e-05 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.22 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 

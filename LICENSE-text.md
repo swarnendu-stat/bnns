@@ -1,4 +1,4 @@
 # License
 
     YEAR: 2025
-    COPYRIGHT HOLDER: bnns authors
+    COPYRIGHT HOLDER: Swarnendu Chatterjee

@@ -48,8 +48,8 @@ model <- bnns(y ~ -1 + x1 + x2,
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 1.5e-05 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.15 seconds.
+#> Chain 1: Gradient evaluation took 1.9e-05 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.19 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -114,7 +114,7 @@ print(model)
 #> sigma        1.25    0.06 0.12   1.16   1.17   1.17  1.38  1.38     3  Inf
 #> lp__        -9.64    0.69 1.28 -11.28 -10.00 -10.00 -8.38 -8.38     3  Inf
 #> 
-#> Samples were drawn using NUTS(diag_e) at Sun Jun  7 10:46:47 2026.
+#> Samples were drawn using NUTS(diag_e) at Sun Jun  7 11:50:33 2026.
 #> For each parameter, n_eff is a crude measure of effective sample size,
 #> and Rhat is the potential scale reduction factor on split chains (at 
 #> convergence, Rhat=1).

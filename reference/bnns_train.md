@@ -75,14 +75,14 @@ bnns_train(
 
 - out_act_fn:
 
-  An integer specifying the activation function for the output layer.
-  Options are:
+  An integer or character string specifying the activation function for
+  the output layer. Options are:
 
-  - `1` for linear (default)
+  - `1` or `"linear"` for linear (default)
 
-  - `2` for sigmoid
+  - `2` or `"sigmoid"` for sigmoid
 
-  - `3` for softmax
+  - `3` or `"softmax"` for softmax
 
 - algorithm:
 
@@ -283,8 +283,8 @@ model <- bnns::bnns_train(train_x, train_y,
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 2e-05 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.2 seconds.
+#> Chain 1: Gradient evaluation took 1.8e-05 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.18 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -346,7 +346,7 @@ model$fit
 #> sigma         1.20    0.09 0.16   0.96   1.23   1.23  1.32  1.32     3  0.80
 #> lp__        -11.05    0.57 1.07 -12.14 -12.14 -10.99 -9.99 -9.99     3  2.42
 #> 
-#> Samples were drawn using NUTS(diag_e) at Sun Jun  7 10:46:44 2026.
+#> Samples were drawn using NUTS(diag_e) at Sun Jun  7 11:50:31 2026.
 #> For each parameter, n_eff is a crude measure of effective sample size,
 #> and Rhat is the potential scale reduction factor on split chains (at 
 #> convergence, Rhat=1).
