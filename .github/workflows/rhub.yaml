@@ -9,6 +9,9 @@
 name: R-hub
 run-name: "${{ github.event.inputs.id }}: ${{ github.event.inputs.name || format('Manually run by {0}', github.triggering_actor) }}"
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   workflow_dispatch:
     inputs:
@@ -86,8 +89,10 @@ jobs:
         shell: powershell
         run: |
           Invoke-WebRequest -Uri "https://github.com/KhronosGroup/OpenCL-SDK/releases/download/v2023.04.17/OpenCL-SDK-v2023.04.17-Win-x64.zip" -OutFile "OpenCL-SDK.zip"
-          Expand-Archive -Path "OpenCL-SDK.zip" -DestinationPath "C:\OpenCL-SDK"
+          Expand-Archive -Path "OpenCL-SDK.zip" -DestinationPath "C:\OpenCL-SDK-tmp"
+          Move-Item -Path "C:\OpenCL-SDK-tmp\OpenCL-SDK-v2023.04.17-Win-x64" -Destination "C:\OpenCL-SDK"
           Add-Content -Path $env:GITHUB_ENV -Value "OCL=C:\OpenCL-SDK"
+          Add-Content -Path $env:GITHUB_ENV -Value "OCL64LIB=C:\OpenCL-SDK\lib\OpenCL.lib"
       - uses: r-hub/actions/platform-info@v1
         with:
           token: ${{ secrets.RHUB_TOKEN }}
