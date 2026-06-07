@@ -62,36 +62,20 @@
 </div>
 <!-- badges: start -->
 
-<p>The <strong><code>bnns</code></strong> package brings the predictive power of deep learning to the rigorous probabilistic framework of Bayesian inference. By fitting Bayesian Neural Networks (BNNs) using Stan, <code>bnns</code> allows you to automatically capture complex, non-linear patterns in your data while seamlessly quantifying predictive uncertainty.</p>
-<p>Whether you are working on regression, binary classification, or multi-class problems, <code>bnns</code> provides a flexible, easy-to-use interface to build customizable network architectures that output full posterior predictive distributions. This makes it ideal for high-stakes domains—like clinical trials, predictive modeling, or finance—where knowing what your model <em>doesn’t</em> know is just as important as the prediction itself.</p>
+<p>The <code>bnns</code> package provides tools to fit Bayesian Neural Networks (BNNs) for regression and classification problems. It is designed to be flexible, supporting various network architectures, activation functions, and output types, making it suitable for both simple and complex data analysis tasks.</p>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
 </h2>
 <ul>
 <li>Support for multi-layer neural networks with customizable architecture.</li>
-<li>Choice of activation functions (e.g., sigmoid, ReLU, tanh).</li>
-<li>Outputs for regression (continuous response) and classification (binary and multiclass).</li>
+<li>Choice of activation functions (e.g., sigmoid, ReLU, tanh) and output types for regression (continuous) and classification (binary and multiclass).</li>
 <li>Choice of prior distributions for weights, biases and sigma (for regression).</li>
-<li>Bayesian inference, providing posterior distributions for predictions and parameters.</li>
-<li>GPU acceleration support for heavy network architectures via OpenCL.</li>
+<li>Seamless integration with the <code>tidymodels</code> ecosystem (<code>parsnip</code>, <code>recipes</code>, <code>workflows</code>, <code>tune</code>).</li>
+<li>GPU acceleration support via OpenCL for significantly faster model training.</li>
+<li>Built-in functions for model evaluation (<code><a href="reference/loo.bnns.html">loo.bnns()</a></code>, <code><a href="reference/waic.bnns.html">waic.bnns()</a></code>), plotting (<code><a href="reference/plot.bnns.html">plot.bnns()</a></code>), and saving/loading (<code><a href="reference/save_bnns.html">save_bnns()</a></code>, <code><a href="reference/load_bnns.html">load_bnns()</a></code>).</li>
+<li>Bayesian inference, providing rigorous uncertainty quantification via posterior distributions for predictions and parameters.</li>
 <li>Applications in domains such as clinical trials, predictive modeling, and more.</li>
 </ul>
-</div>
-<div class="section level2">
-<h2 id="why-bnns-vs-brms">Why <code>bnns</code>? (vs. <code>brms</code>)<a class="anchor" aria-label="anchor" href="#why-bnns-vs-brms"></a>
-</h2>
-<p>While <code>brms</code> is the gold standard for traditional Bayesian statistical modeling in R, <strong><code>bnns</code></strong> serves a highly complementary purpose: <strong>combining the predictive power of deep learning with the rigorous uncertainty quantification of Bayesian inference.</strong></p>
-<ul>
-<li>
-<strong>Purpose-Built for Neural Networks:</strong> Automatically learns complex, high-dimensional interactions and non-linearities without manually specifying splines or Gaussian processes.</li>
-<li>
-<strong>Native Machine Learning Integration:</strong> Built with modern ML pipelines in mind, featuring a fully integrated <code>parsnip</code> engine (<code>set_engine("bnns")</code>) for seamless use within <code>tidymodels</code>.</li>
-<li>
-<strong>GPU Acceleration:</strong> Neural networks are computationally expensive. <code>bnns</code> exposes OpenCL GPU acceleration out-of-the-box (<code>use_gpu = TRUE</code>) for drastically faster training.</li>
-<li>
-<strong>Streamlined Classification:</strong> Built-in output activations (softmax, logistic sigmoid) and evaluation metrics make probabilistic multi-class and binary boundaries straightforward.</li>
-</ul>
-<p><strong>When to Choose Which?</strong> * Choose <strong><code>brms</code></strong> for <strong>inference and interpretability</strong> (e.g., understanding specific predictor effect sizes or hierarchical random effects). * Choose <strong><code>bnns</code></strong> for <strong>predictive accuracy with uncertainty</strong> (e.g., complex data with unknown non-linear interactions in high-stakes domains like clinical trials or finance).</p>
 </div>
 <div class="section level2">
 <h2 id="installation-stable-cran-version">Installation (stable CRAN version)<a class="anchor" aria-label="anchor" href="#installation-stable-cran-version"></a>
@@ -160,20 +144,20 @@
 <span><span class="co">#&gt; Output activation function: 1 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Posterior Summary (Key Parameters):</span></span>
-<span><span class="co">#&gt;                mean      se_mean         sd       2.5%         25%        50%</span></span>
-<span><span class="co">#&gt; w_out[1]  0.8345667 0.0728930420 0.65030179 -0.4150176  0.38054488  0.7769148</span></span>
-<span><span class="co">#&gt; w_out[2] -0.3719132 0.4067431773 0.96605220 -1.7062097 -1.03225732 -0.7365945</span></span>
-<span><span class="co">#&gt; w_out[3]  0.4783495 0.1965466796 0.86504113 -1.2350476  0.02944919  0.5634587</span></span>
-<span><span class="co">#&gt; w_out[4]  0.4537029 0.3334670001 0.89069977 -1.3791675  0.09313077  0.5518418</span></span>
-<span><span class="co">#&gt; b_out     2.2082591 0.0614548175 1.18859472 -0.1036760  1.38416657  2.2072194</span></span>
-<span><span class="co">#&gt; sigma     0.3015085 0.0004831093 0.01804107  0.2693205  0.28895030  0.3013415</span></span>
-<span><span class="co">#&gt;                75%     97.5%       n_eff      Rhat</span></span>
-<span><span class="co">#&gt; w_out[1] 1.2478028 2.1730066   79.589862 1.0254227</span></span>
-<span><span class="co">#&gt; w_out[2] 0.4680286 1.7548944    5.641059 1.3136052</span></span>
-<span><span class="co">#&gt; w_out[3] 1.0454306 2.0448172   19.370556 1.1335888</span></span>
-<span><span class="co">#&gt; w_out[4] 1.0281249 2.0733860    7.134392 1.1997484</span></span>
-<span><span class="co">#&gt; b_out    3.1573563 4.2214829  374.072451 1.0016806</span></span>
-<span><span class="co">#&gt; sigma    0.3128869 0.3386066 1394.549362 0.9988699</span></span>
+<span><span class="co">#&gt;                mean      se_mean         sd        2.5%         25%        50%</span></span>
+<span><span class="co">#&gt; w_out[1] -0.5942278 0.2183999192 0.79456857 -1.86701355 -1.09251619 -0.8169628</span></span>
+<span><span class="co">#&gt; w_out[2]  0.8336814 0.1038869956 0.73827166 -0.51846423  0.33211823  0.7957336</span></span>
+<span><span class="co">#&gt; w_out[3]  0.4338102 0.2921135070 0.86147575 -1.36143601  0.04394916  0.5954254</span></span>
+<span><span class="co">#&gt; w_out[4]  0.6850131 0.1360689685 0.76972857 -1.04704293  0.29744188  0.7507712</span></span>
+<span><span class="co">#&gt; b_out[1]  2.2618133 0.0769776211 1.17876734 -0.02391873  1.42283776  2.2881991</span></span>
+<span><span class="co">#&gt; sigma     0.3020955 0.0005477896 0.01953213  0.26715455  0.28850768  0.3012247</span></span>
+<span><span class="co">#&gt;                  75%     97.5%       n_eff      Rhat</span></span>
+<span><span class="co">#&gt; w_out[1] -0.01503725 1.2874762   13.236032 1.0106679</span></span>
+<span><span class="co">#&gt; w_out[2]  1.24910581 2.3385023   50.502168 0.9987815</span></span>
+<span><span class="co">#&gt; w_out[3]  1.00906365 1.8752488    8.697268 1.1745061</span></span>
+<span><span class="co">#&gt; w_out[4]  1.21289586 1.9468606   32.000519 1.0439056</span></span>
+<span><span class="co">#&gt; b_out[1]  3.13716320 4.3023801  234.491563 1.0087978</span></span>
+<span><span class="co">#&gt; sigma     0.31349020 0.3406216 1271.368723 0.9999925</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Fit Information:</span></span>
 <span><span class="co">#&gt; Iterations: 1000 </span></span>
@@ -182,8 +166,8 @@
 <span><span class="co">#&gt; Chains: 1 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictive Performance:</span></span>
-<span><span class="co">#&gt; RMSE (training): 0.2821305 </span></span>
-<span><span class="co">#&gt; MAE (training): 0.2234606 </span></span>
+<span><span class="co">#&gt; RMSE (training): 0.2820529 </span></span>
+<span><span class="co">#&gt; MAE (training): 0.2234438 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; Check convergence diagnostics for parameters with high R-hat values.</span></span></code></pre></div>
@@ -202,25 +186,8 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"True vs Predicted"</span>, xlab <span class="op">=</span> <span class="st">"True Values"</span>, ylab <span class="op">=</span> <span class="st">"Predicted Values"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-8-1.png" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-8-1.png" alt="" width="100%"></p>
 </div>
-</div>
-<div class="section level2">
-<h2 id="gpu-acceleration">GPU Acceleration<a class="anchor" aria-label="anchor" href="#gpu-acceleration"></a>
-</h2>
-<p>The <code>bnns</code> package natively supports GPU acceleration for Bayesian sampling using OpenCL. This can significantly reduce training time for deep or wide network architectures.</p>
-<p>To use your GPU, ensure you have the appropriate OpenCL drivers installed, then set <code>use_gpu = TRUE</code> and use the <code>cmdstanr</code> backend. You may also need to specify the <code>opencl_ids</code> for your hardware.</p>
-<p>You can check your system’s available OpenCL platforms and device IDs by running:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/opencl_diagnostics.html">opencl_diagnostics</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Fit a Bayesian Neural Network on the GPU</span></span>
-<span><span class="va">model_gpu</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, </span>
-<span>  data <span class="op">=</span> <span class="va">your_data</span>, </span>
-<span>  backend <span class="op">=</span> <span class="st">"cmdstanr"</span>,</span>
-<span>  use_gpu <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  opencl_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span> <span class="co"># Format is c(platform_id, device_id)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="applications">Applications<a class="anchor" aria-label="anchor" href="#applications"></a>
@@ -229,7 +196,7 @@
 <h3 id="regression-example-with-custom-priors">Regression Example (with custom priors)<a class="anchor" aria-label="anchor" href="#regression-example-with-custom-priors"></a>
 </h3>
 <p>Use <code>bnns</code> for regression analysis to model continuous outcomes, such as predicting patient biomarkers in clinical trials.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">.</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">iris</span>, L <span class="op">=</span> <span class="fl">1</span>, act_fn <span class="op">=</span> <span class="fl">3</span>, nodes <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>  out_act_fn <span class="op">=</span> <span class="fl">1</span>, chains <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -242,7 +209,7 @@
 <h3 id="classification-example">Classification Example<a class="anchor" aria-label="anchor" href="#classification-example"></a>
 </h3>
 <p>For binary or multiclass classification, set the <code>out_act_fn</code> to <code>2</code> (binary) or <code>3</code> (multiclass). For example:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Simulate binary classification data</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>,</span>
@@ -252,7 +219,7 @@
 <span><span class="co"># Fit a binary classification BNN</span></span>
 <span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bnns.html">bnns</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">df</span>, L <span class="op">=</span> <span class="fl">2</span>, nodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16</span>, <span class="fl">8</span><span class="op">)</span>,</span>
-<span>  act_fn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span>, out_act_fn <span class="op">=</span> <span class="fl">2</span>, iter <span class="op">=</span> <span class="fl">1e2</span>,</span>
+<span>  act_fn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span>, out_act_fn <span class="op">=</span> <span class="st">"sigmoid"</span>, iter <span class="op">=</span> <span class="fl">1e2</span>,</span>
 <span>  warmup <span class="op">=</span> <span class="fl">5e1</span>, chains <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -293,8 +260,9 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li>
+<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
 
