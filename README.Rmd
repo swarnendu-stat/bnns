@@ -162,4 +162,3 @@ Contributions are welcome! Please raise issues or submit pull requests on [GitHu
 ## License
 
 This package is licensed under the MIT License. See `LICENSE` for details.
-tails.
