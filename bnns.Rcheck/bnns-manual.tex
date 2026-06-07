@@ -1,0 +1,1389 @@
+\nonstopmode{}
+\documentclass[a4paper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\makeatletter\@ifl@t@r\fmtversion{2018/04/01}{}{\usepackage[utf8]{inputenc}}\makeatother
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `bnns'}}
+\par\bigskip{\large \today}
+\end{center}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdftitle = {bnns: Bayesian Neural Network with 'Stan'}}}{}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdfauthor = {Swarnendu Chatterjee}}}{}
+\begin{description}
+\raggedright{}
+\item[Title]\AsIs{Bayesian Neural Network with 'Stan'}
+\item[Version]\AsIs{1.0.0}
+\item[Description]\AsIs{Offers a flexible formula-based interface for building and training Bayesian Neural Networks powered by 'Stan'. The package supports modeling complex relationships while providing rigorous uncertainty quantification via posterior distributions. With features like user chosen priors, clear predictions, and support for regression, binary, and multi-class classification, it is well-suited for applications in clinical trials, finance, and other fields requiring robust Bayesian inference and decision-making. References: Neal(1996) <}\Rhref{https://doi.org/10.1007/978-1-4612-0745-0}{doi:10.1007/978-1-4612-0745-0}\AsIs{>.}
+\item[License]\AsIs{MIT + file LICENSE}
+\item[Depends]\AsIs{R (>= 4.2.0)}
+\item[Encoding]\AsIs{UTF-8}
+\item[Roxygen]\AsIs{list(markdown = TRUE)}
+\item[Suggests]\AsIs{bayesplot, covr, dials, dplyr, ggplot2, knitr, mlbench,
+OpenCL, parsnip (>= 1.0.0), ranger, recipes, rlang, rmarkdown,
+rsample, testthat (>= 3.0.0), tidymodels, tune, workflows}
+\item[Config/testthat/edition]\AsIs{3}
+\item[Imports]\AsIs{BH, digest, loo, pROC, RcppEigen, rstan, stats, tibble}
+\item[URL]\AsIs{}\url{https://github.com/swarnendu-stat/bnns}\AsIs{,
+}\url{https://swarnendu-stat.github.io/bnns/}\AsIs{}
+\item[BugReports]\AsIs{}\url{https://github.com/swarnendu-stat/bnns/issues}\AsIs{}
+\item[VignetteBuilder]\AsIs{knitr}
+\item[Config/Needs/website]\AsIs{rmarkdown}
+\item[Config/roxygen2/version]\AsIs{8.0.0}
+\item[NeedsCompilation]\AsIs{no}
+\item[Author]\AsIs{Swarnendu Chatterjee [aut, cre, cph]}
+\item[Maintainer]\AsIs{Swarnendu Chatterjee }\email{swarnendu.stat@gmail.com}\AsIs{}
+\end{description}
+\Rdcontents{Contents}
+\HeaderA{bnns}{Generic Function for Fitting Bayesian Neural Network Models}{bnns}
+%
+\begin{Description}
+This is a generic function for fitting Bayesian Neural Network (BNN) models. It dispatches to methods based on the class of the input data.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bnns(
+  formula,
+  data,
+  L = 1,
+  nodes = rep(2, L),
+  act_fn = rep(2, L),
+  out_act_fn = 1,
+  algorithm = c("NUTS", "HMC"),
+  iter = 1000,
+  warmup = 200,
+  thin = 1,
+  chains = 2,
+  cores = 2,
+  seed = 123,
+  prior_weights = NULL,
+  prior_bias = NULL,
+  prior_sigma = NULL,
+  verbose = FALSE,
+  refresh = max(iter/10, 1),
+  normalize = TRUE,
+  backend = c("rstan", "cmdstanr"),
+  use_gpu = FALSE,
+  opencl_ids = c(0, 0),
+  ...
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{formula}] A symbolic description of the model to be fitted. The formula should specify the response variable and predictors (e.g., \code{y \textasciitilde{} x1 + x2}). \code{y} must be continuous for regression (\code{out\_act\_fn = 1}), numeric 0/1 for binary classification (\code{out\_act\_fn = 2}), and factor with at least 3 levels for multi-classification (\code{out\_act\_fn = 3}).
+
+\item[\code{data}] A data frame containing the variables in the model.
+
+\item[\code{L}] An integer specifying the number of hidden layers in the neural network. Default is 1.
+
+\item[\code{nodes}] An integer or vector specifying the number of nodes in each hidden layer. If a single value is provided, it is applied to all layers. Default is 16.
+
+\item[\code{act\_fn}] An integer or vector specifying the activation function(s) for the hidden layers. Options are:
+\begin{itemize}
+
+\item{} \code{1} for tanh
+\item{} \code{2} for sigmoid (default)
+\item{} \code{3} for softplus
+\item{} \code{4} for ReLU
+\item{} \code{5} for linear
+
+\end{itemize}
+
+
+\item[\code{out\_act\_fn}] An integer or character string specifying the activation function for the output layer. Options are:
+\begin{itemize}
+
+\item{} \code{1} or \code{"linear"} for linear (default)
+\item{} \code{2} or \code{"sigmoid"} for sigmoid
+\item{} \code{3} or \code{"softmax"} for softmax
+
+\end{itemize}
+
+
+\item[\code{algorithm}] A character string specifying the MCMC algorithm. Options are \code{"NUTS"} (default) or \code{"HMC"}.
+
+\item[\code{iter}] An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.
+
+\item[\code{warmup}] An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.
+
+\item[\code{thin}] An integer specifying the thinning interval for Stan samples. Default is 1.
+
+\item[\code{chains}] An integer specifying the number of Markov chains. Default is 2.
+
+\item[\code{cores}] An integer specifying the number of CPU cores to use for parallel sampling. Default is 2.
+
+\item[\code{seed}] An integer specifying the random seed for reproducibility. Default is 123.
+
+\item[\code{prior\_weights}] A list specifying the prior distribution for the weights in the neural network.
+The list must include two components:
+\begin{itemize}
+
+\item{} \code{dist}: A character string specifying the distribution type. Supported values are
+\code{"normal"}, \code{"uniform"}, \code{"cauchy"}, and \code{"horseshoe"}.
+\item{} \code{params}: A named list specifying the parameters for the chosen distribution:
+\begin{itemize}
+
+\item{} For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
+\item{} For \code{"uniform"}: Provide \code{alpha} (lower bound) and \code{beta} (upper bound).
+\item{} For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
+
+\end{itemize}
+
+
+\end{itemize}
+
+For the \code{"horseshoe"} prior, \code{params} is not needed as it uses a standard half-Cauchy setup.
+If \code{prior\_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
+For example:
+\begin{itemize}
+
+\item{} \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
+\item{} \code{list(dist = "uniform", params = list(alpha = -1, beta = 1))}
+\item{} \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
+
+\end{itemize}
+
+
+\item[\code{prior\_bias}] A list specifying the prior distribution for the biases in the neural network.
+The list must include two components:
+\begin{itemize}
+
+\item{} \code{dist}: A character string specifying the distribution type. Supported values are
+\code{"normal"}, \code{"uniform"}, \code{"cauchy"}, and \code{"horseshoe"}.
+\item{} \code{params}: A named list specifying the parameters for the chosen distribution:
+\begin{itemize}
+
+\item{} For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
+\item{} For \code{"uniform"}: Provide \code{alpha} (lower bound) and \code{beta} (upper bound).
+\item{} For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
+
+\end{itemize}
+
+
+\end{itemize}
+
+If \code{prior\_bias} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
+For example:
+\begin{itemize}
+
+\item{} \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
+\item{} \code{list(dist = "uniform", params = list(alpha = -1, beta = 1))}
+\item{} \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
+
+\end{itemize}
+
+
+\item[\code{prior\_sigma}] A list specifying the prior distribution for the \code{sigma} parameter in regression
+models (\code{out\_act\_fn = 1}). This allows for setting priors on the standard deviation of the residuals.
+The list must include two components:
+\begin{itemize}
+
+\item{} \code{dist}: A character string specifying the distribution type. Supported values are
+\code{"half-normal"} and \code{"inverse-gamma"}.
+\item{} \code{params}: A named list specifying the parameters for the chosen distribution:
+\begin{itemize}
+
+\item{} For \code{"half-normal"}: Provide \code{sd} (standard deviation of the half-normal distribution).
+\item{} For \code{"inverse-gamma"}: Provide \code{shape} (shape parameter) and \code{scale} (scale parameter).
+
+\end{itemize}
+
+
+\end{itemize}
+
+If \code{prior\_sigma} is \code{NULL}, the default prior is a \code{half-normal(0, 1)} distribution.
+For example:
+\begin{itemize}
+
+\item{} \code{list(dist = "half\_normal", params = list(mean = 0, sd = 1))}
+\item{} \code{list(dist = "inv\_gamma", params = list(alpha = 1, beta = 1))}
+
+\end{itemize}
+
+
+\item[\code{verbose}] TRUE or FALSE: flag indicating whether to print intermediate output from Stan on the console, which might be helpful for model debugging.
+
+\item[\code{refresh}] refresh (integer) can be used to control how often the progress of the sampling is reported (i.e. show the progress every refresh iterations). By default, refresh = max(iter/10, 1). The progress indicator is turned off if refresh <= 0.
+
+\item[\code{normalize}] Logical. If \code{TRUE} (default), the input predictors
+are normalized to have zero mean and unit variance before training.
+Normalization ensures stable and efficient Bayesian sampling by standardizing
+the input scale, which is particularly beneficial for neural network training.
+If \code{FALSE}, no normalization is applied, and it is assumed that the input data
+is already pre-processed appropriately.
+
+\item[\code{backend}] A character string specifying the Stan backend to use. Options are \code{"rstan"} (default) or \code{"cmdstanr"}.
+
+\item[\code{use\_gpu}] Logical. If \code{TRUE}, enables OpenCL for GPU acceleration. Default is \code{FALSE}. (Requires the \code{"cmdstanr"} backend).
+
+\item[\code{opencl\_ids}] A vector of two integers specifying the OpenCL platform and device IDs. Default is \code{c(0, 0)}.
+
+\item[\code{...}] Currently not in use.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+The function serves as a generic interface to different methods of fitting Bayesian Neural Networks. The specific method dispatched depends on the class of the input arguments, allowing for flexibility in the types of inputs supported.
+\end{Details}
+%
+\begin{Value}
+The result of the method dispatched by the class of the input data. Typically, this would be an object of class \code{"bnns"} containing the fitted model and associated information.
+\end{Value}
+%
+\begin{References}
+\begin{enumerate}
+
+\item{} Bishop, C.M., 1995. Neural networks for pattern recognition. Oxford university press.
+\item{} Carpenter, B., Gelman, A., Hoffman, M.D., Lee, D., Goodrich, B., Betancourt, M., Brubaker, M.A., Guo, J., Li, P. and Riddell, A., 2017. Stan: A probabilistic programming language. Journal of statistical software, 76.
+\item{} Neal, R.M., 2012. Bayesian learning for neural networks (Vol. 118). Springer Science \& Business Media.
+
+\end{enumerate}
+
+\end{References}
+%
+\begin{SeeAlso}
+\code{\LinkA{bnns.default}{bnns.default}}
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+# Example usage with formula interface:
+data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
+model <- bnns(y ~ -1 + x1 + x2,
+  data = data, L = 1, nodes = 2, act_fn = 1,
+  iter = 1e1, warmup = 5, chains = 1
+)
+
+# See the documentation for bnns.default for more details on the default implementation.
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{bnns.default}{Bayesian Neural Network Model Using Formula(default) Interface}{bnns.default}
+%
+\begin{Description}
+Fits a Bayesian Neural Network (BNN) model using a formula interface. The function parses the formula and data to create the input feature matrix and target vector, then fits the model using \code{\LinkA{bnns.default}{bnns.default}}.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## Default S3 method:
+bnns(
+  formula,
+  data,
+  L = 1,
+  nodes = rep(2, L),
+  act_fn = rep(2, L),
+  out_act_fn = 1,
+  algorithm = c("NUTS", "HMC"),
+  iter = 1000,
+  warmup = 200,
+  thin = 1,
+  chains = 2,
+  cores = 2,
+  seed = 123,
+  prior_weights = NULL,
+  prior_bias = NULL,
+  prior_sigma = NULL,
+  verbose = FALSE,
+  refresh = max(iter/10, 1),
+  normalize = TRUE,
+  backend = c("rstan", "cmdstanr"),
+  use_gpu = FALSE,
+  opencl_ids = c(0, 0),
+  ...
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{formula}] A symbolic description of the model to be fitted. The formula should specify the response variable and predictors (e.g., \code{y \textasciitilde{} x1 + x2}).
+
+\item[\code{data}] A data frame containing the variables in the model.
+
+\item[\code{L}] An integer specifying the number of hidden layers in the neural network. Default is 1.
+
+\item[\code{nodes}] An integer or vector specifying the number of nodes in each hidden layer. If a single value is provided, it is applied to all layers. Default is 16.
+
+\item[\code{act\_fn}] An integer or vector specifying the activation function(s) for the hidden layers. Options are:
+\begin{itemize}
+
+\item{} \code{1} for tanh
+\item{} \code{2} for sigmoid (default)
+\item{} \code{3} for softplus
+\item{} \code{4} for ReLU
+\item{} \code{5} for linear
+
+\end{itemize}
+
+
+\item[\code{out\_act\_fn}] An integer or character string specifying the activation function for the output layer. Options are:
+\begin{itemize}
+
+\item{} \code{1} or \code{"linear"} for linear (default)
+\item{} \code{2} or \code{"sigmoid"} for sigmoid
+\item{} \code{3} or \code{"softmax"} for softmax
+
+\end{itemize}
+
+
+\item[\code{algorithm}] A character string specifying the MCMC algorithm. Options are \code{"NUTS"} (default) or \code{"HMC"}.
+
+\item[\code{iter}] An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.
+
+\item[\code{warmup}] An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.
+
+\item[\code{thin}] An integer specifying the thinning interval for Stan samples. Default is 1.
+
+\item[\code{chains}] An integer specifying the number of Markov chains. Default is 2.
+
+\item[\code{cores}] An integer specifying the number of CPU cores to use for parallel sampling. Default is 2.
+
+\item[\code{seed}] An integer specifying the random seed for reproducibility. Default is 123.
+
+\item[\code{prior\_weights}] A list specifying the prior distribution for the weights in the neural network.
+The list must include two components:
+\begin{itemize}
+
+\item{} \code{dist}: A character string specifying the distribution type. Supported values are
+\code{"normal"}, \code{"uniform"}, \code{"cauchy"}, and \code{"horseshoe"}.
+\item{} \code{params}: A named list specifying the parameters for the chosen distribution:
+\begin{itemize}
+
+\item{} For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
+\item{} For \code{"uniform"}: Provide \code{alpha} (lower bound) and \code{beta} (upper bound).
+\item{} For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
+
+\end{itemize}
+
+
+\end{itemize}
+
+For the \code{"horseshoe"} prior, \code{params} is not needed as it uses a standard half-Cauchy setup.
+If \code{prior\_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
+For example:
+\begin{itemize}
+
+\item{} \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
+\item{} \code{list(dist = "uniform", params = list(alpha = -1, beta = 1))}
+\item{} \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
+
+\end{itemize}
+
+
+\item[\code{prior\_bias}] A list specifying the prior distribution for the biases in the neural network.
+The list must include two components:
+\begin{itemize}
+
+\item{} \code{dist}: A character string specifying the distribution type. Supported values are
+\code{"normal"}, \code{"uniform"}, and \code{"cauchy"}.
+\item{} \code{params}: A named list specifying the parameters for the chosen distribution:
+\begin{itemize}
+
+\item{} For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
+\item{} For \code{"uniform"}: Provide \code{alpha} (lower bound) and \code{beta} (upper bound).
+\item{} For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
+
+\end{itemize}
+
+
+\end{itemize}
+
+If \code{prior\_bias} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
+For example:
+\begin{itemize}
+
+\item{} \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
+\item{} \code{list(dist = "uniform", params = list(alpha = -1, beta = 1))}
+\item{} \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
+
+\end{itemize}
+
+
+\item[\code{prior\_sigma}] A list specifying the prior distribution for the \code{sigma} parameter in regression
+models (\code{out\_act\_fn = 1}). This allows for setting priors on the standard deviation of the residuals.
+The list must include two components:
+\begin{itemize}
+
+\item{} \code{dist}: A character string specifying the distribution type. Supported values are
+\code{"half-normal"} and \code{"inverse-gamma"}.
+\item{} \code{params}: A named list specifying the parameters for the chosen distribution:
+\begin{itemize}
+
+\item{} For \code{"half-normal"}: Provide \code{sd} (standard deviation of the half-normal distribution).
+\item{} For \code{"inverse-gamma"}: Provide \code{shape} (shape parameter) and \code{scale} (scale parameter).
+
+\end{itemize}
+
+
+\end{itemize}
+
+If \code{prior\_sigma} is \code{NULL}, the default prior is a \code{half-normal(0, 1)} distribution.
+For example:
+\begin{itemize}
+
+\item{} \code{list(dist = "half\_normal", params = list(mean = 0, sd = 1))}
+\item{} \code{list(dist = "inv\_gamma", params = list(alpha = 1, beta = 1))}
+
+\end{itemize}
+
+
+\item[\code{verbose}] TRUE or FALSE: flag indicating whether to print intermediate output from Stan on the console, which might be helpful for model debugging.
+
+\item[\code{refresh}] refresh (integer) can be used to control how often the progress of the sampling is reported (i.e. show the progress every refresh iterations). By default, refresh = max(iter/10, 1). The progress indicator is turned off if refresh <= 0.
+
+\item[\code{normalize}] Logical. If \code{TRUE} (default), the input predictors
+are normalized to have zero mean and unit variance before training.
+Normalization ensures stable and efficient Bayesian sampling by standardizing
+the input scale, which is particularly beneficial for neural network training.
+If \code{FALSE}, no normalization is applied, and it is assumed that the input data
+is already pre-processed appropriately.
+
+\item[\code{backend}] A character string specifying the Stan backend to use. Options are \code{"rstan"} (default) or \code{"cmdstanr"}.
+
+\item[\code{use\_gpu}] Logical. If \code{TRUE}, enables OpenCL for GPU acceleration. Default is \code{FALSE}. (Requires the \code{"cmdstanr"} backend).
+
+\item[\code{opencl\_ids}] A vector of two integers specifying the OpenCL platform and device IDs. Default is \code{c(0, 0)}.
+
+\item[\code{...}] Currently not in use.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+The function uses the provided formula and data to generate the design matrix for the predictors and the response vector. It then calls helper function bnns\_train to fit the Bayesian Neural Network model.
+\end{Details}
+%
+\begin{Value}
+An object of class \code{"bnns"} containing the fitted model and associated information, including:
+\begin{itemize}
+
+\item{} \code{fit}: The fitted Stan model object.
+\item{} \code{data}: A list containing the processed training data.
+\item{} \code{call}: The matched function call.
+\item{} \code{formula}: The formula used for the model.
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+# Example usage:
+data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
+model <- bnns(y ~ -1 + x1 + x2,
+  data = data, L = 1, nodes = 2, act_fn = 3,
+  iter = 1e1, warmup = 5, chains = 1
+)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{bnns\_params}{Parameter functions for Bayesian Neural Networks}{bnns.Rul.params}
+\aliasA{act\_fn}{bnns\_params}{act.Rul.fn}
+\aliasA{chains}{bnns\_params}{chains}
+\aliasA{iter}{bnns\_params}{iter}
+\aliasA{L}{bnns\_params}{L}
+\aliasA{nodes}{bnns\_params}{nodes}
+\aliasA{warmup}{bnns\_params}{warmup}
+%
+\begin{Description}
+These functions provide \code{dials} parameter objects for tuning
+the hyperparameters of Bayesian Neural Networks.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+L(range = c(1L, 5L), trans = NULL)
+
+warmup(range = c(100L, 1000L), trans = NULL)
+
+chains(range = c(1L, 4L), trans = NULL)
+
+iter(range = c(500L, 2000L), trans = NULL)
+
+nodes(range = c(1L, 64L), trans = NULL)
+
+act_fn(values = c("tanh", "sigmoid", "softplus", "relu", "linear"))
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{range}] A two-element vector holding the defaults for the smallest and largest possible values.
+
+\item[\code{trans}] A \code{trans} object from the \code{scales} package, could be \code{NULL}.
+
+\item[\code{values}] A character vector of possible values.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \code{quant\_param} or \code{qual\_param} object from the \code{dials} package.
+\end{Value}
+\HeaderA{bnns\_train}{Internal function for training the BNN}{bnns.Rul.train}
+\keyword{internal}{bnns\_train}
+%
+\begin{Description}
+This function performs the actual fitting of the Bayesian Neural Network.
+It is called by the exported bnns methods and is not intended for direct use.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bnns_train(
+  train_x,
+  train_y,
+  L = 1,
+  nodes = rep(2, L),
+  act_fn = rep(2, L),
+  out_act_fn = 1,
+  algorithm = c("NUTS", "HMC"),
+  iter = 1000,
+  warmup = 200,
+  thin = 1,
+  chains = 2,
+  cores = 2,
+  seed = 123,
+  prior_weights = NULL,
+  prior_bias = NULL,
+  prior_sigma = NULL,
+  verbose = FALSE,
+  refresh = max(iter/10, 1),
+  normalize = TRUE,
+  backend = c("rstan", "cmdstanr"),
+  use_gpu = FALSE,
+  opencl_ids = c(0, 0),
+  ...
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{train\_x}] A numeric matrix representing the input features (predictors) for training. Rows correspond to observations, and columns correspond to features.
+
+\item[\code{train\_y}] A numeric vector representing the target values for training. Its length must match the number of rows in \code{train\_x}.
+
+\item[\code{L}] An integer specifying the number of hidden layers in the neural network. Default is 1.
+
+\item[\code{nodes}] An integer or vector specifying the number of nodes in each hidden layer. If a single value is provided, it is applied to all layers. Default is 16.
+
+\item[\code{act\_fn}] An integer or vector specifying the activation function(s) for the hidden layers. Options are:
+\begin{itemize}
+
+\item{} \code{1} for tanh
+\item{} \code{2} for sigmoid (default)
+\item{} \code{3} for softplus
+\item{} \code{4} for ReLU
+\item{} \code{5} for linear
+
+\end{itemize}
+
+
+\item[\code{out\_act\_fn}] An integer or character string specifying the activation function for the output layer. Options are:
+\begin{itemize}
+
+\item{} \code{1} or \code{"linear"} for linear (default)
+\item{} \code{2} or \code{"sigmoid"} for sigmoid
+\item{} \code{3} or \code{"softmax"} for softmax
+
+\end{itemize}
+
+
+\item[\code{algorithm}] A character string specifying the MCMC algorithm. Options are \code{"NUTS"} (default) or \code{"HMC"}.
+
+\item[\code{iter}] An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.
+
+\item[\code{warmup}] An integer specifying the number of warmup iterations for the Stan sampler. Default is \code{2e2}.
+
+\item[\code{thin}] An integer specifying the thinning interval for Stan samples. Default is 1.
+
+\item[\code{chains}] An integer specifying the number of Markov chains. Default is 2.
+
+\item[\code{cores}] An integer specifying the number of CPU cores to use for parallel sampling. Default is 2.
+
+\item[\code{seed}] An integer specifying the random seed for reproducibility. Default is 123.
+
+\item[\code{prior\_weights}] A list specifying the prior distribution for the weights in the neural network.
+The list must include two components:
+\begin{itemize}
+
+\item{} \code{dist}: A character string specifying the distribution type. Supported values are
+\code{"normal"}, \code{"uniform"}, and \code{"cauchy"}.
+\item{} \code{params}: A named list specifying the parameters for the chosen distribution:
+\begin{itemize}
+
+\item{} For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
+\item{} For \code{"uniform"}: Provide \code{alpha} (lower bound) and \code{beta} (upper bound).
+\item{} For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
+
+\end{itemize}
+
+
+\end{itemize}
+
+For the \code{"horseshoe"} prior, \code{params} is not needed as it uses a standard half-Cauchy setup.
+If \code{prior\_weights} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
+For example:
+\begin{itemize}
+
+\item{} \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
+\item{} \code{list(dist = "uniform", params = list(alpha = -1, beta = 1))}
+\item{} \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
+
+\end{itemize}
+
+
+\item[\code{prior\_bias}] A list specifying the prior distribution for the biases in the neural network.
+The list must include two components:
+\begin{itemize}
+
+\item{} \code{dist}: A character string specifying the distribution type. Supported values are
+\code{"normal"}, \code{"uniform"}, and \code{"cauchy"}.
+\item{} \code{params}: A named list specifying the parameters for the chosen distribution:
+\begin{itemize}
+
+\item{} For \code{"normal"}: Provide \code{mean} (mean of the distribution) and \code{sd} (standard deviation).
+\item{} For \code{"uniform"}: Provide \code{alpha} (lower bound) and \code{beta} (upper bound).
+\item{} For \code{"cauchy"}: Provide \code{mu} (location parameter) and \code{sigma} (scale parameter).
+
+\end{itemize}
+
+
+\end{itemize}
+
+If \code{prior\_bias} is \code{NULL}, the default prior is a \code{normal(0, 1)} distribution.
+For example:
+\begin{itemize}
+
+\item{} \code{list(dist = "normal", params = list(mean = 0, sd = 1))}
+\item{} \code{list(dist = "uniform", params = list(alpha = -1, beta = 1))}
+\item{} \code{list(dist = "cauchy", params = list(mu = 0, sigma = 2.5))}
+
+\end{itemize}
+
+
+\item[\code{prior\_sigma}] A list specifying the prior distribution for the \code{sigma} parameter in regression
+models (\code{out\_act\_fn = 1}). This allows for setting priors on the standard deviation of the residuals.
+The list must include two components:
+\begin{itemize}
+
+\item{} \code{dist}: A character string specifying the distribution type. Supported values are
+\code{"half-normal"} and \code{"inverse-gamma"}.
+\item{} \code{params}: A named list specifying the parameters for the chosen distribution:
+\begin{itemize}
+
+\item{} For \code{"half-normal"}: Provide \code{sd} (standard deviation of the half-normal distribution).
+\item{} For \code{"inverse-gamma"}: Provide \code{shape} (shape parameter) and \code{scale} (scale parameter).
+
+\end{itemize}
+
+
+\end{itemize}
+
+If \code{prior\_sigma} is \code{NULL}, the default prior is a \code{half-normal(0, 1)} distribution.
+For example:
+\begin{itemize}
+
+\item{} \code{list(dist = "half\_normal", params = list(mean = 0, sd = 1))}
+\item{} \code{list(dist = "inv\_gamma", params = list(alpha = 1, beta = 1))}
+
+\end{itemize}
+
+
+\item[\code{verbose}] TRUE or FALSE: flag indicating whether to print intermediate output from Stan on the console, which might be helpful for model debugging.
+
+\item[\code{refresh}] refresh (integer) can be used to control how often the progress of the sampling is reported (i.e. show the progress every refresh iterations). By default, refresh = max(iter/10, 1). The progress indicator is turned off if refresh <= 0.
+
+\item[\code{normalize}] Logical. If \code{TRUE} (default), the input predictors
+are normalized to have zero mean and unit variance before training.
+Normalization ensures stable and efficient Bayesian sampling by standardizing
+the input scale, which is particularly beneficial for neural network training.
+If \code{FALSE}, no normalization is applied, and it is assumed that the input data
+is already pre-processed appropriately.
+
+\item[\code{backend}] A character string specifying the Stan backend to use. Options are \code{"rstan"} (default) or \code{"cmdstanr"}.
+
+\item[\code{use\_gpu}] Logical. If \code{TRUE}, enables OpenCL for GPU acceleration. Default is \code{FALSE}. (Requires the \code{"cmdstanr"} backend).
+
+\item[\code{opencl\_ids}] A vector of two integers specifying the OpenCL platform and device IDs. Default is \code{c(0, 0)}.
+
+\item[\code{...}] Currently not in use.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+The function uses the \code{generate\_stan\_code} function to dynamically generate Stan code based on the specified number of layers and nodes. Stan is then used to fit the Bayesian Neural Network.
+\end{Details}
+%
+\begin{Value}
+An object of class \code{"bnns"} containing the following components:
+\begin{description}
+
+\item[\code{fit}] The fitted Stan model object.
+\item[\code{call}] The matched call.
+\item[\code{data}] A list containing the Stan data used in the model.
+
+\end{description}
+
+\end{Value}
+%
+\begin{SeeAlso}
+\code{\LinkA{stan}{stan}}
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+# Example usage:
+train_x <- matrix(runif(20), nrow = 10, ncol = 2)
+train_y <- rnorm(10)
+model <- bnns::bnns_train(train_x, train_y,
+  L = 1, nodes = 2, act_fn = 2,
+  iter = 1e1, warmup = 5, chains = 1
+)
+
+# Access Stan model fit
+model$fit
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{detect\_output\_activation}{Auto-detect out\_act\_fn from response variable}{detect.Rul.output.Rul.activation}
+\keyword{internal}{detect\_output\_activation}
+%
+\begin{Description}
+Auto-detect out\_act\_fn from response variable
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+detect_output_activation(y)
+\end{verbatim}
+\end{Usage}
+\HeaderA{load\_bnns}{Load a fitted bnns model from disk}{load.Rul.bnns}
+%
+\begin{Description}
+Load a fitted bnns model from disk
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+load_bnns(file)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{file}] A character string specifying the path to the saved model.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A fitted \code{bnns} object.
+\end{Value}
+\HeaderA{loo.bnns}{Leave-One-Out Cross-Validation (LOO) for bnns models}{loo.bnns}
+%
+\begin{Description}
+Leave-One-Out Cross-Validation (LOO) for bnns models
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'bnns'
+loo(x, ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] A fitted \code{bnns} model object.
+
+\item[\code{...}] Additional arguments passed to \code{loo::loo()}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \code{loo} object containing model comparison metrics.
+\end{Value}
+\HeaderA{measure\_bin}{Measure Performance for Binary Classification Models}{measure.Rul.bin}
+%
+\begin{Description}
+Evaluates the performance of a binary classification model using a confusion matrix and accuracy.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+measure_bin(obs, pred, cut = 0.5)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{obs}] A numeric or integer vector of observed binary class labels (0 or 1).
+
+\item[\code{pred}] A numeric vector of predicted probabilities for the positive class.
+
+\item[\code{cut}] A numeric threshold (between 0 and 1) to classify predictions into binary labels.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A list containing:
+\begin{description}
+
+\item[\code{conf\_mat}] A confusion matrix comparing observed and predicted class labels.
+\item[\code{accuracy}] The proportion of correct predictions.
+\item[\code{ROC}] ROC generated using \code{pROC::roc}
+\item[\code{AUC}] Area under the ROC curve.
+
+\end{description}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+obs <- c(1, 0, 1, 1, 0)
+pred <- c(0.9, 0.4, 0.8, 0.7, 0.3)
+cut <- 0.5
+measure_bin(obs, pred, cut)
+# Returns: list(conf_mat = <confusion matrix>, accuracy = 1, ROC = <ROC>, AUC = 1)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{measure\_cat}{Measure Performance for Multi-Class Classification Models}{measure.Rul.cat}
+%
+\begin{Description}
+Evaluates the performance of a multi-class classification model using log loss and multiclass AUC.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+measure_cat(obs, pred)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{obs}] A factor vector of observed class labels. Each level represents a unique class.
+
+\item[\code{pred}] A numeric matrix of predicted probabilities, where each row corresponds to an observation,
+and each column corresponds to a class. The number of columns must match the number of levels in \code{obs}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+The log loss is calculated as:
+\deqn{-\frac{1}{N} \sum_{i=1}^N \sum_{c=1}^C y_{ic} \log(p_{ic})}{}
+where \eqn{y_{ic}}{} is 1 if observation \eqn{i}{} belongs to class \eqn{c}{}, and \eqn{p_{ic}}{} is the
+predicted probability for that class.
+
+The AUC is computed using the \code{pROC::multiclass.roc} function, which provides an overall measure
+of model performance for multiclass classification.
+\end{Details}
+%
+\begin{Value}
+A list containing:
+\begin{description}
+
+\item[\code{log\_loss}] The negative log-likelihood averaged across observations.
+\item[\code{ROC}] ROC generated using \code{pROC::roc}
+\item[\code{AUC}] The multiclass Area Under the Curve (AUC) as computed by \code{pROC::multiclass.roc}.
+
+\end{description}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+library(pROC)
+obs <- factor(c("A", "B", "C"), levels = LETTERS[1:3])
+pred <- matrix(
+  c(
+    0.8, 0.1, 0.1,
+    0.2, 0.6, 0.2,
+    0.7, 0.2, 0.1
+  ),
+  nrow = 3, byrow = TRUE
+)
+measure_cat(obs, pred)
+# Returns: list(log_loss = 1.012185, ROC = <ROC>, AUC = 0.75)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{measure\_cont}{Measure Performance for Continuous Response Models}{measure.Rul.cont}
+%
+\begin{Description}
+Evaluates the performance of a continuous response model using RMSE and MAE.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+measure_cont(obs, pred)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{obs}] A numeric vector of observed (true) values.
+
+\item[\code{pred}] A numeric vector of predicted values.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A list containing:
+\begin{description}
+
+\item[\code{rmse}] Root Mean Squared Error.
+\item[\code{mae}] Mean Absolute Error.
+
+\end{description}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+obs <- c(3.2, 4.1, 5.6)
+pred <- c(3.0, 4.3, 5.5)
+measure_cont(obs, pred)
+# Returns: list(rmse = 0.1732051, mae = 0.1666667)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{opencl\_diagnostics}{OpenCL Diagnostic Information}{opencl.Rul.diagnostics}
+%
+\begin{Description}
+This helper function lists the available OpenCL platforms and devices
+on your system. It is useful for determining the correct \code{opencl\_ids}
+to pass to \code{bnns()} when using GPU acceleration.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+opencl_diagnostics()
+\end{verbatim}
+\end{Usage}
+%
+\begin{Details}
+The function first checks if the \code{clinfo} system command is available.
+If not, it falls back to looking for the \code{OpenCL} R package to retrieve the
+platforms and devices.
+\end{Details}
+%
+\begin{Value}
+Invoked for its side effect of printing OpenCL diagnostic information.
+\end{Value}
+\HeaderA{plot.bnns}{Plot diagnostics for a fitted Bayesian Neural Network}{plot.bnns}
+%
+\begin{Description}
+Generates Markov Chain Monte Carlo (MCMC) trace plots, posterior density plots,
+Posterior Predictive Checks (PPC), or predicted probability distributions for the fitted model.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'bnns'
+plot(
+  x,
+  type = c("trace", "density", "posterior_predictive", "pred_prob"),
+  pars = NULL,
+  ...
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] A fitted \code{bnns} model object.
+
+\item[\code{type}] Character string indicating the type of plot.
+Options are \code{"trace"} for MCMC trace plots, \code{"density"} for posterior density plots,
+\code{"posterior\_predictive"} for Posterior Predictive Checks, and \code{"pred\_prob"} for
+visualizing the predicted class probability distributions (classification only).
+
+\item[\code{pars}] A character vector of parameter names to include in the plot.
+By default, this focuses on the output layer (\code{"w\_out"}, \code{"b\_out"}, and \code{"sigma"})
+to avoid cluttering the plot device with hundreds of hidden layer weights.
+
+\item[\code{...}] Additional arguments passed to \code{\LinkA{stan\_trace}{stan.Rul.trace}}, \code{\LinkA{stan\_dens}{stan.Rul.dens}},
+or \code{\LinkA{ppc\_dens\_overlay}{ppc.Rul.dens.Rul.overlay}}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \code{ggplot} object containing the requested diagnostic plots.
+\end{Value}
+\HeaderA{predict.bnns}{Predictions from a fitted Bayesian Neural Network}{predict.bnns}
+%
+\begin{Description}
+Predictions from a fitted Bayesian Neural Network
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'bnns'
+predict(
+  object,
+  newdata = NULL,
+  type = c("samples", "mean", "median", "quantile", "prob", "class"),
+  quantiles = c(0.025, 0.975),
+  ...
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{object}] A fitted \code{bnns} model object.
+
+\item[\code{newdata}] A data frame containing new data for prediction. If not provided,
+the predictions will be generated using the training data.
+
+\item[\code{type}] Character string indicating the type of prediction.
+Options are \code{"samples"} (default), \code{"mean"}, \code{"median"}, \code{"quantile"},
+\code{"prob"} (class probabilities), or \code{"class"} (predicted class labels).
+
+\item[\code{quantiles}] Numeric vector of probabilities used when \code{type = "quantile"}.
+Default is \code{c(0.025, 0.975)}.
+
+\item[\code{...}] Additional arguments passed to internal prediction methods.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\begin{itemize}
+
+\item{} For \code{type = "samples"}: A matrix (regression/binary) or 3D array (multiclass) of posterior predictions.
+\item{} For \code{type = "mean"} or \code{"median"}: A vector or matrix of aggregated predictions. For classification tasks, \code{type = "mean"} returns the posterior mean class probabilities.
+\item{} For \code{type = "quantile"}: A matrix or array of quantiles.
+\item{} For \code{type = "prob"}: A matrix of class probabilities (for classification models).
+\item{} For \code{type = "class"}: A vector of predicted class labels (for classification models).
+
+\end{itemize}
+
+\end{Value}
+\HeaderA{print.bnns}{Print Method for \code{"bnns"} Objects}{print.bnns}
+%
+\begin{Description}
+Displays a summary of a fitted Bayesian Neural Network (BNN) model, including the function call and the Stan fit details.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'bnns'
+print(x, ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] An object of class \code{"bnns"}, typically the result of a call to \code{\LinkA{bnns.default}{bnns.default}}.
+
+\item[\code{...}] Additional arguments (currently not used).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+The function is called for its side effects and does not return a value. It prints the following:
+\begin{itemize}
+
+\item{} The function call used to generate the \code{"bnns"} object.
+\item{} A summary of the Stan fit object stored in \code{x\$fit}.
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{SeeAlso}
+\code{\LinkA{bnns}{bnns}}, \code{\LinkA{summary.bnns}{summary.bnns}}
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+# Example usage:
+data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
+model <- bnns(y ~ -1 + x1 + x2,
+  data = data, L = 1, nodes = 2, act_fn = 2,
+  iter = 1e1, warmup = 5, chains = 1
+)
+print(model)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{relu}{relu transformation}{relu}
+%
+\begin{Description}
+relu transformation
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+relu(x)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] A numeric vector or matrix on which relu transformation is going to be applied.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A numeric vector or matrix after relu transformation.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+relu(matrix(1:4, , nrow = 2))
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{save\_bnns}{Save a fitted bnns model to disk}{save.Rul.bnns}
+%
+\begin{Description}
+Save a fitted bnns model to disk
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+save_bnns(object, file)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{object}] A fitted \code{bnns} object.
+
+\item[\code{file}] A character string specifying the path where the model should be saved (usually ending in .rds).
+\end{ldescription}
+\end{Arguments}
+\HeaderA{sigmoid}{sigmoid transformation}{sigmoid}
+%
+\begin{Description}
+sigmoid transformation
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+sigmoid(x)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] A numeric vector or matrix on which sigmoid transformation is going to be applied.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A numeric vector or matrix after sigmoid transformation.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+sigmoid(matrix(1:4, nrow = 2))
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{softmax\_3d}{Apply Softmax Function to a 3D Array}{softmax.Rul.3d}
+%
+\begin{Description}
+This function applies the softmax transformation along the third dimension
+of a 3D array. The softmax function converts raw scores into probabilities
+such that they sum to 1 for each slice along the third dimension.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+softmax_3d(x)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] A 3D array. The input array on which the softmax function will be applied.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+The softmax transformation is computed as:
+\deqn{\text{softmax}(x_{ijk}) = \frac{\exp(x_{ijk})}{\sum_{l} \exp(x_{ijl})}}{}
+This is applied for each pair of indices \AsIs{\texttt{(i, j)}} across the third dimension \code{(k)}.
+
+The function processes the input array slice-by-slice for the first two dimensions
+\AsIs{\texttt{(i, j)}}, normalizing the values along the third dimension \code{(k)} for each slice.
+\end{Details}
+%
+\begin{Value}
+A 3D array of the same dimensions as \code{x}, where the values along the
+third dimension are transformed using the softmax function.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# Example: Apply softmax to a 3D array
+x <- array(runif(24), dim = c(2, 3, 4)) # Random 3D array (2x3x4)
+softmax_result <- softmax_3d(x)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{softplus}{softplus transformation}{softplus}
+%
+\begin{Description}
+softplus transformation
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+softplus(x)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] A numeric vector or matrix on which softplus transformation is going to be applied.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A numeric vector or matrix after softplus transformation.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+softplus(matrix(1:4, nrow = 2))
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{summary.bnns}{Summary of a Bayesian Neural Network (BNN) Model}{summary.bnns}
+%
+\begin{Description}
+Provides a comprehensive summary of a fitted Bayesian Neural Network (BNN) model, including details about the model call, data, network architecture, posterior distributions, and model fitting information.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'bnns'
+summary(object, ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{object}] An object of class \code{bnns}, representing a fitted Bayesian Neural Network model.
+
+\item[\code{...}] Additional arguments (currently unused).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+The function prints the following information:
+\begin{itemize}
+
+\item{} \strong{Call:} The original function call used to fit the model.
+\item{} \strong{Data Summary:} Number of observations and features in the training data.
+\item{} \strong{Network Architecture:} Structure of the BNN including the number of hidden layers, nodes per layer, and activation functions.
+\item{} \strong{Posterior Summary:} Summarized posterior distributions of key parameters (e.g., weights, biases, and noise parameter).
+\item{} \strong{Model Fit Information:} Bayesian sampling details, including the number of iterations, warmup period, thinning, and chains.
+\item{} \strong{Notes:} Remarks and warnings, such as checks for convergence diagnostics.
+
+\end{itemize}
+
+\end{Details}
+%
+\begin{Value}
+A list (returned invisibly) containing the following elements:
+\begin{itemize}
+
+\item{} \code{"Number of observations"}: The number of observations in the training data.
+\item{} \code{"Number of features"}: The number of features in the training data.
+\item{} \code{"Number of hidden layers"}: The number of hidden layers in the neural network.
+\item{} \code{"Nodes per layer"}: A comma-separated string representing the number of nodes in each hidden layer.
+\item{} \code{"Activation functions"}: A comma-separated string representing the activation functions used in each hidden layer.
+\item{} \code{"Output activation function"}: The activation function used in the output layer.
+\item{} \code{"Stanfit Summary"}: A summary of the Stan model, including key parameter posterior distributions.
+\item{} \code{"Iterations"}: The total number of iterations used for sampling in the Bayesian model.
+\item{} \code{"Warmup"}: The number of iterations used as warmup in the Bayesian model.
+\item{} \code{"Thinning"}: The thinning interval used in the Bayesian model.
+\item{} \code{"Chains"}: The number of Markov chains used in the Bayesian model.
+\item{} \code{"Performance"}: Predictive performance metrics, which vary based on the output activation function.
+
+\end{itemize}
+
+The function also prints the summary to the console.
+\end{Value}
+%
+\begin{SeeAlso}
+\code{\LinkA{bnns}{bnns}}, \code{\LinkA{print.bnns}{print.bnns}}
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+# Fit a Bayesian Neural Network
+data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
+model <- bnns(y ~ -1 + x1 + x2,
+  data = data, L = 1, nodes = 2, act_fn = 2,
+  iter = 1e1, warmup = 5, chains = 1
+)
+
+# Get a summary of the model
+summary(model)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{translate\_activation}{Translate parsnip activation name to bnns code}{translate.Rul.activation}
+\keyword{internal}{translate\_activation}
+%
+\begin{Description}
+Translate parsnip activation name to bnns code
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+translate_activation(activation)
+\end{verbatim}
+\end{Usage}
+\HeaderA{translate\_out\_activation}{Translate output activation name to bnns code}{translate.Rul.out.Rul.activation}
+\keyword{internal}{translate\_out\_activation}
+%
+\begin{Description}
+Translate output activation name to bnns code
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+translate_out_activation(out_act_fn)
+\end{verbatim}
+\end{Usage}
+\HeaderA{waic.bnns}{Watanabe-Akaike Information Criterion (WAIC) for bnns models}{waic.bnns}
+%
+\begin{Description}
+Watanabe-Akaike Information Criterion (WAIC) for bnns models
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'bnns'
+waic(x, ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] A fitted \code{bnns} model object.
+
+\item[\code{...}] Additional arguments passed to \code{loo::waic()}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \code{waic} object containing model comparison metrics.
+\end{Value}
+\printindex{}
+\end{document}

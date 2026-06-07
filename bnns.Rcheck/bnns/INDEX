@@ -1,0 +1,30 @@
+bnns                    Generic Function for Fitting Bayesian Neural
+                        Network Models
+bnns.default            Bayesian Neural Network Model Using
+                        Formula(default) Interface
+bnns_params             Parameter functions for Bayesian Neural
+                        Networks
+load_bnns               Load a fitted bnns model from disk
+loo.bnns                Leave-One-Out Cross-Validation (LOO) for bnns
+                        models
+measure_bin             Measure Performance for Binary Classification
+                        Models
+measure_cat             Measure Performance for Multi-Class
+                        Classification Models
+measure_cont            Measure Performance for Continuous Response
+                        Models
+opencl_diagnostics      OpenCL Diagnostic Information
+plot.bnns               Plot diagnostics for a fitted Bayesian Neural
+                        Network
+predict.bnns            Predictions from a fitted Bayesian Neural
+                        Network
+print.bnns              Print Method for '"bnns"' Objects
+relu                    relu transformation
+save_bnns               Save a fitted bnns model to disk
+sigmoid                 sigmoid transformation
+softmax_3d              Apply Softmax Function to a 3D Array
+softplus                softplus transformation
+summary.bnns            Summary of a Bayesian Neural Network (BNN)
+                        Model
+waic.bnns               Watanabe-Akaike Information Criterion (WAIC)
+                        for bnns models

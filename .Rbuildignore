@@ -9,3 +9,4 @@
 ^LICENSE\.md$
 ^revdep$
 ^CRAN-SUBMISSION$
+^vignettes/articles$

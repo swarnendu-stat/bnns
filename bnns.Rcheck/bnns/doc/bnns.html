@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>bnns</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">bnns</h1>
+
+
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>The <code>bnns</code> package provides an efficient and user-friendly
+implementation of <strong>Bayesian Neural Networks (BNNs)</strong> for
+regression, binary classification, and multiclass classification
+problems. By integrating Bayesian inference, <code>bnns</code> allows
+for uncertainty quantification in predictions and robust parameter
+estimation.</p>
+<p>This vignette covers: 1. Installing and loading the package 2.
+Preparing data 3. Fitting a BNN model 4. Summarizing the model 5. Making
+predictions 6. Model evaluation 7. Customizing prior</p>
+</div>
+<div id="installation" class="section level2">
+<h2>1. Installation</h2>
+<p>To install the package, use the following commands:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Install from CRAN (if available)</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co">#  install.packages(&quot;bnns&quot;)</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># Or install the development version from GitHub</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co"># devtools::install_github(&quot;swarnendu-stat/bnns&quot;)</span></span></code></pre></div>
+<p>Load the package in your R session:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(bnns)</span></code></pre></div>
+</div>
+<div id="preparing-the-data" class="section level2">
+<h2>2. Preparing the Data</h2>
+<p>The <code>bnns</code> package expects data in the form of matrices
+for predictors and a vector for responses.</p>
+<p>Here’s an example of generating synthetic data:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Generate training data</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x1 =</span> <span class="fu">runif</span>(<span class="dv">10</span>), <span class="at">x2 =</span> <span class="fu">runif</span>(<span class="dv">10</span>), <span class="at">y =</span> <span class="fu">rnorm</span>(<span class="dv">10</span>))</span></code></pre></div>
+<p>For binary or multiclass classification:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Binary classification response</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>df<span class="sc">$</span>y_bin <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co"># Multiclass classification response</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>df<span class="sc">$</span>y_cat <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">sample</span>(letters[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)) <span class="co"># 3 classes</span></span></code></pre></div>
+</div>
+<div id="fitting-a-bayesian-neural-network-model" class="section level2">
+<h2>3. Fitting a Bayesian Neural Network Model</h2>
+<p>Fit a Bayesian Neural Network using the <code>bnns()</code> function.
+Specify the network architecture using arguments like the number of
+layers (<code>L</code>), nodes per layer (<code>nodes</code>), and
+activation functions (<code>act_fn</code>).</p>
+<div id="regression-example" class="section level3">
+<h3>Regression Example</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>model_reg <span class="ot">&lt;-</span> <span class="fu">bnns</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  y <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> x1 <span class="sc">+</span> x2,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">data =</span> df,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">L =</span> <span class="dv">1</span>, <span class="co"># Number of hidden layers</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="at">nodes =</span> <span class="dv">2</span>, <span class="co"># Nodes per layer</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  <span class="at">act_fn =</span> <span class="dv">3</span>, <span class="co"># Activation functions: 3 = ReLU</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  <span class="at">out_act_fn =</span> <span class="dv">1</span>, <span class="co"># Output activation function: 1 = Identity (for regression)</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="at">iter =</span> <span class="fl">1e1</span>,  <span class="co"># Very low number of iteration is shown, increase to at least 1e3 for meaningful inference</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  <span class="at">warmup =</span> <span class="dv">5</span>,  <span class="co"># Very low number of warmup is shown, increase to at least 2e2 for meaningful inference</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">1</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="binary-classification-example" class="section level3">
+<h3>Binary Classification Example</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>model_bin <span class="ot">&lt;-</span> <span class="fu">bnns</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  y_bin <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> x1 <span class="sc">+</span> x2,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">data =</span> df,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">L =</span> <span class="dv">1</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="at">nodes =</span> <span class="fu">c</span>(<span class="dv">16</span>),</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="at">act_fn =</span> <span class="fu">c</span>(<span class="dv">2</span>),</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="at">out_act_fn =</span> <span class="dv">2</span>, <span class="co"># Output activation: 2 = Logistic sigmoid</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="at">iter =</span> <span class="fl">2e2</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  <span class="at">warmup =</span> <span class="fl">1e2</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">1</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="multiclass-classification-example" class="section level3">
+<h3>Multiclass Classification Example</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>model_cat <span class="ot">&lt;-</span> <span class="fu">bnns</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  y_cat <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> x1 <span class="sc">+</span> x2,</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="at">data =</span> df,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">L =</span> <span class="dv">3</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="at">nodes =</span> <span class="fu">c</span>(<span class="dv">32</span>, <span class="dv">16</span>, <span class="dv">8</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="at">act_fn =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">2</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="at">out_act_fn =</span> <span class="dv">3</span>, <span class="co"># Output activation: 3 = Softmax</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="at">iter =</span> <span class="fl">2e2</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  <span class="at">warmup =</span> <span class="fl">1e2</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">1</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+<div id="summarizing-the-model" class="section level2">
+<h2>4. Summarizing the Model</h2>
+<p>Use the <code>summary()</code> function to view details of the fitted
+model, including the network architecture, posterior distributions, and
+predictive performance.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">summary</span>(model_reg)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">summary</span>(model_bin)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">summary</span>(model_cat)</span></code></pre></div>
+</div>
+<div id="making-predictions" class="section level2">
+<h2>5. Making Predictions</h2>
+<p>The <code>predict()</code> function generates predictions for new
+data. The format of predictions depends on the output activation
+function.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># New data</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>test_x <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(<span class="dv">10</span>), <span class="at">nrow =</span> <span class="dv">5</span>, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="fu">data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  <span class="st">`</span><span class="at">colnames&lt;-</span><span class="st">`</span>(<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>, <span class="st">&quot;x2&quot;</span>))</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co"># Regression predictions</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>pred_reg <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_reg, test_x)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># Binary classification predictions</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>pred_bin <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_bin, test_x)</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co"># Multiclass classification predictions</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>pred_cat <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_cat, test_x)</span></code></pre></div>
+</div>
+<div id="evaluating-the-model" class="section level2">
+<h2>6. Evaluating the Model</h2>
+<p>The <code>bnns</code> package includes utility functions like
+<code>measure_cont</code>, <code>measure_bin</code>, and
+<code>measure_cat</code> for evaluating model performance.</p>
+<div id="regression-evaluation" class="section level3">
+<h3>Regression Evaluation</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># True responses</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>test_y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">5</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co"># Evaluate predictions</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>metrics_reg <span class="ot">&lt;-</span> <span class="fu">measure_cont</span>(<span class="at">obs =</span> test_y, <span class="at">pred =</span> pred_reg)</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="fu">print</span>(metrics_reg)</span></code></pre></div>
+</div>
+<div id="binary-classification-evaluation" class="section level3">
+<h3>Binary Classification Evaluation</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># True responses</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>test_y_bin <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">2</span>), <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">3</span>)), <span class="dv">5</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co"># Evaluate predictions</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>metrics_bin <span class="ot">&lt;-</span> <span class="fu">measure_bin</span>(<span class="at">obs =</span> test_y_bin, <span class="at">pred =</span> pred_bin)</span></code></pre></div>
+</div>
+<div id="multiclass-classification-evaluation" class="section level3">
+<h3>Multiclass Classification Evaluation</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># True responses</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>test_y_cat <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">sample</span>(letters[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], <span class="dv">5</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co"># Evaluate predictions</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>metrics_cat <span class="ot">&lt;-</span> <span class="fu">measure_cat</span>(<span class="at">obs =</span> test_y_cat, <span class="at">pred =</span> pred_cat)</span></code></pre></div>
+</div>
+</div>
+<div id="customized-prior" class="section level2">
+<h2>7. Customized Prior</h2>
+<p>Customized priors can be used for weights as well as the
+<code>sigma</code> parameter (for regression). Here we show an example
+use of a <code>Cauchy</code> prior for weights in multi-classification
+case.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>model_cat_cauchy <span class="ot">&lt;-</span> <span class="fu">bnns</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  y_cat <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> x1 <span class="sc">+</span> x2,</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="at">data =</span> df,</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>  <span class="at">L =</span> <span class="dv">3</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>  <span class="at">nodes =</span> <span class="fu">c</span>(<span class="dv">32</span>, <span class="dv">16</span>, <span class="dv">8</span>),</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>  <span class="at">act_fn =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">2</span>),</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>  <span class="at">out_act_fn =</span> <span class="dv">3</span>, <span class="co"># Output activation: 3 = Softmax</span></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>  <span class="at">iter =</span> <span class="fl">2e2</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>  <span class="at">warmup =</span> <span class="fl">1e2</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">1</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a>  <span class="at">prior_weights =</span> <span class="fu">list</span>(<span class="at">dist =</span> <span class="st">&quot;cauchy&quot;</span>, <span class="at">params =</span> <span class="fu">list</span>(<span class="at">mu =</span> <span class="dv">0</span>, <span class="at">sigma =</span> <span class="fl">2.5</span>))</span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># Evaluate predictions</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>metrics_cat_cauchy <span class="ot">&lt;-</span> <span class="fu">measure_cat</span>(<span class="at">obs =</span> test_y_cat, <span class="at">pred =</span> <span class="fu">predict</span>(model_cat_cauchy, test_x))</span></code></pre></div>
+</div>
+<div id="notes-on-bayesian-neural-networks" class="section level2">
+<h2>8. Notes on Bayesian Neural Networks</h2>
+<ul>
+<li>Bayesian inference allows for use of prior knowledge about the
+weights.</li>
+<li>It allows for uncertainty quantification in predictions.</li>
+<li>Always check convergence diagnostics such as R-hat values.</li>
+<li>Use informative priors when possible to stabilize the model.</li>
+</ul>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<p>For more details, consult the source code on <a href="https://github.com/swarnendu-stat/bnns">GitHub</a>.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

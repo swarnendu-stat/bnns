@@ -1,0 +1,669 @@
+
+R version 4.6.0 (2026-04-24 ucrt) -- "Because it was There"
+Copyright (C) 2026 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "bnns"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> options(pager = "console")
+> base::assign(".ExTimings", "bnns-Ex.timings", pos = 'CheckExEnv')
+> base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
+> base::assign(".format_ptime",
++ function(x) {
++   if(!is.na(x[4L])) x[1L] <- x[1L] + x[4L]
++   if(!is.na(x[5L])) x[2L] <- x[2L] + x[5L]
++   options(OutDec = '.')
++   format(x[1L:3L], digits = 7L)
++ },
++ pos = 'CheckExEnv')
+> 
+> ### * </HEADER>
+> library('bnns')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("bnns")
+> ### * bnns
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: bnns
+> ### Title: Generic Function for Fitting Bayesian Neural Network Models
+> ### Aliases: bnns
+> 
+> ### ** Examples
+> 
+> ## No test: 
+> # Example usage with formula interface:
+> data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
+> model <- bnns(y ~ -1 + x1 + x2,
++   data = data, L = 1, nodes = 2, act_fn = 1,
++   iter = 1e1, warmup = 5, chains = 1
++ )
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 4.2e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.42 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: WARNING: No variance estimation is
+Chain 1:          performed for num_warmup < 20
+Chain 1: 
+Chain 1: Iteration: 1 / 10 [ 10%]  (Warmup)
+Chain 1: Iteration: 2 / 10 [ 20%]  (Warmup)
+Chain 1: Iteration: 3 / 10 [ 30%]  (Warmup)
+Chain 1: Iteration: 4 / 10 [ 40%]  (Warmup)
+Chain 1: Iteration: 5 / 10 [ 50%]  (Warmup)
+Chain 1: Iteration: 6 / 10 [ 60%]  (Sampling)
+Chain 1: Iteration: 7 / 10 [ 70%]  (Sampling)
+Chain 1: Iteration: 8 / 10 [ 80%]  (Sampling)
+Chain 1: Iteration: 9 / 10 [ 90%]  (Sampling)
+Chain 1: Iteration: 10 / 10 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 0 seconds (Warm-up)
+Chain 1:                0 seconds (Sampling)
+Chain 1:                0 seconds (Total)
+Chain 1: 
+> ## End(No test)
+> # See the documentation for bnns.default for more details on the default implementation.
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("bnns", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("bnns.default")
+> ### * bnns.default
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: bnns.default
+> ### Title: Bayesian Neural Network Model Using Formula(default) Interface
+> ### Aliases: bnns.default
+> 
+> ### ** Examples
+> 
+> ## No test: 
+> # Example usage:
+> data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
+> model <- bnns(y ~ -1 + x1 + x2,
++   data = data, L = 1, nodes = 2, act_fn = 3,
++   iter = 1e1, warmup = 5, chains = 1
++ )
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 9e-06 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.09 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: WARNING: No variance estimation is
+Chain 1:          performed for num_warmup < 20
+Chain 1: 
+Chain 1: Iteration: 1 / 10 [ 10%]  (Warmup)
+Chain 1: Iteration: 2 / 10 [ 20%]  (Warmup)
+Chain 1: Iteration: 3 / 10 [ 30%]  (Warmup)
+Chain 1: Iteration: 4 / 10 [ 40%]  (Warmup)
+Chain 1: Iteration: 5 / 10 [ 50%]  (Warmup)
+Chain 1: Iteration: 6 / 10 [ 60%]  (Sampling)
+Chain 1: Iteration: 7 / 10 [ 70%]  (Sampling)
+Chain 1: Iteration: 8 / 10 [ 80%]  (Sampling)
+Chain 1: Iteration: 9 / 10 [ 90%]  (Sampling)
+Chain 1: Iteration: 10 / 10 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 0.001 seconds (Warm-up)
+Chain 1:                0 seconds (Sampling)
+Chain 1:                0.001 seconds (Total)
+Chain 1: 
+> ## End(No test)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("bnns.default", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("bnns_train")
+> ### * bnns_train
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: bnns_train
+> ### Title: Internal function for training the BNN
+> ### Aliases: bnns_train
+> ### Keywords: internal
+> 
+> ### ** Examples
+> 
+> ## No test: 
+> # Example usage:
+> train_x <- matrix(runif(20), nrow = 10, ncol = 2)
+> train_y <- rnorm(10)
+> model <- bnns::bnns_train(train_x, train_y,
++   L = 1, nodes = 2, act_fn = 2,
++   iter = 1e1, warmup = 5, chains = 1
++ )
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 1e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.1 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: WARNING: No variance estimation is
+Chain 1:          performed for num_warmup < 20
+Chain 1: 
+Chain 1: Iteration: 1 / 10 [ 10%]  (Warmup)
+Chain 1: Iteration: 2 / 10 [ 20%]  (Warmup)
+Chain 1: Iteration: 3 / 10 [ 30%]  (Warmup)
+Chain 1: Iteration: 4 / 10 [ 40%]  (Warmup)
+Chain 1: Iteration: 5 / 10 [ 50%]  (Warmup)
+Chain 1: Iteration: 6 / 10 [ 60%]  (Sampling)
+Chain 1: Iteration: 7 / 10 [ 70%]  (Sampling)
+Chain 1: Iteration: 8 / 10 [ 80%]  (Sampling)
+Chain 1: Iteration: 9 / 10 [ 90%]  (Sampling)
+Chain 1: Iteration: 10 / 10 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 0 seconds (Warm-up)
+Chain 1:                0 seconds (Sampling)
+Chain 1:                0 seconds (Total)
+Chain 1: 
+> 
+> # Access Stan model fit
+> model$fit
+Inference for Stan model: anon_model.
+1 chains, each with iter=10; warmup=5; thin=1; 
+post-warmup draws per chain=5, total post-warmup draws=5.
+
+              mean se_mean   sd   2.5%    25%    50%   75% 97.5% n_eff Rhat
+w1[1,1]      -0.65    0.51 0.96  -1.75  -1.11  -0.85 -0.15  0.60     3 0.71
+w1[1,2]       0.48    0.38 0.72  -0.63   0.55   0.72  0.86  1.01     3 1.00
+w1[2,1]       0.36    0.36 0.67  -0.45   0.00   0.26  0.97  1.08     3 1.00
+w1[2,2]      -0.36    0.88 1.65  -1.89  -1.36  -1.34  1.12  1.64     3 1.10
+b1[1]        -0.19    0.43 0.80  -0.97  -0.78  -0.51  0.54  0.76     3 0.95
+b1[2]        -0.54    0.67 1.26  -2.14  -0.93  -0.88  0.46  0.86     3 0.71
+w_out[1]      0.99    0.45 0.85  -0.14   0.73   0.88  1.61  1.91     3 0.82
+w_out[2]     -0.48    0.81 1.51  -1.46  -1.41  -1.23 -0.41  1.86     3 0.85
+b_out[1]      0.10    0.25 0.47  -0.38  -0.28   0.10  0.31  0.73     3 0.78
+log_lik[1]   -1.75    0.36 0.68  -2.69  -1.88  -1.72 -1.38 -1.01     3 1.52
+log_lik[2]   -1.13    0.18 0.34  -1.55  -1.22  -1.14 -1.03 -0.70     3 1.38
+log_lik[3]   -1.28    0.26 0.49  -1.87  -1.65  -1.22 -0.86 -0.79     3 0.82
+log_lik[4]   -2.72    0.30 0.56  -3.28  -3.06  -2.94 -2.36 -1.99     3 0.78
+log_lik[5]   -1.45    0.23 0.44  -1.91  -1.72  -1.65 -1.02 -0.96     3 0.74
+log_lik[6]   -0.99    0.08 0.14  -1.18  -1.09  -0.93 -0.93 -0.84     3 0.81
+log_lik[7]   -0.98    0.08 0.14  -1.19  -1.01  -0.94 -0.92 -0.83     3 0.98
+log_lik[8]   -1.48    0.25 0.47  -1.97  -1.78  -1.67 -1.01 -0.96     3 0.72
+log_lik[9]   -1.38    0.14 0.27  -1.60  -1.56  -1.41 -1.39 -0.98     3 1.21
+log_lik[10]  -1.22    0.12 0.23  -1.44  -1.36  -1.30 -1.15 -0.88     3 0.73
+y_rep[1]      0.11    0.35 0.65  -0.54  -0.50   0.23  0.32  0.96     3 0.79
+y_rep[2]     -0.63    0.48 0.90  -1.99  -0.81  -0.23 -0.06  0.08     3 0.84
+y_rep[3]     -0.33    0.89 1.67  -1.85  -1.63  -1.04  1.10  1.73     3 0.71
+y_rep[4]     -0.29    0.19 0.35  -0.69  -0.53  -0.25 -0.18  0.17     3 1.86
+y_rep[5]      1.32    0.74 1.39  -0.42   0.30   1.62  2.40  2.73     3 0.80
+y_rep[6]     -1.21    0.37 0.69  -2.12  -1.56  -1.10 -0.89 -0.40     3 1.04
+y_rep[7]     -0.19    0.46 0.86  -1.30  -0.59  -0.17  0.32  0.81     3 2.42
+y_rep[8]     -0.58    0.72 1.35  -2.60  -0.81  -0.22  0.47  0.48     3 0.89
+y_rep[9]     -0.96    0.58 1.09  -2.30  -1.37  -1.28  0.09  0.16     3 1.16
+y_rep[10]     0.50    0.73 1.36  -0.93  -0.03   0.14  0.80  2.45     3 0.99
+sigma         1.00    0.11 0.21   0.77   0.85   1.01  1.09  1.27     3 0.98
+lp__        -10.99    0.80 1.50 -12.53 -12.15 -11.41 -9.49 -9.35     3 1.55
+
+Samples were drawn using NUTS(diag_e) at Sun Jun  7 23:33:12 2026.
+For each parameter, n_eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor on split chains (at 
+convergence, Rhat=1).
+> ## End(No test)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("bnns_train", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("measure_bin")
+> ### * measure_bin
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: measure_bin
+> ### Title: Measure Performance for Binary Classification Models
+> ### Aliases: measure_bin
+> 
+> ### ** Examples
+> 
+> obs <- c(1, 0, 1, 1, 0)
+> pred <- c(0.9, 0.4, 0.8, 0.7, 0.3)
+> cut <- 0.5
+> measure_bin(obs, pred, cut)
+Setting levels: control = 0, case = 1
+Setting direction: controls < cases
+$conf_mat
+   pred_label
+obs 0 1
+  0 2 0
+  1 0 3
+
+$accuracy
+[1] 1
+
+$ROC
+
+Call:
+roc.default(response = obs, predictor = pred)
+
+Data: pred in 2 controls (obs 0) < 3 cases (obs 1).
+Area under the curve: 1
+
+$AUC
+[1] 1
+
+> # Returns: list(conf_mat = <confusion matrix>, accuracy = 1, ROC = <ROC>, AUC = 1)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("measure_bin", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("measure_cat")
+> ### * measure_cat
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: measure_cat
+> ### Title: Measure Performance for Multi-Class Classification Models
+> ### Aliases: measure_cat
+> 
+> ### ** Examples
+> 
+> library(pROC)
+Type 'citation("pROC")' for a citation.
+
+Attaching package: 'pROC'
+
+The following objects are masked from 'package:stats':
+
+    cov, smooth, var
+
+> obs <- factor(c("A", "B", "C"), levels = LETTERS[1:3])
+> pred <- matrix(
++   c(
++     0.8, 0.1, 0.1,
++     0.2, 0.6, 0.2,
++     0.7, 0.2, 0.1
++   ),
++   nrow = 3, byrow = TRUE
++ )
+> measure_cat(obs, pred)
+$log_loss
+[1] 1.012185
+
+$ROC
+
+Call:
+multiclass.roc.default(response = obs, predictor = `colnames<-`(data.frame(pred),     levels(obs)))
+
+Data: multivariate predictor `colnames<-`(data.frame(pred), levels(obs)) with 3 levels of obs: A, B, C.
+Multi-class area under the curve: 0.75
+
+$AUC
+[1] 0.75
+
+> # Returns: list(log_loss = 1.012185, ROC = <ROC>, AUC = 0.75)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("measure_cat", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+
+detaching 'package:pROC'
+
+> nameEx("measure_cont")
+> ### * measure_cont
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: measure_cont
+> ### Title: Measure Performance for Continuous Response Models
+> ### Aliases: measure_cont
+> 
+> ### ** Examples
+> 
+> obs <- c(3.2, 4.1, 5.6)
+> pred <- c(3.0, 4.3, 5.5)
+> measure_cont(obs, pred)
+$rmse
+[1] 0.1732051
+
+$mae
+[1] 0.1666667
+
+> # Returns: list(rmse = 0.1732051, mae = 0.1666667)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("measure_cont", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("print.bnns")
+> ### * print.bnns
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: print.bnns
+> ### Title: Print Method for '"bnns"' Objects
+> ### Aliases: print.bnns
+> 
+> ### ** Examples
+> 
+> ## No test: 
+> # Example usage:
+> data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
+> model <- bnns(y ~ -1 + x1 + x2,
++   data = data, L = 1, nodes = 2, act_fn = 2,
++   iter = 1e1, warmup = 5, chains = 1
++ )
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 9e-06 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.09 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: WARNING: No variance estimation is
+Chain 1:          performed for num_warmup < 20
+Chain 1: 
+Chain 1: Iteration: 1 / 10 [ 10%]  (Warmup)
+Chain 1: Iteration: 2 / 10 [ 20%]  (Warmup)
+Chain 1: Iteration: 3 / 10 [ 30%]  (Warmup)
+Chain 1: Iteration: 4 / 10 [ 40%]  (Warmup)
+Chain 1: Iteration: 5 / 10 [ 50%]  (Warmup)
+Chain 1: Iteration: 6 / 10 [ 60%]  (Sampling)
+Chain 1: Iteration: 7 / 10 [ 70%]  (Sampling)
+Chain 1: Iteration: 8 / 10 [ 80%]  (Sampling)
+Chain 1: Iteration: 9 / 10 [ 90%]  (Sampling)
+Chain 1: Iteration: 10 / 10 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 0 seconds (Warm-up)
+Chain 1:                0 seconds (Sampling)
+Chain 1:                0 seconds (Total)
+Chain 1: 
+> print(model)
+Call:
+bnns.default(formula = y ~ -1 + x1 + x2, data = data, L = 1, 
+    nodes = 2, act_fn = 2, iter = 10, warmup = 5, chains = 1)
+
+Stan fit:
+Inference for Stan model: anon_model.
+1 chains, each with iter=10; warmup=5; thin=1; 
+post-warmup draws per chain=5, total post-warmup draws=5.
+
+              mean se_mean   sd   2.5%    25%    50%   75% 97.5% n_eff Rhat
+w1[1,1]      -0.65    0.51 0.96  -1.75  -1.11  -0.85 -0.15  0.60     3 0.71
+w1[1,2]       0.48    0.38 0.72  -0.63   0.55   0.72  0.86  1.01     3 1.00
+w1[2,1]       0.36    0.36 0.67  -0.45   0.00   0.26  0.97  1.08     3 1.00
+w1[2,2]      -0.36    0.88 1.65  -1.89  -1.36  -1.34  1.12  1.64     3 1.10
+b1[1]        -0.19    0.43 0.80  -0.97  -0.78  -0.51  0.54  0.76     3 0.95
+b1[2]        -0.54    0.67 1.26  -2.14  -0.93  -0.88  0.46  0.86     3 0.71
+w_out[1]      0.99    0.45 0.85  -0.14   0.73   0.88  1.61  1.91     3 0.82
+w_out[2]     -0.48    0.81 1.51  -1.46  -1.41  -1.23 -0.41  1.86     3 0.85
+b_out[1]      0.10    0.25 0.47  -0.38  -0.28   0.10  0.31  0.73     3 0.78
+log_lik[1]   -1.75    0.36 0.68  -2.69  -1.88  -1.72 -1.38 -1.01     3 1.52
+log_lik[2]   -1.13    0.18 0.34  -1.55  -1.22  -1.14 -1.03 -0.70     3 1.38
+log_lik[3]   -1.28    0.26 0.49  -1.87  -1.65  -1.22 -0.86 -0.79     3 0.82
+log_lik[4]   -2.72    0.30 0.56  -3.28  -3.06  -2.94 -2.36 -1.99     3 0.78
+log_lik[5]   -1.45    0.23 0.44  -1.91  -1.72  -1.65 -1.02 -0.96     3 0.74
+log_lik[6]   -0.99    0.08 0.14  -1.18  -1.09  -0.93 -0.93 -0.84     3 0.81
+log_lik[7]   -0.98    0.08 0.14  -1.19  -1.01  -0.94 -0.92 -0.83     3 0.98
+log_lik[8]   -1.48    0.25 0.47  -1.97  -1.78  -1.67 -1.01 -0.96     3 0.72
+log_lik[9]   -1.38    0.14 0.27  -1.60  -1.56  -1.41 -1.39 -0.98     3 1.21
+log_lik[10]  -1.22    0.12 0.23  -1.44  -1.36  -1.30 -1.15 -0.88     3 0.73
+y_rep[1]      0.11    0.35 0.65  -0.54  -0.50   0.23  0.32  0.96     3 0.79
+y_rep[2]     -0.63    0.48 0.90  -1.99  -0.81  -0.23 -0.06  0.08     3 0.84
+y_rep[3]     -0.33    0.89 1.67  -1.85  -1.63  -1.04  1.10  1.73     3 0.71
+y_rep[4]     -0.29    0.19 0.35  -0.69  -0.53  -0.25 -0.18  0.17     3 1.86
+y_rep[5]      1.32    0.74 1.39  -0.42   0.30   1.62  2.40  2.73     3 0.80
+y_rep[6]     -1.21    0.37 0.69  -2.12  -1.56  -1.10 -0.89 -0.40     3 1.04
+y_rep[7]     -0.19    0.46 0.86  -1.30  -0.59  -0.17  0.32  0.81     3 2.42
+y_rep[8]     -0.58    0.72 1.35  -2.60  -0.81  -0.22  0.47  0.48     3 0.89
+y_rep[9]     -0.96    0.58 1.09  -2.30  -1.37  -1.28  0.09  0.16     3 1.16
+y_rep[10]     0.50    0.73 1.36  -0.93  -0.03   0.14  0.80  2.45     3 0.99
+sigma         1.00    0.11 0.21   0.77   0.85   1.01  1.09  1.27     3 0.98
+lp__        -10.99    0.80 1.50 -12.53 -12.15 -11.41 -9.49 -9.35     3 1.55
+
+Samples were drawn using NUTS(diag_e) at Sun Jun  7 23:33:13 2026.
+For each parameter, n_eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor on split chains (at 
+convergence, Rhat=1).
+> ## End(No test)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("print.bnns", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("relu")
+> ### * relu
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: relu
+> ### Title: relu transformation
+> ### Aliases: relu
+> 
+> ### ** Examples
+> 
+> relu(matrix(1:4, , nrow = 2))
+     [,1] [,2]
+[1,]    1    3
+[2,]    2    4
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("relu", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("sigmoid")
+> ### * sigmoid
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: sigmoid
+> ### Title: sigmoid transformation
+> ### Aliases: sigmoid
+> 
+> ### ** Examples
+> 
+> sigmoid(matrix(1:4, nrow = 2))
+          [,1]      [,2]
+[1,] 0.7310586 0.9525741
+[2,] 0.8807971 0.9820138
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("sigmoid", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("softmax_3d")
+> ### * softmax_3d
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: softmax_3d
+> ### Title: Apply Softmax Function to a 3D Array
+> ### Aliases: softmax_3d
+> 
+> ### ** Examples
+> 
+> # Example: Apply softmax to a 3D array
+> x <- array(runif(24), dim = c(2, 3, 4)) # Random 3D array (2x3x4)
+> softmax_result <- softmax_3d(x)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("softmax_3d", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("softplus")
+> ### * softplus
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: softplus
+> ### Title: softplus transformation
+> ### Aliases: softplus
+> 
+> ### ** Examples
+> 
+> softplus(matrix(1:4, nrow = 2))
+         [,1]     [,2]
+[1,] 1.313262 3.048587
+[2,] 2.126928 4.018150
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("softplus", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("summary.bnns")
+> ### * summary.bnns
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: summary.bnns
+> ### Title: Summary of a Bayesian Neural Network (BNN) Model
+> ### Aliases: summary.bnns
+> 
+> ### ** Examples
+> 
+> ## No test: 
+> # Fit a Bayesian Neural Network
+> data <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
+> model <- bnns(y ~ -1 + x1 + x2,
++   data = data, L = 1, nodes = 2, act_fn = 2,
++   iter = 1e1, warmup = 5, chains = 1
++ )
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 1e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.1 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: WARNING: No variance estimation is
+Chain 1:          performed for num_warmup < 20
+Chain 1: 
+Chain 1: Iteration: 1 / 10 [ 10%]  (Warmup)
+Chain 1: Iteration: 2 / 10 [ 20%]  (Warmup)
+Chain 1: Iteration: 3 / 10 [ 30%]  (Warmup)
+Chain 1: Iteration: 4 / 10 [ 40%]  (Warmup)
+Chain 1: Iteration: 5 / 10 [ 50%]  (Warmup)
+Chain 1: Iteration: 6 / 10 [ 60%]  (Sampling)
+Chain 1: Iteration: 7 / 10 [ 70%]  (Sampling)
+Chain 1: Iteration: 8 / 10 [ 80%]  (Sampling)
+Chain 1: Iteration: 9 / 10 [ 90%]  (Sampling)
+Chain 1: Iteration: 10 / 10 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 0 seconds (Warm-up)
+Chain 1:                0 seconds (Sampling)
+Chain 1:                0 seconds (Total)
+Chain 1: 
+> 
+> # Get a summary of the model
+> summary(model)
+Call:
+bnns.default(formula = y ~ -1 + x1 + x2, data = data, L = 1, 
+    nodes = 2, act_fn = 2, iter = 10, warmup = 5, chains = 1)
+
+Data Summary:
+Number of observations: 10 
+Number of features: 2 
+
+Network Architecture:
+Number of hidden layers: 1 
+Nodes per layer: 2 
+Activation functions: 2 
+Output activation function: 1 
+
+Posterior Summary (Key Parameters):
+               mean   se_mean        sd       2.5%        25%         50%
+w_out[1]  0.9863156 0.4545757 0.8498074 -0.1420408  0.7336618  0.88101359
+w_out[2] -0.4806196 0.8078404 1.5102187 -1.4556943 -1.4142097 -1.22876392
+b_out[1]  0.1020412 0.2521710 0.4714214 -0.3845334 -0.2761012  0.09913234
+sigma     0.9993545 0.1114993 0.2084426  0.7672513  0.8483949  1.00786100
+                75%     97.5%   n_eff      Rhat
+w_out[1]  1.6083880 1.9139090 3.49485 0.8223087
+w_out[2] -0.4129178 1.8604956 3.49485 0.8504604
+b_out[1]  0.3069154 0.7298484 3.49485 0.7801838
+sigma     1.0930846 1.2695853 3.49485 0.9771032
+
+Model Fit Information:
+Iterations: 10 
+Warmup: 5 
+Thinning: 1 
+Chains: 1 
+
+Predictive Performance:
+RMSE (training): 0.822523 
+MAE (training): 0.6493844 
+
+Notes:
+Check convergence diagnostics for parameters with high R-hat values.
+> ## End(No test)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("summary.bnns", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  4.98 0.41 62.72 NA NA 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

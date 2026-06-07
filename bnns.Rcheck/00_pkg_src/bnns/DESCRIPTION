@@ -1,0 +1,25 @@
+Package: bnns
+Title: Bayesian Neural Network with 'Stan'
+Version: 1.0.0
+Authors@R: 
+    person("Swarnendu", "Chatterjee", , "swarnendu.stat@gmail.com", role = c("aut", "cre", "cph"))
+Description: Offers a flexible formula-based interface for building and training Bayesian Neural Networks powered by 'Stan'. The package supports modeling complex relationships while providing rigorous uncertainty quantification via posterior distributions. With features like user chosen priors, clear predictions, and support for regression, binary, and multi-class classification, it is well-suited for applications in clinical trials, finance, and other fields requiring robust Bayesian inference and decision-making. References: Neal(1996) <doi:10.1007/978-1-4612-0745-0>.
+License: MIT + file LICENSE
+Depends: R (>= 4.2.0)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Suggests: bayesplot, covr, dials, dplyr, ggplot2, knitr, mlbench,
+        OpenCL, parsnip (>= 1.0.0), ranger, recipes, rlang, rmarkdown,
+        rsample, testthat (>= 3.0.0), tidymodels, tune, workflows
+Config/testthat/edition: 3
+Imports: BH, digest, loo, pROC, RcppEigen, rstan, stats, tibble
+URL: https://github.com/swarnendu-stat/bnns,
+        https://swarnendu-stat.github.io/bnns/
+BugReports: https://github.com/swarnendu-stat/bnns/issues
+VignetteBuilder: knitr
+Config/Needs/website: rmarkdown
+Config/roxygen2/version: 8.0.0
+NeedsCompilation: no
+Packaged: 2026-06-07 18:00:29 UTC; swarn
+Author: Swarnendu Chatterjee [aut, cre, cph]
+Maintainer: Swarnendu Chatterjee <swarnendu.stat@gmail.com>
