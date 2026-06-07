@@ -1,5 +1,6 @@
 # bnns 1.0.0
 
+
 * **New Feature**: Added full support for the `tidymodels` ecosystem, including integration with `parsnip`, `recipes`, `workflows`, and `tune`.
 * **New Feature**: Added GPU acceleration support for fitting Bayesian Neural Networks via OpenCL and `cmdstanr`.
 * **New Feature**: Introduced model evaluation metrics using Leave-One-Out (LOO) cross-validation (`loo.bnns()`) and Watanabe-Akaike Information Criterion (`waic.bnns()`).
