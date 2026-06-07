@@ -142,6 +142,7 @@ test_that("pred_prob plot runs for classification", {
 })
 
 test_that("opencl_diagnostics runs", {
+  testthat::skip_if_not_installed("OpenCL")
   out <- capture.output(suppressMessages(opencl_diagnostics()))
   expect_type(out, "character")
 })
