@@ -48,11 +48,11 @@ bnns_train(
 \item \code{5} for linear
 }}
 
-\item{out_act_fn}{An integer specifying the activation function for the output layer. Options are:
+\item{out_act_fn}{An integer or character string specifying the activation function for the output layer. Options are:
 \itemize{
-\item \code{1} for linear (default)
-\item \code{2} for sigmoid
-\item \code{3} for softmax
+\item \code{1} or \code{"linear"} for linear (default)
+\item \code{2} or \code{"sigmoid"} for sigmoid
+\item \code{3} or \code{"softmax"} for softmax
 }}
 
 \item{algorithm}{A character string specifying the MCMC algorithm. Options are \code{"NUTS"} (default) or \code{"HMC"}.}

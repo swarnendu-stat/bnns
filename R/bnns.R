@@ -14,11 +14,11 @@
 #'     \item \code{4} for ReLU
 #'     \item \code{5} for linear
 #'   }
-#' @param out_act_fn An integer specifying the activation function for the output layer. Options are:
+#' @param out_act_fn An integer or character string specifying the activation function for the output layer. Options are:
 #'   \itemize{
-#'     \item \code{1} for linear (default)
-#'     \item \code{2} for sigmoid
-#'     \item \code{3} for softmax
+#'     \item \code{1} or \code{"linear"} for linear (default)
+#'     \item \code{2} or \code{"sigmoid"} for sigmoid
+#'     \item \code{3} or \code{"softmax"} for softmax
 #'   }
 #' @param algorithm A character string specifying the MCMC algorithm. Options are \code{"NUTS"} (default) or \code{"HMC"}.
 #' @param iter An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.
@@ -199,11 +199,11 @@ get_or_compile_cmdstan_model <- function(stan_code, use_gpu = FALSE) {
 #'     \item \code{4} for ReLU
 #'     \item \code{5} for linear
 #'   }
-#' @param out_act_fn An integer specifying the activation function for the output layer. Options are:
+#' @param out_act_fn An integer or character string specifying the activation function for the output layer. Options are:
 #'   \itemize{
-#'     \item \code{1} for linear (default)
-#'     \item \code{2} for sigmoid
-#'     \item \code{3} for softmax
+#'     \item \code{1} or \code{"linear"} for linear (default)
+#'     \item \code{2} or \code{"sigmoid"} for sigmoid
+#'     \item \code{3} or \code{"softmax"} for softmax
 #'   }
 #' @param algorithm A character string specifying the MCMC algorithm. Options are \code{"NUTS"} (default) or \code{"HMC"}.
 #' @param iter An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.
@@ -641,11 +641,11 @@ bnns_train <- function(train_x,
 #'     \item \code{4} for ReLU
 #'     \item \code{5} for linear
 #'   }
-#' @param out_act_fn An integer specifying the activation function for the output layer. Options are:
+#' @param out_act_fn An integer or character string specifying the activation function for the output layer. Options are:
 #'   \itemize{
-#'     \item \code{1} for linear (default)
-#'     \item \code{2} for sigmoid
-#'     \item \code{3} for softmax
+#'     \item \code{1} or \code{"linear"} for linear (default)
+#'     \item \code{2} or \code{"sigmoid"} for sigmoid
+#'     \item \code{3} or \code{"softmax"} for softmax
 #'   }
 #' @param algorithm A character string specifying the MCMC algorithm. Options are \code{"NUTS"} (default) or \code{"HMC"}.
 #' @param iter An integer specifying the total number of iterations for the Stan sampler. Default is \code{1e3}.
