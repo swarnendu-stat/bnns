@@ -245,4 +245,4 @@ on [GitHub](https://github.com/swarnendu-stat/bnns).
 ## License
 
 This package is licensed under the MIT License. See `LICENSE` for
-details. tails.
+details.
