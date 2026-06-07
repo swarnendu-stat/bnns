@@ -148,6 +148,7 @@ test_that("opencl_diagnostics runs", {
 })
 
 test_that("loo and waic run", {
+  skip_on_cran()
   df <- data.frame(x1 = runif(10), y = rnorm(10))
   mod <- suppressWarnings(bnns(y ~ x1, data = df, iter = 20, warmup = 10, chains = 1))
   

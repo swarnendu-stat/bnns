@@ -7,6 +7,7 @@ library(dplyr)
 test_that("bnns regression works with recipes and step_normalize", {
   skip_if_not_installed("recipes")
   skip_if_not_installed("workflows")
+  skip_on_cran()
   
   library(recipes)
   library(workflows)
@@ -43,6 +44,7 @@ test_that("bnns regression works with recipes and step_normalize", {
 test_that("bnns classification works with recipes and step_normalize", {
   skip_if_not_installed("recipes")
   skip_if_not_installed("workflows")
+  skip_on_cran()
 
   library(recipes)
   library(workflows)
@@ -74,6 +76,7 @@ test_that("bnns classification works with recipes and step_normalize", {
 test_that("bnns regression handles missing data with step_impute_mean", {
   skip_if_not_installed("recipes")
   skip_if_not_installed("workflows")
+  skip_on_cran()
 
   library(recipes)
   library(workflows)
@@ -116,6 +119,7 @@ test_that("bnns regression handles missing data with step_impute_mean", {
 test_that("bnns classification handles missing factor levels with step_unknown", {
   skip_if_not_installed("recipes")
   skip_if_not_installed("workflows")
+  skip_on_cran()
 
   library(recipes)
   library(workflows)

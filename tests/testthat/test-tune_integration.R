@@ -8,6 +8,7 @@ test_that("bnns regression cross-validation works with tune_grid", {
   skip_if_not_installed("rsample")
   skip_if_not_installed("tune")
   skip_if_not_installed("workflows")
+  skip_on_cran()
   
   library(rsample)
   library(tune)
@@ -47,6 +48,7 @@ test_that("bnns classification cross-validation works with fit_resamples", {
   skip_if_not_installed("rsample")
   skip_if_not_installed("tune")
   skip_if_not_installed("workflows")
+  skip_on_cran()
 
   library(rsample)
   library(tune)

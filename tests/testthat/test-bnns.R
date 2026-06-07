@@ -1,5 +1,4 @@
 test_that("bnns works for regression (linear output with/without normalization(including constant))", {
-  set.seed(123)
   df <- data.frame(x1 = runif(10), x2 = runif(10), y = rnorm(10))
   new_data <- data.frame(x1 = runif(5), x2 = runif(5))
 
@@ -83,6 +82,7 @@ test_that("bnns throws appropriate error for missing formula or data", {
 
 
 test_that("bnns works for binary classification (sigmoid output)", {
+  skip_on_cran()
   set.seed(123)
   df <- data.frame(x1 = runif(10), x2 = runif(10), y = c(0, 1, sample(0:1, 8, replace = TRUE)))
   new_data <- data.frame(x1 = runif(5), x2 = runif(5))
@@ -130,6 +130,7 @@ test_that("bnns works for binary classification (sigmoid output)", {
 })
 
 test_that("bnns works for multiclass classification (softmax output)", {
+  skip_on_cran()
   set.seed(123)
   df <- data.frame(x1 = runif(10), x2 = runif(10), y = factor(c("a", "b", "c", sample(letters[1:3], 7, replace = TRUE))))
   new_data <- data.frame(x1 = runif(5), x2 = runif(5))

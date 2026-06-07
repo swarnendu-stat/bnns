@@ -5,8 +5,10 @@ This is an update to an existing package. Key changes in this release include:
 * `tidymodels` integration
 * GPU support with OpenCL
 
+## Re-Submission to reduce test-time
+
+`skip_on_cran()` has been added to lengthy integration tests to resolve the Windows check time limit.
+
 ## R CMD check results
 
-0 errors ✔ | 0 warnings ✔ | 1 note ✖
-
-* The note regarding 'Remotes' and 'cmdstanr' not being in mainstream repositories is expected. The `cmdstanr` package is not on CRAN (it is hosted by the Stan Development Team). It is only listed in `Suggests` to provide users with an alternative faster backend and GPU support. The package degrades gracefully and functions perfectly with the default `rstan` backend (which is on CRAN) if `cmdstanr` is not installed. The `Remotes` field is included to facilitate automated installation of `cmdstanr` for users.
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔

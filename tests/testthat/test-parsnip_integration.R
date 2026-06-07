@@ -5,6 +5,7 @@ library(bnns)
 library(dplyr)
 
 test_that("bnns regression parsnip integration works", {
+  skip_on_cran()
   # Fast sampling parameters for testing
   reg_spec <- mlp(mode = "regression", hidden_units = 2, epochs = 20) %>%
     set_engine("bnns", warmup = 10, refresh = 0, chains = 1)
@@ -24,6 +25,7 @@ test_that("bnns regression parsnip integration works", {
 })
 
 test_that("bnns binary classification parsnip integration works", {
+  skip_on_cran()
   # Create a binary target
   df_bin <- iris %>% 
     filter(Species != "virginica") %>%
@@ -56,6 +58,7 @@ test_that("bnns binary classification parsnip integration works", {
 })
 
 test_that("bnns multiclass classification parsnip integration works", {
+  skip_on_cran()
   multi_spec <- mlp(mode = "classification", hidden_units = 2, epochs = 20) %>%
     set_engine("bnns", warmup = 10, refresh = 0, chains = 1)
   
