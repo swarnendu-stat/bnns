@@ -1,5 +1,7 @@
 # Changelog
 
+## bnns (development version)
+
 ## bnns 1.0.0
 
 CRAN release: 2026-06-07
