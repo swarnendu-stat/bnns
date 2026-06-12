@@ -2,6 +2,8 @@
 
 ## bnns 1.0.0
 
+CRAN release: 2026-06-07
+
 - **New Feature**: Added full support for the `tidymodels` ecosystem,
   including integration with `parsnip`, `recipes`, `workflows`, and
   `tune`.

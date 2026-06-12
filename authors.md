@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/swarnendu-stat/bnns/blob/master/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/swarnendu-stat/bnns/blob/v1.0.0/DESCRIPTION)
 
 Chatterjee S (2026). *bnns: Bayesian Neural Network with 'Stan'*. R
 package version 1.0.0, <https://github.com/swarnendu-stat/bnns>.
